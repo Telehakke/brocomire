@@ -1,0 +1,97 @@
+export type ViewerBody = HTMLDivElement | null;
+export type ViewerCanvas = HTMLCanvasElement | null;
+type Size = { width: number; height: number };
+
+export class ViewerManager {
+    readonly body: ViewerBody;
+    readonly canvas: ViewerCanvas;
+    readonly imageSize: Size | undefined;
+
+    constructor(body: ViewerBody, canvas: ViewerCanvas, imageSize?: Size) {
+        this.body = body;
+        this.canvas = canvas;
+        this.imageSize = imageSize;
+    }
+
+    readonly copyWith = ({
+        body,
+        canvas,
+        imageSize,
+    }: Partial<{
+        body: ViewerBody;
+        canvas: ViewerCanvas;
+        imageSize: Size;
+    }>): ViewerManager => {
+        return new ViewerManager(
+            body ?? this.body,
+            canvas ?? this.canvas,
+            imageSize ?? this.imageSize,
+        );
+    };
+
+    readonly setBody = (body: ViewerBody): ViewerManager => {
+        return this.copyWith({ body: body });
+    };
+
+    readonly setCanvas = (canvas: ViewerCanvas): ViewerManager => {
+        return this.copyWith({ canvas: canvas });
+    };
+
+    readonly setImageSize = (size: Size): ViewerManager => {
+        return this.copyWith({ imageSize: size });
+    };
+
+    /** ビューアー内の水平方向の空間の合計 */
+    readonly spaceWidth = (): number => {
+        if (this.body == null || this.canvas == null) return 0;
+        return this.canvas.clientWidth - this.body.clientWidth;
+    };
+
+    /** ビューアー内の垂直方向の空間の合計 */
+    readonly spaceHeight = (): number => {
+        if (this.body == null || this.canvas == null) return 0;
+        return this.canvas.clientHeight - this.body.clientHeight;
+    };
+
+    /**
+     *  ビューアーの水平方向のスクロール位置をパーセンテージで返す\
+     *  水平方向にスクロールできない場合、undefinedを返す
+     */
+    readonly positionX = (): number | undefined => {
+        if (this.body == null) return undefined;
+        const w = this.spaceWidth();
+        return w > 0 ? (Math.ceil(this.body.scrollLeft) / w) * 100 : undefined;
+    };
+
+    /**
+     *  ビューアーの垂直方向のスクロール位置をパーセンテージで返す\
+     *  垂直方向にスクロールできない場合、undefinedを返す
+     */
+    readonly positionY = (): number | undefined => {
+        if (this.body == null) return undefined;
+        const h = this.spaceHeight();
+        return h > 0 ? (Math.ceil(this.body.scrollTop) / h) * 100 : undefined;
+    };
+
+    /** 水平方向のスクロール限界に達しているかどうか */
+    readonly isReachedLimitX = (): boolean => {
+        const x = this.positionX() ?? 0;
+        return x <= 0 || x >= 100;
+    };
+
+    /** ビューアー縦横比よりも画像の方が横に長いかどうか */
+    readonly isImageWiderThanViewer = (): boolean | undefined => {
+        if (this.body == null || this.imageSize == null) return undefined;
+        if (this.body.clientHeight === 0) return undefined;
+        if (this.imageSize.height === 0) return undefined;
+
+        const bodyRatio = this.body.clientWidth / this.body.clientHeight;
+        const imageRatio = this.imageSize.width / this.imageSize.height;
+        return bodyRatio <= imageRatio;
+    };
+
+    /** ビューアーをスクロール */
+    readonly scroll = (x: number, y: number): void => {
+        this.body?.scroll(x, y);
+    };
+}
