@@ -11,7 +11,7 @@ export default defineConfig({
         babel({ presets: [reactCompilerPreset()] }),
         tailwindcss(),
         VitePWA({
-            includeAssets: ["favicon.png", "apple-touch-icon.png"],
+            includeAssets: ["favicon.svg", "apple-touch-icon.png"],
             registerType: "autoUpdate",
             devOptions: { enabled: true },
             manifest: {
