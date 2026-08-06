@@ -178,6 +178,11 @@ export class FileManager {
         });
     };
 
+    /** キャッシュの古いものを切り捨てる */
+    readonly cutoff = (max: number): void => {
+        this.blobCache.cutoff(max);
+    };
+
     private readonly copyWith = ({
         files,
         index,

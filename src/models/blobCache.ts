@@ -18,12 +18,11 @@ export class BlobCache {
     readonly addBlob = (index: number, blob: Blob): void => {
         this.dataList.push({ number: this.count, index, blob });
         this.count += 1;
-        this.cutoff();
     };
 
     /** キャッシュの古いものを切り捨てる */
-    private readonly cutoff = (): void => {
-        if (this.dataList.length <= 6) return;
+    readonly cutoff = (max: number): void => {
+        if (this.dataList.length <= max * 2) return;
         this.dataList = this.dataList
             .sort((a, b) => b.number - a.number)
             .slice(0, 6);

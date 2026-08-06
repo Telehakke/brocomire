@@ -12,7 +12,6 @@ import { BodyView } from "./sub/BodyView";
 import { Content } from "./sub/Content";
 import { GamepadMonitor } from "./sub/GamepadMonitor";
 import { KeydownMonitor } from "./sub/KeydownMonitor";
-import { LandscapeMonitor } from "./sub/LandscapeMonitor";
 
 /** 左側のページへ移動 */
 const moveToLeftPageAtom = atom(null, (get, set) => {
@@ -66,7 +65,6 @@ export const ImageViewer = (): JSX.Element => {
             <Content canvas={canvas} />
             <GamepadMonitor />
             <KeydownMonitor />
-            <LandscapeMonitor />
         </BodyView>
     );
 };

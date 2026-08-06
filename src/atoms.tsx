@@ -16,7 +16,6 @@ export const Atom = {
     fullscreenManager: atom(new FullscreenManager(false)),
     historyManager: atom(new HistoryManager()),
     infoState: atom<Visibility>("visible"),
-    isLandscape: atom(true),
     isOpenSideMenu: atom(false),
     isUserScrolled: atom(false),
     messageManager: atom(MessageManager.create()),

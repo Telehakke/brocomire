@@ -21,6 +21,7 @@ type Image = HTMLImageElement | undefined;
 const getImagesAtom = atom(
     null,
     async (get, _, fileManager: FileManager): Promise<Image[]> => {
+        fileManager.cutoff(7);
         const appStore = get(Atom.appStore);
         const leftIndex = fileManager.getLeftIndex(appStore);
         const rightIndex = fileManager.getRightIndex(appStore);
@@ -31,19 +32,6 @@ const getImagesAtom = atom(
         );
     },
 );
-
-/** 次のページのBlobをキャッシュに保存 */
-const cacheNextPageAtom = atom(null, (get, _, fileManager: FileManager) => {
-    const appStore = get(Atom.appStore);
-    const file = fileManager.nextIndex(appStore);
-    const leftIndex = file.getLeftIndex(appStore);
-    const rightIndex = file.getRightIndex(appStore);
-    Promise.all(
-        [leftIndex, rightIndex].map(async (v) =>
-            getImage(await fileManager.getBlob(v)),
-        ),
-    );
-});
 
 /** Blobを読み込ませたImage要素を取得 */
 const getImage = async (blob?: Blob): Promise<Image> => {
@@ -101,6 +89,31 @@ const drawImagesAtom = atom(
     },
 );
 
+/** 次のページのBlobをキャッシュに保存 */
+// const cacheNextPageAtom = atom(null, (get, _, fileManager: FileManager) => {
+//     const appStore = get(Atom.appStore);
+//     const file = fileManager.nextIndex(appStore);
+//     const leftIndex = file.getLeftIndex(appStore);
+//     const rightIndex = file.getRightIndex(appStore);
+//     Promise.all(
+//         [leftIndex, rightIndex].map(async (v) => fileManager.getBlob(v)),
+//     );
+// });
+
+/** ５ページ先までのBlobをキャッシュに保存 */
+const cacheAfterPagesAtom = atom(null, (get, _, fileManager: FileManager) => {
+    const appStore = get(Atom.appStore);
+    let fm = fileManager;
+    [...Array(5)].forEach(() => {
+        fm = fm.nextIndex(appStore);
+        const leftIndex = fm.getLeftIndex(appStore);
+        const rightIndex = fm.getRightIndex(appStore);
+        Promise.all(
+            [leftIndex, rightIndex].map(async (v) => fileManager.getBlob(v)),
+        );
+    });
+});
+
 /* -------------------------------------------------------------------------- */
 
 export const Canvas = ({
@@ -111,11 +124,11 @@ export const Canvas = ({
     const setViewerManager = useSetAtom(Atom.viewerManager);
     const getImages = useSetAtom(getImagesAtom);
     const drawImages = useSetAtom(drawImagesAtom);
-    const cacheNextPage = useSetAtom(cacheNextPageAtom);
+    // const cacheNextPage = useSetAtom(cacheNextPageAtom);
+    const cacheAfterPages = useSetAtom(cacheAfterPagesAtom);
     const fileManager = useAtomValue(Atom.fileManager);
     const onSharpeningFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
     const isSafeAreaEnabled = useAtomValue(AppStateAtom.isSafeAreaEnabled);
-    const isLandscape = useAtomValue(Atom.isLandscape);
     const contentFit = useAtomValue(AppStateAtom.contentFit);
     const viewerManager = useAtomValue(Atom.viewerManager);
 
@@ -132,18 +145,19 @@ export const Canvas = ({
         getImages(fileManager).then(([img1, img2]) => {
             if (!isMounded) return;
             drawImages(el, ctx, img1, img2);
-            cacheNextPage(fileManager);
+            //cacheNextPage(fileManager);
+            cacheAfterPages(fileManager);
         });
         return (): void => {
             isMounded = false;
         };
-    }, [canvas, drawImages, fileManager, getImages, cacheNextPage]);
+    }, [cacheAfterPages, canvas, drawImages, fileManager, getImages]);
 
     return (
         <canvas
             className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
             style={{
-                ...safeAriaStyle(isSafeAreaEnabled, isLandscape),
+                ...safeAriaStyle(isSafeAreaEnabled),
                 ...canvasStyle(contentFit, viewerManager),
             }}
             ref={canvas}
@@ -151,15 +165,14 @@ export const Canvas = ({
     );
 };
 
-const safeAriaStyle = (
-    isSafeAreaEnabled: boolean,
-    isLandscape: boolean,
-): CSSProperties => {
+const safeAriaStyle = (isSafeAreaEnabled: boolean): CSSProperties => {
     if (!isSafeAreaEnabled) return {};
-    if (isLandscape) {
-        return { ...safeAreaPaddingLeft(), ...safeAreaPaddingRight() };
-    }
-    return { ...safeAreaPaddingTop(), ...safeAreaPaddingBottom() };
+    return {
+        ...safeAreaPaddingLeft(),
+        ...safeAreaPaddingRight(),
+        ...safeAreaPaddingTop(),
+        ...safeAreaPaddingBottom(),
+    };
 };
 
 const canvasStyle = (
