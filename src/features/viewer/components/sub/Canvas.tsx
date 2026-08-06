@@ -89,17 +89,6 @@ const drawImagesAtom = atom(
     },
 );
 
-/** 次のページのBlobをキャッシュに保存 */
-// const cacheNextPageAtom = atom(null, (get, _, fileManager: FileManager) => {
-//     const appStore = get(Atom.appStore);
-//     const file = fileManager.nextIndex(appStore);
-//     const leftIndex = file.getLeftIndex(appStore);
-//     const rightIndex = file.getRightIndex(appStore);
-//     Promise.all(
-//         [leftIndex, rightIndex].map(async (v) => fileManager.getBlob(v)),
-//     );
-// });
-
 /** ５ページ先までのBlobをキャッシュに保存 */
 const cacheAfterPagesAtom = atom(null, (get, _, fileManager: FileManager) => {
     const appStore = get(Atom.appStore);
@@ -124,7 +113,6 @@ export const Canvas = ({
     const setViewerManager = useSetAtom(Atom.viewerManager);
     const getImages = useSetAtom(getImagesAtom);
     const drawImages = useSetAtom(drawImagesAtom);
-    // const cacheNextPage = useSetAtom(cacheNextPageAtom);
     const cacheAfterPages = useSetAtom(cacheAfterPagesAtom);
     const fileManager = useAtomValue(Atom.fileManager);
     const onSharpeningFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
@@ -145,7 +133,6 @@ export const Canvas = ({
         getImages(fileManager).then(([img1, img2]) => {
             if (!isMounded) return;
             drawImages(el, ctx, img1, img2);
-            //cacheNextPage(fileManager);
             cacheAfterPages(fileManager);
         });
         return (): void => {

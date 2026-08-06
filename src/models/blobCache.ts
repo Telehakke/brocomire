@@ -18,13 +18,15 @@ export class BlobCache {
     readonly addBlob = (index: number, blob: Blob): void => {
         this.dataList.push({ number: this.count, index, blob });
         this.count += 1;
+        console.log(this.dataList);
     };
 
     /** キャッシュの古いものを切り捨てる */
     readonly cutoff = (max: number): void => {
-        if (this.dataList.length <= max * 2) return;
+        const maxAmount = max * 2;
+        if (this.dataList.length <= maxAmount) return;
         this.dataList = this.dataList
             .sort((a, b) => b.number - a.number)
-            .slice(0, 6);
+            .slice(0, maxAmount);
     };
 }
