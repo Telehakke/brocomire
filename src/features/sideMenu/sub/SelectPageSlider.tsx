@@ -16,6 +16,7 @@ export const SelectPageSlider = (): JSX.Element => {
 
 const Part = (): JSX.Element => {
     const writingType = useAtomValue(AppStateAtom.writingType);
+    const shouldPreload = useAtomValue(AppStateAtom.shouldPreload);
     const fileManager = useAtomValue(Atom.fileManager);
     const [index, setIndex] = useState(
         correctIndex(writingType, fileManager, fileManager.index),
@@ -37,6 +38,7 @@ const Part = (): JSX.Element => {
                     setBlob(
                         await fileManager.getBlob(
                             correctIndex(writingType, fileManager, v),
+                            shouldPreload,
                         ),
                     );
                 }}

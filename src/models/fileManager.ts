@@ -61,7 +61,10 @@ export class FileManager {
         return this.files.length > 0;
     };
 
-    readonly getBlob = async (index?: number): Promise<Blob | undefined> => {
+    readonly getBlob = async (
+        index: number | undefined,
+        shouldPreload: boolean,
+    ): Promise<Blob | undefined> => {
         if (index == null) return undefined;
         if (index < 0) return undefined;
 
@@ -72,12 +75,12 @@ export class FileManager {
         if (file == null) return undefined;
 
         if (file instanceof File) {
-            this.blobCache.addBlob(index, file);
+            if (shouldPreload) this.blobCache.addBlob(index, file);
             return file;
         }
 
         const data = await (file as FileEntry).getData(new BlobWriter());
-        this.blobCache.addBlob(index, data);
+        if (shouldPreload) this.blobCache.addBlob(index, data);
         return data;
     };
 

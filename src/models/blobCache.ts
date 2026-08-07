@@ -18,7 +18,6 @@ export class BlobCache {
     readonly addBlob = (index: number, blob: Blob): void => {
         this.dataList.push({ number: this.count, index, blob });
         this.count += 1;
-        console.log(this.dataList);
     };
 
     /** キャッシュの古いものを切り捨てる */
