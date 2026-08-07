@@ -1,5 +1,10 @@
 import { isBoolean, isNotNull } from "./typeGuards";
-import { FilterStrength, ScrollSpeed, ZoomStep } from "./validator";
+import {
+    FilterStrength,
+    PreloadPageCount,
+    ScrollSpeed,
+    ZoomStep,
+} from "./validator";
 
 export type AppState = Readonly<{
     contentFit: ContentFit;
@@ -7,9 +12,11 @@ export type AppState = Readonly<{
     histories: readonly History[];
     isSafeAreaEnabled: boolean;
     onSharpeningFilter: boolean;
+    preloadPageCount: number;
     scrollSpeed: number;
     sharpeningFilterStrength: number;
     shouldAdvance: boolean;
+    shouldPreload: boolean;
     shouldShowFullscreenButton: boolean;
     shouldShowInvertButton: boolean;
     tapAreaWidth: TapAreaLength;
@@ -25,9 +32,11 @@ export const defaultAppState: AppState = {
     histories: [],
     isSafeAreaEnabled: true,
     onSharpeningFilter: false,
+    preloadPageCount: 5,
     scrollSpeed: 4,
     sharpeningFilterStrength: 3,
     shouldAdvance: false,
+    shouldPreload: false,
     shouldShowFullscreenButton: false,
     shouldShowInvertButton: false,
     tapAreaWidth: "s",
@@ -58,6 +67,10 @@ export const createAppState = (value: unknown): AppState => {
             v.onSharpeningFilter,
             defaultAppState.onSharpeningFilter,
         ),
+        preloadPageCount: PreloadPageCount.ensure(
+            v.preloadPageCount,
+            defaultAppState.preloadPageCount,
+        ),
         scrollSpeed: ScrollSpeed.ensure(
             v.scrollSpeed,
             defaultAppState.scrollSpeed,
@@ -69,6 +82,10 @@ export const createAppState = (value: unknown): AppState => {
         shouldAdvance: ensureBoolean(
             v.shouldAdvance,
             defaultAppState.shouldAdvance,
+        ),
+        shouldPreload: ensureBoolean(
+            v.shouldPreload,
+            defaultAppState.shouldPreload,
         ),
         shouldShowFullscreenButton: ensureBoolean(
             v.shouldShowFullscreenButton,

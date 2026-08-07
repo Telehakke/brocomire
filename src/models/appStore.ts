@@ -18,9 +18,11 @@ type AppStore = AppState &
         setHistories: (value: readonly History[]) => AppStore;
         setIsSafeAreaEnabled: (value: boolean) => AppStore;
         setOnSharpeningFilter: (value: boolean) => AppStore;
+        setPreloadPageCount: (value: number) => AppStore;
         setScrollSpeed: (value: number) => AppStore;
         setSharpeningFilterStrength: (value: number) => AppStore;
         setShouldAdvance: (value: boolean) => AppStore;
+        setShouldPreload: (value: boolean) => AppStore;
         setShouldShowFullscreenButton: (value: boolean) => AppStore;
         setShouldShowInvertButton: (value: boolean) => AppStore;
         setTapAreaWidth: (value: TapAreaLength) => AppStore;
@@ -62,6 +64,11 @@ export const appStore: AppStore = {
         LocalStorage.setAppState(obj);
         return obj;
     },
+    setPreloadPageCount(value) {
+        const obj: AppStore = { ...this, preloadPageCount: value };
+        LocalStorage.setAppState(obj);
+        return obj;
+    },
     setScrollSpeed(value) {
         const obj: AppStore = { ...this, scrollSpeed: value };
         LocalStorage.setAppState(obj);
@@ -74,6 +81,11 @@ export const appStore: AppStore = {
     },
     setShouldAdvance(value) {
         const obj: AppStore = { ...this, shouldAdvance: value };
+        LocalStorage.setAppState(obj);
+        return obj;
+    },
+    setShouldPreload(value) {
+        const obj: AppStore = { ...this, shouldPreload: value };
         LocalStorage.setAppState(obj);
         return obj;
     },

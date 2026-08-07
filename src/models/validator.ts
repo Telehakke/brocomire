@@ -47,3 +47,17 @@ export const ScrollSpeed: Validator = {
         return Math.max(Math.min(value, this.MAX), this.MIN);
     },
 };
+
+/* -------------------------------------------------------------------------- */
+
+export const PreloadPageCount: Validator = {
+    MIN: 1,
+    MAX: 10,
+    ensure(value, defaultValue) {
+        if (!isNumber(value)) {
+            return Math.max(Math.min(defaultValue, this.MAX), this.MIN);
+        }
+
+        return Math.max(Math.min(value, this.MAX), this.MIN);
+    },
+};

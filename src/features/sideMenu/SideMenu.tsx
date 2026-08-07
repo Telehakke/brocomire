@@ -13,10 +13,12 @@ import { ContentFitSegmentGroup } from "./sub/ContentFitSegmentGroup";
 import { DisplayModeSegmentGroup } from "./sub/DisplayModeSegmentGroup";
 import { IsSafeAreaEnabledSwitch } from "./sub/IsSafeAreaEnabledSwitch";
 import { OnSharpeningFilterSwitch } from "./sub/OnSharpeningFilterSwitch";
+import { PreloadPageCountSlider } from "./sub/PreloadPageCountSlider";
 import { ScrollSpeedSlider } from "./sub/ScrollSpeedSlider";
 import { SelectPageSlider } from "./sub/SelectPageSlider";
 import { SharpeningFilterStrengthSlider } from "./sub/SharpeningFilterStrengthSlider";
 import { ShouldAdvanceSwitch } from "./sub/ShouldAdvanceSwitch";
+import { ShouldPreloadSwitch } from "./sub/ShouldPreloadSwitch";
 import { ShouldShowFullscreenButtonSwitch } from "./sub/shouldShowFullscreenButtonSwitch";
 import { ShouldShowInvertButtonSwitch } from "./sub/ShouldShowInvertButtonSwitch";
 import { TapAreaHeightSegmentGroup } from "./sub/TapAreaHeightSegmentGroup";
@@ -52,7 +54,7 @@ export const SideMenu = (): JSX.Element => {
                     <Card>
                         <WritingTypeSegmentGroup />
                     </Card>
-                    <Card footer="有効にするとディスプレイの角の丸みを避けてコンテンツを表示します">
+                    <Card footer="ディスプレイのノッチやパンチホールなどを避けてコンテンツを表示します">
                         <ContentFitSegmentGroup />
                         <IsSafeAreaEnabledSwitch />
                     </Card>
@@ -79,7 +81,7 @@ export const SideMenu = (): JSX.Element => {
                         <ShouldAdvanceSwitch />
                     </Card>
                     <Card
-                        footer={`垂直スクロール：左右をスクロール\n水平スクロール：下をスクロール`}
+                        footer={`垂直スクロール：左右端をスクロール\n水平スクロール：下端をスクロール`}
                     >
                         <ScrollSpeedSlider />
                     </Card>
@@ -90,6 +92,10 @@ export const SideMenu = (): JSX.Element => {
                     <Card footer="全画面への切り替えはiPhone以外で使用できます">
                         <ShouldShowInvertButtonSwitch />
                         <ShouldShowFullscreenButtonSwitch />
+                    </Card>
+                    <Card footer="読み込みが遅い場合にパフォーマンスが改善します">
+                        <ShouldPreloadSwitch />
+                        <PreloadPageCountSlider />
                     </Card>
                 </div>
             </div>

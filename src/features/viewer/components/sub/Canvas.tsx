@@ -21,7 +21,9 @@ type Image = HTMLImageElement | undefined;
 const getImagesAtom = atom(
     null,
     async (get, _, fileManager: FileManager): Promise<Image[]> => {
-        fileManager.cutoff(7);
+        // 前・今・先読みを合計したページ数でキャッシュを整理
+        fileManager.cutoffCache(2 + get(AppStateAtom.preloadPageCount));
+
         const appStore = get(Atom.appStore);
         const leftIndex = fileManager.getLeftIndex(appStore);
         const rightIndex = fileManager.getRightIndex(appStore);
@@ -89,11 +91,14 @@ const drawImagesAtom = atom(
     },
 );
 
-/** ５ページ先までのBlobをキャッシュに保存 */
+/** 次方向のBlobをキャッシュに保存 */
 const cacheAfterPagesAtom = atom(null, (get, _, fileManager: FileManager) => {
+    if (!AppStateAtom.shouldPreload) return;
+
+    const preloadPageCount = get(AppStateAtom.preloadPageCount);
     const appStore = get(Atom.appStore);
     let fm = fileManager;
-    [...Array(5)].forEach(() => {
+    [...Array(preloadPageCount)].forEach(() => {
         fm = fm.nextIndex(appStore);
         const leftIndex = fm.getLeftIndex(appStore);
         const rightIndex = fm.getRightIndex(appStore);

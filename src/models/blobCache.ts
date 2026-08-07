@@ -22,8 +22,8 @@ export class BlobCache {
     };
 
     /** キャッシュの古いものを切り捨てる */
-    readonly cutoff = (max: number): void => {
-        const maxAmount = max * 2;
+    readonly cutoff = (pageCount: number): void => {
+        const maxAmount = pageCount * 2;
         if (this.dataList.length <= maxAmount) return;
         this.dataList = this.dataList
             .sort((a, b) => b.number - a.number)
