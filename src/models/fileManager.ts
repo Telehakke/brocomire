@@ -11,7 +11,7 @@ import { BlobCache } from "./blobCache";
 export class FileManager {
     readonly files: readonly File[] | readonly Entry[];
     readonly index: number;
-    private readonly blobCache: BlobCache;
+    private blobCache: BlobCache;
 
     constructor(
         files?: readonly File[] | readonly Entry[],
@@ -181,9 +181,19 @@ export class FileManager {
         });
     };
 
-    /** キャッシュの古いものを切り捨てる */
-    readonly cutoffCache = (pageCount: number): void => {
-        this.blobCache.cutoff(pageCount);
+    /** キャッシュをすべて削除 */
+    readonly clearCache = (): void => {
+        this.blobCache = new BlobCache();
+    };
+
+    /** キャッシュの先頭に位置するものを切り捨てる */
+    readonly trimFrontCache = (pageCount: number): void => {
+        this.blobCache.trimFront(pageCount);
+    };
+
+    /** キャッシュの最後尾に位置するものを切り捨てる */
+    readonly trimBackCache = (pageCount: number): void => {
+        this.blobCache.trimBack(pageCount);
     };
 
     private readonly copyWith = ({

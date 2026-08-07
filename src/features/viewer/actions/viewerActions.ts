@@ -71,6 +71,7 @@ export const moveToIndexPageAtom = atom(
     async (get, set, index: number) => {
         const { writingType } = get(Atom.appStore);
         const file = get(Atom.fileManager).setIndex(index);
+        file.clearCache();
         set(Atom.fileManager, file);
         set(Atom.scrollManager, ScrollManager.fromWritingType(writingType));
         set(Atom.messageManager, (m) => m.setMessage(file.progress()));
@@ -84,6 +85,7 @@ export const moveToNextPageAtom = atom(null, async (get, set) => {
 
     const { displayMode, writingType } = get(Atom.appStore);
     file = file.nextIndex({ displayMode });
+    file.trimFrontCache(get(Atom.appStore).preloadPageCount);
     set(Atom.fileManager, file);
     set(Atom.scrollManager, ScrollManager.fromWritingType(writingType));
     set(Atom.messageManager, (m) => m.setMessage(file.progress()));
@@ -96,6 +98,7 @@ export const moveToPreviousPageAtom = atom(null, async (get, set) => {
 
     const { displayMode, writingType } = get(Atom.appStore);
     file = file.prevIndex({ displayMode });
+    file.trimBackCache(get(Atom.appStore).preloadPageCount);
     set(Atom.fileManager, file);
     set(Atom.scrollManager, ScrollManager.fromWritingType(writingType, true));
     set(Atom.messageManager, (m) => m.setMessage(file.progress()));

@@ -1,11 +1,9 @@
-type Data = { number: number; index: number; blob: Blob };
+type Data = { index: number; blob: Blob };
 
 export class BlobCache {
-    private count: number;
     private dataList: Data[];
 
     constructor() {
-        this.count = 0;
         this.dataList = [];
     }
 
@@ -16,16 +14,24 @@ export class BlobCache {
 
     /** キャッシュにBlobを追加 */
     readonly addBlob = (index: number, blob: Blob): void => {
-        this.dataList.push({ number: this.count, index, blob });
-        this.count += 1;
+        this.dataList.push({ index, blob });
     };
 
-    /** キャッシュの古いものを切り捨てる */
-    readonly cutoff = (pageCount: number): void => {
-        const maxAmount = pageCount * 2;
-        if (this.dataList.length <= maxAmount) return;
+    /** キャッシュの先頭に位置するものを切り捨てる */
+    readonly trimFront = (pageCount: number): void => {
+        const max = (pageCount + 2) * 2;
+        if (this.dataList.length <= max) return;
         this.dataList = this.dataList
-            .sort((a, b) => b.number - a.number)
-            .slice(0, maxAmount);
+            .sort((a, b) => b.index - a.index)
+            .slice(0, max);
+    };
+
+    /** キャッシュの最後尾に位置するものを切り捨てる */
+    readonly trimBack = (pageCount: number): void => {
+        const max = (pageCount + 2) * 2;
+        if (this.dataList.length <= max) return;
+        this.dataList = this.dataList
+            .sort((a, b) => a.index - b.index)
+            .slice(0, max);
     };
 }

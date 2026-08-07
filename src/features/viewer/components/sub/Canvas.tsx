@@ -24,15 +24,11 @@ const getImagesAtom = atom(
         const appStore = get(Atom.appStore);
         const leftIndex = fileManager.getLeftIndex(appStore);
         const rightIndex = fileManager.getRightIndex(appStore);
-        const images = await Promise.all(
+        return await Promise.all(
             [leftIndex, rightIndex].map(async (v) =>
                 getImage(await fileManager.getBlob(v, appStore.shouldPreload)),
             ),
         );
-        // 前・今・先読みを合計したページ数でキャッシュを整理
-        fileManager.cutoffCache(2 + get(AppStateAtom.preloadPageCount));
-
-        return images;
     },
 );
 
@@ -103,10 +99,8 @@ const cacheAfterPagesAtom = atom(null, (get, _, fileManager: FileManager) => {
         fm = fm.nextIndex(appStore);
         const leftIndex = fm.getLeftIndex(appStore);
         const rightIndex = fm.getRightIndex(appStore);
-        Promise.all(
-            [leftIndex, rightIndex].map(async (v) =>
-                fileManager.getBlob(v, appStore.shouldPreload),
-            ),
+        [leftIndex, rightIndex].map(async (v) =>
+            fileManager.getBlob(v, appStore.shouldPreload),
         );
     });
 });
