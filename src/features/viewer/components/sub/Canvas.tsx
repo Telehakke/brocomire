@@ -119,6 +119,7 @@ export const Canvas = ({
     const fileManager = useAtomValue(Atom.fileManager);
     const onSharpeningFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
     const isSafeAreaEnabled = useAtomValue(AppStateAtom.isSafeAreaEnabled);
+    const isLandscape = useAtomValue(Atom.isLandscape);
     const contentFit = useAtomValue(AppStateAtom.contentFit);
     const viewerManager = useAtomValue(Atom.viewerManager);
 
@@ -146,7 +147,7 @@ export const Canvas = ({
         <canvas
             className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
             style={{
-                ...safeAriaStyle(isSafeAreaEnabled),
+                ...safeAriaStyle(isSafeAreaEnabled, isLandscape),
                 ...canvasStyle(contentFit, viewerManager),
             }}
             ref={canvas}
@@ -154,11 +155,17 @@ export const Canvas = ({
     );
 };
 
-const safeAriaStyle = (isSafeAreaEnabled: boolean): CSSProperties => {
+const safeAriaStyle = (
+    isSafeAreaEnabled: boolean,
+    isLandscape: boolean,
+): CSSProperties => {
     if (!isSafeAreaEnabled) return {};
+    if (isLandscape)
+        return {
+            ...safeAreaPaddingLeft(),
+            ...safeAreaPaddingRight(),
+        };
     return {
-        ...safeAreaPaddingLeft(),
-        ...safeAreaPaddingRight(),
         ...safeAreaPaddingTop(),
         ...safeAreaPaddingBottom(),
     };
