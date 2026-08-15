@@ -1,7 +1,7 @@
 import { Portal } from "@ark-ui/react";
 import { Dialog as ArkDialog } from "@ark-ui/react/dialog";
 import { X } from "lucide-react";
-import type { JSX, ReactNode } from "react";
+import type { CSSProperties, JSX, ReactNode } from "react";
 
 type SideMenuDialogProps = Partial<{
     closeOnInteractOutside: boolean;
@@ -10,6 +10,7 @@ type SideMenuDialogProps = Partial<{
     modal: boolean;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    style: CSSProperties;
     children: ReactNode;
 }>;
 
@@ -48,7 +49,10 @@ const Root = (
 
 /* -------------------------------------------------------------------------- */
 
-const Content = (props: { children?: ReactNode }): JSX.Element => {
+const Content = (props: {
+    style?: CSSProperties;
+    children?: ReactNode;
+}): JSX.Element => {
     const className = {
         _: "h-full min-w-80 p-4 shadow-2xl",
         bg: "bg-neutral-100 dark:bg-neutral-900",
@@ -63,7 +67,10 @@ const Content = (props: { children?: ReactNode }): JSX.Element => {
                 <ArkDialog.Content
                     className={Object.values(className).join(" ")}
                 >
-                    <div className="flex h-full flex-col gap-1 overflow-auto">
+                    <div
+                        className="flex h-full flex-col gap-1 overflow-auto"
+                        style={props.style}
+                    >
                         <CloseTrigger />
                         {props.children}
                     </div>
@@ -75,7 +82,7 @@ const Content = (props: { children?: ReactNode }): JSX.Element => {
 
 const CloseTrigger = (): JSX.Element => {
     const className = {
-        _: "mb-2 size-10 flex-none self-end rounded-full transition",
+        _: "mb-2 size-10 flex-none self-start rounded-full transition",
         grid: "grid place-items-center",
         hoverBg: "hover:bg-neutral-200 dark:hover:bg-neutral-800",
         activeBg: "active:bg-neutral-300 dark:active:bg-neutral-700",
