@@ -53,7 +53,7 @@ const Home = (): JSX.Element => {
                 <ImageFilesOpenButton />
                 <ZipFileOpenButton />
             </div>
-            <p className="fixed bottom-8 left-8">v0.260906c</p>
+            <p className="fixed bottom-8 left-8">v0.260906d</p>
         </>
     );
 };
@@ -80,7 +80,7 @@ const Infos = (): JSX.Element | null => {
                 <FullscreenButton />
             </div>
             <div
-                className="fixed top-4 right-4 flex gap-4"
+                className="fixed top-4 right-4 flex gap-2 text-xs"
                 style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingRight() }}
             >
                 <PageNumber />

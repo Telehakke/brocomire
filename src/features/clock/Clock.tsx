@@ -19,11 +19,8 @@ export const Clock = (): JSX.Element => {
     }, []);
 
     return (
-        <div className="tabular-nums opacity-75 select-none">
-            <p className="text-black" style={{ WebkitTextStroke: "2px #000" }}>
-                {clockManager.time}
-            </p>
-            <p className="-translate-y-full text-white">{clockManager.time}</p>
+        <div className="rounded-sm bg-neutral-600/50 px-1 tabular-nums select-none">
+            <p className="text-neutral-100">{clockManager.time}</p>
         </div>
     );
 };
