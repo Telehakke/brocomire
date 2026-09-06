@@ -35,6 +35,7 @@ export const AppStateAtom = {
     displayMode: selectAtom(Atom.appStore, (a) => a.displayMode),
     histories: selectAtom(Atom.appStore, (a) => a.histories),
     isSafeAreaEnabled: selectAtom(Atom.appStore, (a) => a.isSafeAreaEnabled),
+    isSmoothScrollEnabled: selectAtom(Atom.appStore, (a) => a.isSmoothScrollEnabled),
     onSharpeningFilter: selectAtom(Atom.appStore, (a) => a.onSharpeningFilter),
     preloadPageCount: selectAtom(Atom.appStore, (a) => a.preloadPageCount),
     scrollSpeed: selectAtom(Atom.appStore, (a) => a.scrollSpeed),

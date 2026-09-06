@@ -12,6 +12,7 @@ import { CloseButton } from "./sub/CloseButton";
 import { ContentFitSegmentGroup } from "./sub/ContentFitSegmentGroup";
 import { DisplayModeSegmentGroup } from "./sub/DisplayModeSegmentGroup";
 import { IsSafeAreaEnabledSwitch } from "./sub/IsSafeAreaEnabledSwitch";
+import { IsSmoothScrollEnabledSwitch } from "./sub/IsSmoothScrollEnabledSwitch";
 import { OnSharpeningFilterSwitch } from "./sub/OnSharpeningFilterSwitch";
 import { PreloadPageCountSlider } from "./sub/PreloadPageCountSlider";
 import { ScrollSpeedSlider } from "./sub/ScrollSpeedSlider";
@@ -82,6 +83,7 @@ export const SideMenu = (): JSX.Element => {
                     footer={`垂直スクロール：左右端をスクロール\n水平スクロール：下端をスクロール`}
                 >
                     <ScrollSpeedSlider />
+                    <IsSmoothScrollEnabledSwitch />
                 </Card>
                 <Card>
                     <OnSharpeningFilterSwitch />

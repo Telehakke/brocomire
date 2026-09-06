@@ -11,6 +11,7 @@ export type AppState = Readonly<{
     displayMode: DisplayMode;
     histories: readonly History[];
     isSafeAreaEnabled: boolean;
+    isSmoothScrollEnabled: boolean;
     onSharpeningFilter: boolean;
     preloadPageCount: number;
     scrollSpeed: number;
@@ -31,6 +32,7 @@ export const defaultAppState: AppState = {
     displayMode: "single",
     histories: [],
     isSafeAreaEnabled: true,
+    isSmoothScrollEnabled: false,
     onSharpeningFilter: false,
     preloadPageCount: 5,
     scrollSpeed: 4,
@@ -62,6 +64,10 @@ export const createAppState = (value: unknown): AppState => {
         isSafeAreaEnabled: ensureBoolean(
             v.isSafeAreaEnabled,
             defaultAppState.isSafeAreaEnabled,
+        ),
+        isSmoothScrollEnabled: ensureBoolean(
+            v.isSmoothScrollEnabled,
+            defaultAppState.isSmoothScrollEnabled,
         ),
         onSharpeningFilter: ensureBoolean(
             v.onSharpeningFilter,

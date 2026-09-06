@@ -17,6 +17,7 @@ type AppStore = AppState &
         setDisplayMode: (value: DisplayMode) => AppStore;
         setHistories: (value: readonly History[]) => AppStore;
         setIsSafeAreaEnabled: (value: boolean) => AppStore;
+        setIsSmoothScrollEnabled: (value: boolean) => AppStore;
         setOnSharpeningFilter: (value: boolean) => AppStore;
         setPreloadPageCount: (value: number) => AppStore;
         setScrollSpeed: (value: number) => AppStore;
@@ -56,6 +57,11 @@ export const appStore: AppStore = {
     },
     setIsSafeAreaEnabled(value) {
         const obj: AppStore = { ...this, isSafeAreaEnabled: value };
+        LocalStorage.setAppState(obj);
+        return obj;
+    },
+    setIsSmoothScrollEnabled(value) {
+        const obj: AppStore = { ...this, isSmoothScrollEnabled: value };
         LocalStorage.setAppState(obj);
         return obj;
     },
