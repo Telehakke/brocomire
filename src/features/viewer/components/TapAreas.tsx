@@ -217,32 +217,34 @@ class ClickManager {
 
 class SmoothScroll {
     static readonly SIZE = 10;
-    private deltaXList: number[];
-    private deltaYList: number[];
-
-    constructor() {
-        this.deltaXList = Array(SmoothScroll.SIZE).fill(0);
-        this.deltaYList = Array(SmoothScroll.SIZE).fill(0);
-    }
+    private deltaXList: number[] = [];
+    private deltaYList: number[] = [];
 
     push(deltaX: number, deltaY: number): void {
-        this.deltaXList.shift();
         this.deltaXList.push(deltaX);
-        this.deltaYList.shift();
+        if (this.deltaXList.length > SmoothScroll.SIZE) {
+            this.deltaXList.shift();
+        }
         this.deltaYList.push(deltaY);
+        if (this.deltaYList.length > SmoothScroll.SIZE) {
+            this.deltaYList.shift();
+        }
     }
 
     getPosition(): Position {
-        return {
-            x:
-                this.deltaXList.reduce((acc, current) => {
-                    return acc + current;
-                }, 0) / SmoothScroll.SIZE,
-            y:
-                this.deltaYList.reduce((acc, current) => {
-                    return acc + current;
-                }, 0) / SmoothScroll.SIZE,
-        };
+        const x =
+            this.deltaXList.length === 0
+                ? 0
+                : this.deltaXList.reduce((acc, current) => {
+                      return acc + current;
+                  }, 0) / this.deltaXList.length;
+        const y =
+            this.deltaYList.length === 0
+                ? 0
+                : this.deltaXList.reduce((acc, current) => {
+                      return acc + current;
+                  }, 0) / this.deltaYList.length;
+        return { x, y };
     }
 }
 
