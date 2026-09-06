@@ -53,7 +53,7 @@ const Home = (): JSX.Element => {
                 <ImageFilesOpenButton />
                 <ZipFileOpenButton />
             </div>
-            <p className="fixed bottom-8 left-8">v0.260906b</p>
+            <p className="fixed bottom-8 left-8">v0.260906c</p>
         </>
     );
 };
