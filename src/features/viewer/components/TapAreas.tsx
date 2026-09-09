@@ -244,7 +244,6 @@ class SmoothScroll {
                 : this.deltaYList.reduce((acc, current) => {
                       return acc + current;
                   }, 0) / this.deltaYList.length;
-        console.log(x);
         return { x, y };
     }
 }

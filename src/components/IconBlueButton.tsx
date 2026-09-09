@@ -2,10 +2,10 @@ import type { JSX, ReactNode } from "react";
 
 const className = {
     _: "size-10 p-2 rounded-full transition",
-    bg: "bg-blue-600/50",
-    hoverBg: "group-hover:bg-blue-700/50",
-    activeBg: " group-active:bg-blue-800/50",
-    stroke: "stroke-neutral-100",
+    bg: "bg-blue-300/75",
+    hoverBg: "group-hover:bg-blue-400/75",
+    activeBg: " group-active:bg-blue-500/75",
+    stroke: "stroke-black",
 };
 
 export const IconBlueButton = {

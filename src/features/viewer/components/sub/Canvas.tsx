@@ -1,5 +1,12 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect, type CSSProperties, type JSX, type RefObject } from "react";
+import { LoaderCircle } from "lucide-react";
+import {
+    useEffect,
+    useRef,
+    type CSSProperties,
+    type JSX,
+    type RefObject,
+} from "react";
 import { AppStateAtom, Atom } from "../../../../atoms";
 import type { ContentFit } from "../../../../models/appState";
 import { FileManager } from "../../../../models/fileManager";
@@ -122,12 +129,14 @@ export const Canvas = ({
     const isLandscape = useAtomValue(Atom.isLandscape);
     const contentFit = useAtomValue(AppStateAtom.contentFit);
     const viewerManager = useAtomValue(Atom.viewerManager);
+    const loaderIconRef = useRef<SVGSVGElement | null>(null);
 
     useEffect(() => {
         setViewerManager((v) => v.setCanvas(canvas.current));
     }, [canvas, setViewerManager]);
 
     useEffect(() => {
+        const loaderIcon = loaderIconRef.current;
         let isMounded = true;
         const el = canvas.current;
         const ctx = el?.getContext("2d");
@@ -137,21 +146,29 @@ export const Canvas = ({
             if (!isMounded) return;
             drawImages(el, ctx, img1, img2);
             cacheAfterPages(fileManager);
+            loaderIcon!.style.display = "none";
         });
         return (): void => {
             isMounded = false;
+            loaderIcon!.style.display = "unset";
         };
     }, [cacheAfterPages, canvas, drawImages, fileManager, getImages]);
 
     return (
-        <canvas
-            className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
-            style={{
-                ...safeAriaStyle(isSafeAreaEnabled, isLandscape),
-                ...canvasStyle(contentFit, viewerManager),
-            }}
-            ref={canvas}
-        />
+        <>
+            <canvas
+                className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
+                style={{
+                    ...safeAriaStyle(isSafeAreaEnabled, isLandscape),
+                    ...canvasStyle(contentFit, viewerManager),
+                }}
+                ref={canvas}
+            />
+            <LoaderCircle
+                className="fixed inset-0 m-auto hidden size-16 animate-spin stroke-green-500"
+                ref={loaderIconRef}
+            />
+        </>
     );
 };
 

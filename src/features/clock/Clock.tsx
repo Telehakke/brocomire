@@ -19,8 +19,8 @@ export const Clock = (): JSX.Element => {
     }, []);
 
     return (
-        <div className="rounded-sm bg-neutral-600/50 px-1 tabular-nums select-none">
-            <p className="text-neutral-100">{clockManager.time}</p>
+        <div className="rounded-sm bg-neutral-300/75 px-1 tabular-nums select-none">
+            <p className="text-black">{clockManager.time}</p>
         </div>
     );
 };
