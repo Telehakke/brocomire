@@ -130,6 +130,7 @@ export const Canvas = ({
     const contentFit = useAtomValue(AppStateAtom.contentFit);
     const viewerManager = useAtomValue(Atom.viewerManager);
     const loaderIconRef = useRef<SVGSVGElement | null>(null);
+    const timerRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         setViewerManager((v) => v.setCanvas(canvas.current));
@@ -146,11 +147,18 @@ export const Canvas = ({
             if (!isMounded) return;
             drawImages(el, ctx, img1, img2);
             cacheAfterPages(fileManager);
-            loaderIcon!.style.display = "none";
+            if (loaderIcon != null) {
+                window.clearTimeout(timerRef.current);
+                loaderIcon.style.display = "none";
+            }
         });
         return (): void => {
             isMounded = false;
-            loaderIcon!.style.display = "unset";
+            if (loaderIcon != null) {
+                timerRef.current = window.setTimeout(() => {
+                    loaderIcon.style.display = "inline";
+                }, 100);
+            }
         };
     }, [cacheAfterPages, canvas, drawImages, fileManager, getImages]);
 
@@ -165,7 +173,7 @@ export const Canvas = ({
                 ref={canvas}
             />
             <LoaderCircle
-                className="fixed inset-0 m-auto hidden size-16 animate-spin stroke-green-500"
+                className="fixed inset-0 m-auto inline size-16 animate-spin stroke-green-500"
                 ref={loaderIconRef}
             />
         </>
