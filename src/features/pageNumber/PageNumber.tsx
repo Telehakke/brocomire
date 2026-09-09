@@ -7,8 +7,8 @@ export const PageNumber = (): JSX.Element => {
     const text = `${file.index + 1} / ${file.length}`;
 
     return (
-        <div className="rounded-sm bg-neutral-300/75 px-1 tabular-nums select-none">
-            <p className="text-black">{text}</p>
+        <div className="rounded-sm bg-neutral-300/75 px-1 select-none">
+            <p className="font-bold text-black tabular-nums">{text}</p>
         </div>
     );
 };
