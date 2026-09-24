@@ -1,0 +1,35 @@
+import type { HistoryJSON } from "./history/historyJSON";
+import type { BookFormatType } from "./valueObjects/bookFormat";
+import type { ContentFitType } from "./valueObjects/contentFit";
+import type { DisplayModeType } from "./valueObjects/displayMode";
+import type { IsSafeAreaEnabledJSON } from "./valueObjects/isSafeAreaEnabled";
+import type { IsSmoothScrollEnabledJSON } from "./valueObjects/isSmoothScrollEnabled";
+import type { ScrollSpeedJSON } from "./valueObjects/scrollSpeed";
+import type { ScrollStepCountType } from "./valueObjects/scrollStepCount";
+import type { SharpeningFilterStrengthJSON } from "./valueObjects/sharpeningFilterStrength";
+import type { ShouldAdvanceJSON } from "./valueObjects/shouldAdvance";
+import type { ShouldPreloadJSON } from "./valueObjects/shouldPreload";
+import type { ShouldShowFullscreenButtonJSON } from "./valueObjects/shouldShowFullscreenButton";
+import type { ShouldShowInvertButtonJSON } from "./valueObjects/shouldShowInvertButton";
+import type { ShouldShowSharpeningFilterButtonJSON } from "./valueObjects/shouldShowSharpeningFilterButton";
+import type { TapAreaSizeValue } from "./valueObjects/tapAreaSize";
+import type { ZoomStepJSON } from "./valueObjects/zoomStep";
+
+export type UserSettingsJSON = Readonly<{
+    bookFormat: BookFormatType;
+    contentFit: ContentFitType;
+    displayMode: DisplayModeType;
+    histories: readonly HistoryJSON[];
+    isSafeAreaEnabled: IsSafeAreaEnabledJSON;
+    isSmoothScrollEnabled: IsSmoothScrollEnabledJSON;
+    scrollSpeed: ScrollSpeedJSON;
+    scrollStepCount: ScrollStepCountType;
+    sharpeningFilterStrength: SharpeningFilterStrengthJSON;
+    shouldAdvance: ShouldAdvanceJSON;
+    shouldPreload: ShouldPreloadJSON;
+    shouldShowFullscreenButton: ShouldShowFullscreenButtonJSON;
+    shouldShowInvertButton: ShouldShowInvertButtonJSON;
+    shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButtonJSON;
+    tapAreaSize: TapAreaSizeValue;
+    zoomStep: ZoomStepJSON;
+}>;

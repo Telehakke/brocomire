@@ -1,91 +1,54 @@
-import { useAtom, useAtomValue } from "jotai";
-import { type JSX } from "react";
-import { Atom } from "./atoms";
-import { ChevronLeft, ChevronRight } from "./components/ChevronIcons";
-import { Clock } from "./features/clock/Clock";
-import {
-    ImageFilesOpenButton,
-    ZipFileOpenButton,
-} from "./features/fileOpen/FileOpenButtons";
-import { FullscreenButton } from "./features/fullscreen/FullscreenButton";
-import { InvertFilterButton } from "./features/invertFilter/InvertFilterButton";
-import { Notification } from "./features/notification/Notification";
-import { PageNumber } from "./features/pageNumber/PageNumber";
-import { MenuButton } from "./features/sideMenu/MenuButton";
-import { SideMenu } from "./features/sideMenu/SideMenu";
-import { ImageViewer } from "./features/viewer/components/ImageViewer";
-import { SharpeningFilter } from "./features/viewer/components/SharpeningFilter";
-import { TapAreas } from "./features/viewer/components/TapAreas";
-import {
-    safeAreaPaddingLeft,
-    safeAreaPaddingRight,
-    safeAreaPaddingTop,
-} from "./utils/safeAreaPadding";
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect, type JSX } from "react";
+import { updateHistory } from "./application/viewer/updateHistory";
+import type { UserSettingsStore } from "./domain/models/userSettings/userSettingsStore";
+import { LocalStorageUserSettingsRepository } from "./infrastructure/userSettings/localStorageUserSettingsRepository";
+import { AppStateAtom, Atom } from "./presentation/atoms";
+import { Home } from "./presentation/react/home/Home";
+import { Menu } from "./presentation/react/menu/Menu";
+import { NotificationView } from "./presentation/react/notification/NotificationView";
+import { SideMenu } from "./presentation/react/sideMenu/SideMenu";
+import { ImageViewer } from "./presentation/react/viewer/ImageViewer";
+
+const updateHistoryAtom = atom(null, (get, set) => {
+    const appState = get(Atom.appState);
+    const userSettingsStore: UserSettingsStore = {
+        get: () => get(Atom.userSettings),
+        set: (callback) =>
+            set(Atom.userSettings, callback(get(Atom.userSettings))),
+    };
+    updateHistory(
+        appState,
+        userSettingsStore,
+        new LocalStorageUserSettingsRepository(),
+    );
+});
 
 export const App = (): JSX.Element => {
-    const onViewer = useAtomValue(Atom.onViewer);
+    const userSettings = useSetAtom(Atom.userSettings);
+    const updateHistory = useSetAtom(updateHistoryAtom);
+    const onViewer = useAtomValue(AppStateAtom.onViewer);
+
+    useEffect(() => {
+        userSettings(new LocalStorageUserSettingsRepository().load());
+    }, [userSettings]);
+
+    useEffect(() => {
+        document.addEventListener("visibilitychange", () => {
+            // ブラウザが最小化されたら履歴を更新
+            if (document.hidden) {
+                updateHistory();
+            }
+        });
+    }, [updateHistory]);
 
     if (!onViewer) return <Home />;
     return (
         <>
-            <SharpeningFilter.Component />
             <ImageViewer />
-            <TapAreas />
             <SideMenu />
-            <Infos />
-            <Notification />
-            <ChevronLeft />
-            <ChevronRight />
+            <Menu />
+            <NotificationView />
         </>
-    );
-};
-
-const Home = (): JSX.Element => {
-    const className = {
-        _: "m-auto w-max",
-        position: "fixed inset-x-0 top-1/2 -translate-y-1/2",
-        grid: "grid grid-cols-2 place-items-center gap-4",
-    };
-
-    return (
-        <>
-            <div className={Object.values(className).join(" ")}>
-                <ImageFilesOpenButton />
-                <ZipFileOpenButton />
-            </div>
-            <p className="fixed bottom-8 left-8">v0.260815a</p>
-        </>
-    );
-};
-
-const Infos = (): JSX.Element | null => {
-    const [infoState, setInfoState] = useAtom(Atom.infoState);
-
-    if (infoState === "none") return null;
-    return (
-        <div
-            className="data-[state=visible]:animate-fade-in data-[state=hidden]:animate-fade-out data-[state=hidden]:opacity-0"
-            data-state={infoState}
-            onAnimationEnd={() => {
-                if (infoState !== "hidden") return;
-                setInfoState("none");
-            }}
-        >
-            <div
-                className="fixed top-4 left-4 flex gap-4"
-                style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingLeft() }}
-            >
-                <MenuButton />
-                <InvertFilterButton />
-                <FullscreenButton />
-            </div>
-            <div
-                className="fixed top-4 right-4 flex gap-4"
-                style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingRight() }}
-            >
-                <PageNumber />
-                <Clock />
-            </div>
-        </div>
     );
 };
