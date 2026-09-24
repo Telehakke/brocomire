@@ -12,16 +12,14 @@ export type AppStateValue = Readonly<{
     cache: Cache;
     chevronMark: ChevronMark;
     fileManager: FileManager;
-    hashedFileName: string | undefined;
+    hashedFileName: string;
     imageSize: ImageSize;
     infoVisibility: InfoVisibility;
-    isFullscreen: boolean;
     isLandscape: boolean;
     isOpenSideMenu: boolean;
     isUserScrolled: boolean;
     notification: Notification;
     onInvertFilter: boolean;
-    onLoadingAnimation: boolean;
     onSharpeningFilter: boolean;
     onViewer: boolean;
     scrollPct2D: ScrollPct2D;
@@ -60,10 +58,6 @@ export class AppState {
         return this.value.infoVisibility;
     }
 
-    get isFullscreen(): boolean {
-        return this.value.isFullscreen;
-    }
-
     get isLandscape(): boolean {
         return this.value.isLandscape;
     }
@@ -82,10 +76,6 @@ export class AppState {
 
     get onInvertFIlter(): boolean {
         return this.value.onInvertFilter;
-    }
-
-    get onLoadingAnimation(): boolean {
-        return this.value.onLoadingAnimation;
     }
 
     get onSharpeningFilter(): boolean {
@@ -115,13 +105,11 @@ export class AppState {
         hashedFileName,
         imageSize,
         infoVisibility,
-        isFullscreen,
         isLandscape,
         isOpenSideMenu,
         isUserScrolled,
         notification,
         onInvertFilter,
-        onLoadingAnimation,
         onSharpeningFilter,
         onViewer,
         scrollPct2D,
@@ -135,14 +123,11 @@ export class AppState {
             hashedFileName: hashedFileName ?? this.value.hashedFileName,
             imageSize: imageSize ?? this.value.imageSize,
             infoVisibility: infoVisibility ?? this.value.infoVisibility,
-            isFullscreen: isFullscreen ?? this.value.isFullscreen,
             isLandscape: isLandscape ?? this.value.isLandscape,
             isOpenSideMenu: isOpenSideMenu ?? this.value.isOpenSideMenu,
             isUserScrolled: isUserScrolled ?? this.value.isUserScrolled,
             notification: notification ?? this.value.notification,
             onInvertFilter: onInvertFilter ?? this.value.onInvertFilter,
-            onLoadingAnimation:
-                onLoadingAnimation ?? this.value.onLoadingAnimation,
             onSharpeningFilter:
                 onSharpeningFilter ?? this.value.onSharpeningFilter,
             onViewer: onViewer ?? this.value.onViewer,

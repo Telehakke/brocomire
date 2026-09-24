@@ -34,12 +34,13 @@ export const App = (): JSX.Element => {
     }, [userSettings]);
 
     useEffect(() => {
-        document.addEventListener("visibilitychange", () => {
+        const handleChange = (): void => {
             // ブラウザが最小化されたら履歴を更新
-            if (document.hidden) {
-                updateHistory();
-            }
-        });
+            if (document.hidden) updateHistory();
+        };
+        document.addEventListener("visibilitychange", handleChange);
+        return (): void =>
+            document.removeEventListener("visibilitychange", handleChange);
     }, [updateHistory]);
 
     if (!onViewer) return <Home />;

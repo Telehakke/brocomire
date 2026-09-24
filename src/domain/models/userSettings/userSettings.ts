@@ -220,7 +220,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             tapAreaSize,
             zoomStep,
         }: Partial<UserSettingsValue>,
-        userSettingsRepository?: UserSettingsRepository,
+        userSettingsRepository: UserSettingsRepository,
     ): UserSettings {
         const obj = new UserSettings({
             bookFormat: bookFormat ?? this.value.bookFormat,
@@ -248,7 +248,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             tapAreaSize: tapAreaSize ?? this.value.tapAreaSize,
             zoomStep: zoomStep ?? this.value.zoomStep,
         });
-        userSettingsRepository?.save(obj);
+        userSettingsRepository.save(obj);
         return obj;
     }
 }

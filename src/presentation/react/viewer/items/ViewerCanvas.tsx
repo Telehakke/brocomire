@@ -1,5 +1,12 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useRef, type CSSProperties, type JSX } from "react";
+import { LoaderCircle } from "lucide-react";
+import {
+    useEffect,
+    useRef,
+    useState,
+    type CSSProperties,
+    type JSX,
+} from "react";
 import type { AppStore } from "../../../../application/appState/appStore";
 import type { ImageSize } from "../../../../application/appState/valueObjects/imageSize";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
@@ -80,6 +87,7 @@ export const ViewerCanvas = (): JSX.Element => {
     const contentFit = useAtomValue(UserSettingsAtom.contentFit);
     const displayMode = useAtomValue(UserSettingsAtom.displayMode);
     const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -101,11 +109,11 @@ export const ViewerCanvas = (): JSX.Element => {
             if (!isMounded) return;
             drawImages(canvas, ctx, images);
             preloadFiles();
-            setAppState((a) => a.copyWith({ onLoadingAnimation: false }));
+            setIsLoading(false);
         });
         return (): void => {
             isMounded = false;
-            setAppState((a) => a.copyWith({ onLoadingAnimation: true }));
+            setIsLoading(true);
         };
     }, [
         bookFormat, // メニューから書式の変更で再レンダリング
@@ -127,6 +135,9 @@ export const ViewerCanvas = (): JSX.Element => {
                 }}
                 ref={canvasRef}
             />
+            {isLoading && (
+                <LoaderCircle className="fixed inset-0 m-auto inline size-16 animate-spin stroke-green-500" />
+            )}
         </>
     );
 };

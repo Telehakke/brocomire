@@ -10,15 +10,14 @@ export const closeViewer = (
     userSettingsStore: UserSettingsStore,
     userSettingsRepository: UserSettingsRepository,
 ): void => {
-    updateHistory(appStore.get(), userSettingsStore, userSettingsRepository);
-    appStore.set((a) =>
-        a.copyWith({
+    appStore.set((a) => {
+        updateHistory(a, userSettingsStore, userSettingsRepository);
+        return a.copyWith({
             fileManager: a.fileManager.clear(),
-            hashedFileName: undefined,
-            isFullscreen: false,
+            hashedFileName: "",
             isOpenSideMenu: false,
             onViewer: false,
             zoomPct: ZoomPct.createSafe(),
-        }),
-    );
+        });
+    });
 };

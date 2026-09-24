@@ -1,5 +1,6 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
 import { ScrollPct2D } from "../../domain/models/scroll/scrollPct2D";
+import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 import type { UserSettingsStore } from "../../domain/models/userSettings/userSettingsStore";
 import type { AppStore } from "../appState/appStore";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
@@ -9,6 +10,7 @@ export const openZipFile = async (
     fileManager: FileManager,
     appStore: AppStore,
     userSettingsStore: UserSettingsStore,
+    userSettingsRepository: UserSettingsRepository,
 ): Promise<void> => {
     if (!fileManager.hasFiles()) return;
 
@@ -22,14 +24,14 @@ export const openZipFile = async (
             scrollPct2D: ScrollPct2D.fromBookFormat(bookFormat, true),
         }),
     );
-    userSettingsStore.set((a) => {
-        const histories = a.histories.tryPrepend(hashedFileName);
+    userSettingsStore.set((u) => {
+        const histories = u.histories.tryPrepend(hashedFileName);
         moveToIndexPage(
             histories.getClosedPageIndex(hashedFileName) ?? 0,
             appStore,
             userSettingsStore.get(),
         );
-        return a.copyWith({ histories });
+        return u.copyWith({ histories }, userSettingsRepository);
     });
 };
 
