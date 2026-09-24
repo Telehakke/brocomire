@@ -1,6 +1,7 @@
 import type { UserSettings } from "../../domain/models/userSettings/userSettings";
 import type { AppStore } from "../appState/appStore";
 import { moveToPreviousPage } from "./moveToPreviousPage";
+import { updateScrollPct2D } from "./updateScrollPct";
 
 /** 前へ戻る */
 export const goToPrevious = (
@@ -20,6 +21,7 @@ export const goToPrevious = (
         return;
     }
 
+    updateScrollPct2D(appStore);
     appStore.set((a) => {
         const scrollPct2D = a.scrollPct2D.previous(
             bookFormat,
