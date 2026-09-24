@@ -8,6 +8,7 @@ export const goToPrevious = (
     appStore: AppStore,
     userSettings: UserSettings,
 ): void => {
+    updateScrollPct2D(appStore);
     const { scrollPct2D, viewerManager } = appStore.get();
     const { bookFormat, scrollStepCount } = userSettings;
     if (
@@ -21,7 +22,6 @@ export const goToPrevious = (
         return;
     }
 
-    updateScrollPct2D(appStore);
     appStore.set((a) => {
         const scrollPct2D = a.scrollPct2D.previous(
             bookFormat,

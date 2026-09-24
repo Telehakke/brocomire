@@ -74,6 +74,7 @@ const preloadFilesAtom = atom(null, (get) => {
 
 export const ViewerCanvas = (): JSX.Element => {
     const canvasRef = useRef<Canvas>(null);
+    const timerId = useRef<number | undefined>(undefined);
     const setAppState = useSetAtom(Atom.appState);
     const getImages = useSetAtom(getImagesAtom);
     const drawImages = useSetAtom(drawImagesAtom);
@@ -109,11 +110,14 @@ export const ViewerCanvas = (): JSX.Element => {
             if (!isMounded) return;
             drawImages(canvas, ctx, images);
             preloadFiles();
+            window.clearInterval(timerId.current);
             setIsLoading(false);
         });
         return (): void => {
             isMounded = false;
-            setIsLoading(true);
+            timerId.current = window.setTimeout(() => {
+                setIsLoading(true);
+            }, 100);
         };
     }, [
         bookFormat, // メニューから書式の変更で再レンダリング

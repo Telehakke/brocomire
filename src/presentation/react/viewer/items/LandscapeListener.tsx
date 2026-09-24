@@ -5,9 +5,10 @@ import { LandscapeMonitor } from "../../../../infrastructure/device/landscapeMon
 import { Atom } from "../../../atoms";
 
 const getLandscapeMonitorAtom = atom(null, (get, set) => {
+    const appState = Atom.appState;
     const appStore: AppStore = {
-        get: () => get(Atom.appState),
-        set: (callback) => set(Atom.appState, callback(get(Atom.appState))),
+        get: () => get(appState),
+        set: (callback) => set(appState, callback(get(appState))),
     };
     return new LandscapeMonitor(appStore);
 });
