@@ -4,7 +4,7 @@ import { ChevronMark } from "../../../../application/appState/valueObjects/chevr
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { PullManager } from "../../../../infrastructure/viewer/pullManager";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
-import { AppStateAtom, Atom } from "../../../atoms";
+import { AppStateAtom, Atom, UserSettingsAtom } from "../../../atoms";
 
 export type Body = HTMLDivElement | null;
 
@@ -30,6 +30,9 @@ export const ViewerBody = ({
     const touchMoveManager = useRef(new TouchMoveManager(0, 0));
     const pullManager = useRef(new PullManager());
     const viewerManager = useAtomValue(AppStateAtom.viewerManager);
+    const longPressRecognitionTime = useAtomValue(
+        UserSettingsAtom.longPressRecognitionTime,
+    );
     const setAppState = useSetAtom(Atom.appState);
 
     useEffect(() => {
@@ -70,7 +73,10 @@ export const ViewerBody = ({
         const { clientX, clientY } = ev.targetTouches[0];
         touchMoveManager.current = new TouchMoveManager(clientX, clientY);
         clickGestureManager.current.reset();
-        clickGestureManager.current.onLongPress(onSubClick);
+        clickGestureManager.current.onLongPress(
+            onSubClick,
+            longPressRecognitionTime.value,
+        );
         pullManager.current.reset();
     };
 

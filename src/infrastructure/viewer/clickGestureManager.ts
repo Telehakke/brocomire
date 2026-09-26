@@ -1,6 +1,7 @@
 export class ClickGestureManager {
     private isDoubleClickEnable: boolean;
     private canClick: boolean;
+    private canDoubleClick: boolean;
     private canSubClick: boolean;
     private canLongPress: boolean;
     private clickTimerId: number | undefined;
@@ -9,6 +10,7 @@ export class ClickGestureManager {
     constructor(isDoubleClickEnable: boolean) {
         this.isDoubleClickEnable = isDoubleClickEnable;
         this.canClick = true;
+        this.canDoubleClick = true;
         this.canSubClick = true;
         this.canLongPress = true;
         this.clickTimerId = undefined;
@@ -18,6 +20,7 @@ export class ClickGestureManager {
     /** 状態を初期化 */
     reset(): void {
         this.canClick = true;
+        this.canDoubleClick = true;
         this.canSubClick = true;
         this.canLongPress = true;
     }
@@ -39,6 +42,10 @@ export class ClickGestureManager {
     /** ダブルクリックでactionを実行 */
     onDoubleClick(action: () => void): void {
         if (!this.isDoubleClickEnable) return;
+        if (!this.canDoubleClick) {
+            this.canDoubleClick = true;
+            return;
+        }
         window.clearTimeout(this.clickTimerId);
         action();
     }
@@ -54,16 +61,18 @@ export class ClickGestureManager {
     }
 
     /** 長押しでactionを実行 */
-    onLongPress(action: () => void): void {
+    onLongPress(action: () => void, timeout: number): void {
         this.longPressTimerId = window.setTimeout(() => {
             if (!this.canLongPress) {
                 this.canLongPress = true;
                 return;
             }
             this.canClick = false;
+            this.canDoubleClick = false;
             this.canSubClick = false;
+            window.clearTimeout(this.clickTimerId);
             action();
-        }, 500);
+        }, timeout);
     }
 
     /** 長押しをキャンセル */

@@ -26,6 +26,9 @@ export const TapArea = (props: {
     const isSmoothScrollEnabled = useAtomValue(
         UserSettingsAtom.isSmoothScrollEnabled,
     );
+    const longPressRecognitionTime = useAtomValue(
+        UserSettingsAtom.longPressRecognitionTime,
+    );
     const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
@@ -101,7 +104,10 @@ export const TapArea = (props: {
         const { clientX, clientY } = ev.targetTouches[0];
         touchMoveManager.current = new TouchMoveManager(clientX, clientY);
         clickGestureManager.current.reset();
-        clickGestureManager.current.onLongPress(props.onSubClick);
+        clickGestureManager.current.onLongPress(
+            props.onSubClick,
+            longPressRecognitionTime.value,
+        );
         smoothScroll.current = new SmoothScroll();
     };
 

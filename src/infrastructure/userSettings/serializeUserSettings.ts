@@ -11,6 +11,8 @@ export const serializeUserSettings = (userSettings: UserSettings): string => {
         }),
         isSafeAreaEnabled: userSettings.value.isSafeAreaEnabled.value,
         isSmoothScrollEnabled: userSettings.value.isSmoothScrollEnabled.value,
+        longPressRecognitionTime:
+            userSettings.value.longPressRecognitionTime.value,
         scrollSpeed: userSettings.value.scrollSpeed.value,
         scrollStepCount: userSettings.value.scrollStepCount.value,
         sharpeningFilterStrength:

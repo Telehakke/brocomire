@@ -35,7 +35,7 @@ const Text = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const className = {
-        _: "w-max rounded-md px-2 py-1 tabular-nums",
+        _: "w-max rounded-md px-2 py-1 tabular-nums, select-none",
         opacity: "data-[state=hidden]:opacity-0",
         text: "text-neutral-100",
         bg: "bg-neutral-900",

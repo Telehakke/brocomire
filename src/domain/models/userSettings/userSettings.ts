@@ -8,6 +8,7 @@ import { ContentFit } from "./valueObjects/contentFit";
 import { DisplayMode } from "./valueObjects/displayMode";
 import { IsSafeAreaEnabled } from "./valueObjects/isSafeAreaEnabled";
 import { IsSmoothScrollEnabled } from "./valueObjects/isSmoothScrollEnabled";
+import { LongPressRecognitionTime } from "./valueObjects/longPressRecognitionTime";
 import { ScrollSpeed } from "./valueObjects/scrollSpeed";
 import { ScrollStepCount } from "./valueObjects/scrollStepCount";
 import { SharpeningFilterStrength } from "./valueObjects/sharpeningFilterStrength";
@@ -26,6 +27,7 @@ type UserSettingsValue = Readonly<{
     histories: HistoryList;
     isSafeAreaEnabled: IsSafeAreaEnabled;
     isSmoothScrollEnabled: IsSmoothScrollEnabled;
+    longPressRecognitionTime: LongPressRecognitionTime;
     scrollSpeed: ScrollSpeed;
     scrollStepCount: ScrollStepCount;
     sharpeningFilterStrength: SharpeningFilterStrength;
@@ -56,6 +58,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
                 histories: new HistoryList(),
                 isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(),
                 isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(),
+                longPressRecognitionTime: LongPressRecognitionTime.createSafe(),
                 scrollSpeed: ScrollSpeed.createSafe(),
                 scrollStepCount: ScrollStepCount.createSafe(),
                 sharpeningFilterStrength: SharpeningFilterStrength.createSafe(),
@@ -81,6 +84,9 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             ),
             isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(
                 v.isSmoothScrollEnabled,
+            ),
+            longPressRecognitionTime: LongPressRecognitionTime.createSafe(
+                v.longPressRecognitionTime,
             ),
             scrollSpeed: ScrollSpeed.createSafe(v.scrollSpeed),
             scrollStepCount: ScrollStepCount.createSafe(v.scrollStepCount),
@@ -126,6 +132,10 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
 
     get isSmoothScrollEnabled(): IsSmoothScrollEnabled {
         return this.value.isSmoothScrollEnabled;
+    }
+
+    get longPressRecognitionTime(): LongPressRecognitionTime {
+        return this.value.longPressRecognitionTime;
     }
 
     get scrollSpeed(): ScrollSpeed {
@@ -209,6 +219,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             histories,
             isSafeAreaEnabled,
             isSmoothScrollEnabled,
+            longPressRecognitionTime,
             scrollSpeed,
             scrollStepCount,
             sharpeningFilterStrength,
@@ -231,6 +242,8 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
                 isSafeAreaEnabled ?? this.value.isSafeAreaEnabled,
             isSmoothScrollEnabled:
                 isSmoothScrollEnabled ?? this.value.isSmoothScrollEnabled,
+            longPressRecognitionTime:
+                longPressRecognitionTime ?? this.value.longPressRecognitionTime,
             scrollSpeed: scrollSpeed ?? this.value.scrollSpeed,
             scrollStepCount: scrollStepCount ?? this.value.scrollStepCount,
             sharpeningFilterStrength:

@@ -13,6 +13,7 @@ import { ContentFitSegmentGroup } from "./items/ContentFitSegmentGroup";
 import { DisplayModeSegmentGroup } from "./items/DisplayModeSegmentGroup";
 import { IsSafeAreaEnabledSwitch } from "./items/IsSafeAreaEnabledSwitch";
 import { IsSmoothScrollEnabledSwitch } from "./items/IsSmoothScrollEnabledSwitch";
+import { LongPressRecognitionTimeSlider } from "./items/LongPressRecognitionTimeSlider";
 import { ScrollSpeedSlider } from "./items/ScrollSpeedSlider";
 import { ScrollStepCountSegmentGroup } from "./items/ScrollStepCountSegmentGroup";
 import { SelectPageSlider } from "./items/SelectPageSlider";
@@ -75,11 +76,14 @@ export const SideMenu = (): JSX.Element => {
                     <ZoomStepSlider />
                 </Card>
                 <Card
-                    footer={`左右どちらをタップしても次に進みます\n右クリック、またはロングタッチで前へ戻ります`}
+                    footer={`左右どちらをタップしても次に進みます\n右クリック、または長押しで前へ戻ります`}
                 >
                     <TapAreaWidthSegmentGroup />
                     <TapAreaHeightSegmentGroup />
                     <ShouldAdvanceSwitch />
+                </Card>
+                <Card>
+                    <LongPressRecognitionTimeSlider />
                 </Card>
                 <Card
                     footer={`垂直スクロール：左右端をスクロール\n水平スクロール：下端をスクロール`}

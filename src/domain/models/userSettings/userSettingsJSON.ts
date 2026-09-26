@@ -4,6 +4,7 @@ import type { ContentFitType } from "./valueObjects/contentFit";
 import type { DisplayModeType } from "./valueObjects/displayMode";
 import type { IsSafeAreaEnabledJSON } from "./valueObjects/isSafeAreaEnabled";
 import type { IsSmoothScrollEnabledJSON } from "./valueObjects/isSmoothScrollEnabled";
+import type { LongPressRecognitionTimeJSON } from "./valueObjects/longPressRecognitionTime";
 import type { ScrollSpeedJSON } from "./valueObjects/scrollSpeed";
 import type { ScrollStepCountType } from "./valueObjects/scrollStepCount";
 import type { SharpeningFilterStrengthJSON } from "./valueObjects/sharpeningFilterStrength";
@@ -22,6 +23,7 @@ export type UserSettingsJSON = Readonly<{
     histories: readonly HistoryJSON[];
     isSafeAreaEnabled: IsSafeAreaEnabledJSON;
     isSmoothScrollEnabled: IsSmoothScrollEnabledJSON;
+    longPressRecognitionTime: LongPressRecognitionTimeJSON;
     scrollSpeed: ScrollSpeedJSON;
     scrollStepCount: ScrollStepCountType;
     sharpeningFilterStrength: SharpeningFilterStrengthJSON;
