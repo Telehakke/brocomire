@@ -14,6 +14,7 @@ import { DisplayModeSegmentGroup } from "./items/DisplayModeSegmentGroup";
 import { IsSafeAreaEnabledSwitch } from "./items/IsSafeAreaEnabledSwitch";
 import { IsSmoothScrollEnabledSwitch } from "./items/IsSmoothScrollEnabledSwitch";
 import { LongPressRecognitionTimeSlider } from "./items/LongPressRecognitionTimeSlider";
+import { SafeAreaLengthSlider } from "./items/SafeAreaLengthSlider";
 import { ScrollSpeedSlider } from "./items/ScrollSpeedSlider";
 import { ScrollStepCountSegmentGroup } from "./items/ScrollStepCountSegmentGroup";
 import { SelectPageSlider } from "./items/SelectPageSlider";
@@ -33,7 +34,7 @@ export const SideMenu = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleOpenChange = (open: boolean): void => {
-        setAppState((a) => a.copyWith({ isOpenSideMenu: open }));
+        setAppState((a) => a.setIsOpenSideMenu(() => open));
     };
 
     return (
@@ -61,6 +62,7 @@ export const SideMenu = (): JSX.Element => {
                 <Card footer="ディスプレイのノッチやパンチホールなどを避けてコンテンツを表示します">
                     <ContentFitSegmentGroup />
                     <IsSafeAreaEnabledSwitch />
+                    <SafeAreaLengthSlider />
                 </Card>
                 <Card
                     footer={`1：1枚の画像を表示\n1・2：表紙だけ1枚、以降は2枚\n2：2枚の画像を並べて表示`}

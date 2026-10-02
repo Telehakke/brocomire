@@ -9,6 +9,7 @@ import { DisplayMode } from "./valueObjects/displayMode";
 import { IsSafeAreaEnabled } from "./valueObjects/isSafeAreaEnabled";
 import { IsSmoothScrollEnabled } from "./valueObjects/isSmoothScrollEnabled";
 import { LongPressRecognitionTime } from "./valueObjects/longPressRecognitionTime";
+import { SafeAreaLength } from "./valueObjects/safeAreaLength";
 import { ScrollSpeed } from "./valueObjects/scrollSpeed";
 import { ScrollStepCount } from "./valueObjects/scrollStepCount";
 import { SharpeningFilterStrength } from "./valueObjects/sharpeningFilterStrength";
@@ -28,6 +29,7 @@ type UserSettingsValue = Readonly<{
     isSafeAreaEnabled: IsSafeAreaEnabled;
     isSmoothScrollEnabled: IsSmoothScrollEnabled;
     longPressRecognitionTime: LongPressRecognitionTime;
+    safeAreaLength: SafeAreaLength;
     scrollSpeed: ScrollSpeed;
     scrollStepCount: ScrollStepCount;
     sharpeningFilterStrength: SharpeningFilterStrength;
@@ -59,6 +61,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
                 isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(),
                 isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(),
                 longPressRecognitionTime: LongPressRecognitionTime.createSafe(),
+                safeAreaLength: SafeAreaLength.createSafe(),
                 scrollSpeed: ScrollSpeed.createSafe(),
                 scrollStepCount: ScrollStepCount.createSafe(),
                 sharpeningFilterStrength: SharpeningFilterStrength.createSafe(),
@@ -88,6 +91,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             longPressRecognitionTime: LongPressRecognitionTime.createSafe(
                 v.longPressRecognitionTime,
             ),
+            safeAreaLength: SafeAreaLength.createSafe(v.safeAreaLength),
             scrollSpeed: ScrollSpeed.createSafe(v.scrollSpeed),
             scrollStepCount: ScrollStepCount.createSafe(v.scrollStepCount),
             sharpeningFilterStrength: SharpeningFilterStrength.createSafe(
@@ -136,6 +140,10 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
 
     get longPressRecognitionTime(): LongPressRecognitionTime {
         return this.value.longPressRecognitionTime;
+    }
+
+    get safeAreaLength(): SafeAreaLength {
+        return this.value.safeAreaLength;
     }
 
     get scrollSpeed(): ScrollSpeed {
@@ -189,6 +197,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             this.value.isSmoothScrollEnabled.equals(
                 other.value.isSmoothScrollEnabled,
             ) &&
+            this.value.safeAreaLength.equals(other.value.safeAreaLength) &&
             this.value.scrollSpeed.equals(other.value.scrollSpeed) &&
             this.value.scrollStepCount.equals(other.value.scrollStepCount) &&
             this.value.sharpeningFilterStrength.equals(
@@ -210,8 +219,167 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
         );
     }
 
+    setBookFormat(
+        callback: (prev: UserSettingsValue) => BookFormat,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ bookFormat: callback(this.value) }, repository);
+    }
+
+    setContentFit(
+        callback: (prev: UserSettingsValue) => ContentFit,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ contentFit: callback(this.value) }, repository);
+    }
+
+    setDisplayMode(
+        callback: (prev: UserSettingsValue) => DisplayMode,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ displayMode: callback(this.value) }, repository);
+    }
+
+    setHistories(
+        callback: (prev: UserSettingsValue) => HistoryList,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ histories: callback(this.value) }, repository);
+    }
+
+    setIsSafeAreaEnabled(
+        callback: (prev: UserSettingsValue) => IsSafeAreaEnabled,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { isSafeAreaEnabled: callback(this.value) },
+            repository,
+        );
+    }
+
+    setIsSmoothScrollEnabled(
+        callback: (prev: UserSettingsValue) => IsSmoothScrollEnabled,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { isSmoothScrollEnabled: callback(this.value) },
+            repository,
+        );
+    }
+
+    setLongPressRecognitionTime(
+        callback: (prev: UserSettingsValue) => LongPressRecognitionTime,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { longPressRecognitionTime: callback(this.value) },
+            repository,
+        );
+    }
+
+    setSafeAreaLength(
+        callback: (prev: UserSettingsValue) => SafeAreaLength,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { safeAreaLength: callback(this.value) },
+            repository,
+        );
+    }
+
+    setScrollSpeed(
+        callback: (prev: UserSettingsValue) => ScrollSpeed,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ scrollSpeed: callback(this.value) }, repository);
+    }
+
+    setScrollStepCount(
+        callback: (prev: UserSettingsValue) => ScrollStepCount,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { scrollStepCount: callback(this.value) },
+            repository,
+        );
+    }
+
+    setSharpeningFilterStrength(
+        callback: (prev: UserSettingsValue) => SharpeningFilterStrength,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { sharpeningFilterStrength: callback(this.value) },
+            repository,
+        );
+    }
+
+    setShouldAdvance(
+        callback: (prev: UserSettingsValue) => ShouldAdvance,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { shouldAdvance: callback(this.value) },
+            repository,
+        );
+    }
+
+    setShouldPreload(
+        callback: (prev: UserSettingsValue) => ShouldPreload,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { shouldPreload: callback(this.value) },
+            repository,
+        );
+    }
+
+    setShouldShowFullscreenButton(
+        callback: (prev: UserSettingsValue) => ShouldShowFullscreenButton,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { shouldShowFullscreenButton: callback(this.value) },
+            repository,
+        );
+    }
+
+    setShouldShowInvertButton(
+        callback: (prev: UserSettingsValue) => ShouldShowInvertButton,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { shouldShowInvertButton: callback(this.value) },
+            repository,
+        );
+    }
+
+    setShouldShowSharpeningFilterButton(
+        callback: (prev: UserSettingsValue) => ShouldShowSharpeningFilterButton,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith(
+            { shouldShowSharpeningFilterButton: callback(this.value) },
+            repository,
+        );
+    }
+
+    setTapAreaSize(
+        callback: (prev: UserSettingsValue) => TapAreaSize,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ tapAreaSize: callback(this.value) }, repository);
+    }
+
+    setZoomStep(
+        callback: (prev: UserSettingsValue) => ZoomStep,
+        repository: UserSettingsRepository,
+    ): UserSettings {
+        return this.copyWith({ zoomStep: callback(this.value) }, repository);
+    }
+
     /** 指定した項目を上書きした新しいインスタンスを返す */
-    copyWith(
+    private copyWith(
         {
             bookFormat,
             contentFit,
@@ -220,6 +388,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
             isSafeAreaEnabled,
             isSmoothScrollEnabled,
             longPressRecognitionTime,
+            safeAreaLength,
             scrollSpeed,
             scrollStepCount,
             sharpeningFilterStrength,
@@ -244,6 +413,7 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
                 isSmoothScrollEnabled ?? this.value.isSmoothScrollEnabled,
             longPressRecognitionTime:
                 longPressRecognitionTime ?? this.value.longPressRecognitionTime,
+            safeAreaLength: safeAreaLength ?? this.value.safeAreaLength,
             scrollSpeed: scrollSpeed ?? this.value.scrollSpeed,
             scrollStepCount: scrollStepCount ?? this.value.scrollStepCount,
             sharpeningFilterStrength:

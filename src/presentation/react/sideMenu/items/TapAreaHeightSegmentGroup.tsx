@@ -14,12 +14,11 @@ export const TapAreaHeightSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    tapAreaSize: u.tapAreaSize.copyWith({
+            u.setTapAreaSize(
+                (v) =>
+                    v.tapAreaSize.copyWith({
                         height: value as TapAreaSizeType,
                     }),
-                },
                 new LocalStorageUserSettingsRepository(),
             ),
         );

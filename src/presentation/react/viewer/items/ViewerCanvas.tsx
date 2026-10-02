@@ -14,6 +14,7 @@ import type { FileManager } from "../../../../domain/models/file/fileManager";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import type { ContentFit } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
+import { SafeAreaLength } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
 import { AppStateAtom, Atom, UserSettingsAtom } from "../../../atoms";
 import {
@@ -88,15 +89,14 @@ export const ViewerCanvas = (): JSX.Element => {
     const contentFit = useAtomValue(UserSettingsAtom.contentFit);
     const displayMode = useAtomValue(UserSettingsAtom.displayMode);
     const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+    const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas == null) return;
         setAppState((a) =>
-            a.copyWith({
-                viewerManager: a.viewerManager.setCanvas(() => canvas),
-            }),
+            a.setViewerManager((v) => v.viewerManager.setCanvas(() => canvas)),
         );
     }, [setAppState]);
 
@@ -134,7 +134,11 @@ export const ViewerCanvas = (): JSX.Element => {
             <canvas
                 className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
                 style={{
-                    ...safeAriaStyle(isSafeAreaEnabled.value, isLandscape),
+                    ...safeAriaStyle(
+                        isSafeAreaEnabled.value,
+                        isLandscape,
+                        safeAreaLength,
+                    ),
                     ...canvasStyle(imageSize, contentFit, viewerManager),
                 }}
                 ref={canvasRef}
@@ -149,17 +153,25 @@ export const ViewerCanvas = (): JSX.Element => {
 const safeAriaStyle = (
     isSafeAreaEnabled: boolean,
     isLandscape: boolean,
+    safeAreaLength: SafeAreaLength,
 ): CSSProperties => {
     if (!isSafeAreaEnabled) return {};
-    if (isLandscape)
-        return {
-            ...safeAreaPaddingLeft(),
-            ...safeAreaPaddingRight(),
-        };
-    return {
-        ...safeAreaPaddingTop(),
-        ...safeAreaPaddingBottom(),
-    };
+    if (isLandscape) return landscapeStyle(safeAreaLength);
+    return portraitStyle(safeAreaLength);
+};
+
+const landscapeStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+    if (safeAreaLength.isMin())
+        return { ...safeAreaPaddingLeft(), ...safeAreaPaddingRight() };
+    const value = `${safeAreaLength.value}px`;
+    return { paddingLeft: value, paddingRight: value };
+};
+
+const portraitStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+    if (safeAreaLength.isMin())
+        return { ...safeAreaPaddingTop(), ...safeAreaPaddingBottom() };
+    const value = `${safeAreaLength.value}px`;
+    return { paddingTop: value, paddingBottom: value };
 };
 
 const canvasStyle = (

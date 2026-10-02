@@ -11,8 +11,8 @@ export const IsSafeAreaEnabledSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(checked) },
+            u.setIsSafeAreaEnabled(
+                () => IsSafeAreaEnabled.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

@@ -22,7 +22,7 @@ const SharpeningFilterIconBlueButton = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleClick = (): void => {
-        setAppState((a) => a.copyWith({ onSharpeningFilter: false }));
+        setAppState((a) => a.setOnSharpeningFilter(() => false));
     };
 
     return (
@@ -38,7 +38,7 @@ const SharpeningFilterIconButton = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleClick = (): void => {
-        setAppState((a) => a.copyWith({ onSharpeningFilter: true }));
+        setAppState((a) => a.setOnSharpeningFilter(() => true));
     };
 
     return (

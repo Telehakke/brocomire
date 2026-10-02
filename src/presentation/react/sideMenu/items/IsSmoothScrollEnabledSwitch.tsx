@@ -13,11 +13,8 @@ export const IsSmoothScrollEnabledSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    isSmoothScrollEnabled:
-                        IsSmoothScrollEnabled.createSafe(checked),
-                },
+            u.setIsSmoothScrollEnabled(
+                () => IsSmoothScrollEnabled.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

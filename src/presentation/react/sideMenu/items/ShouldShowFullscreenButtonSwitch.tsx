@@ -13,11 +13,8 @@ export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    shouldShowFullscreenButton:
-                        ShouldShowFullscreenButton.createSafe(checked),
-                },
+            u.setShouldShowFullscreenButton(
+                () => ShouldShowFullscreenButton.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

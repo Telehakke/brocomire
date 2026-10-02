@@ -13,7 +13,7 @@ export const NotificationView = (): JSX.Element | null => {
         window.clearTimeout(timerId.current);
         timerId.current = window.setTimeout(() => {
             setAppState((a) =>
-                a.copyWith({ notification: a.notification.hidden() }),
+                a.setNotification((v) => v.notification.hidden()),
             );
         }, 1000);
     }, [notification, setAppState]);
@@ -45,7 +45,7 @@ const Text = (): JSX.Element => {
 
     const handleAnimationEnd = (): void => {
         if (notification.visibility !== "hidden") return;
-        setAppState((a) => a.copyWith({ notification: a.notification.none() }));
+        setAppState((a) => a.setNotification((v) => v.notification.none()));
     };
 
     return (

@@ -12,7 +12,7 @@ export class LandscapeMonitor {
     /** デバイス方向を一度だけ確認 */
     runOnce(): void {
         this.appStore.set((a) =>
-            a.copyWith({ isLandscape: this.mediaQuery.matches }),
+            a.setIsLandscape(() => this.mediaQuery.matches),
         );
     }
 
@@ -27,6 +27,6 @@ export class LandscapeMonitor {
     }
 
     private handleChange = (ev: MediaQueryListEvent): void => {
-        this.appStore.set((a) => a.copyWith({ isLandscape: ev.matches }));
+        this.appStore.set((a) => a.setIsLandscape(() => ev.matches));
     };
 }

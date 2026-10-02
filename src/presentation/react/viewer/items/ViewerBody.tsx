@@ -39,9 +39,7 @@ export const ViewerBody = ({
         const body = bodyRef.current;
         if (body == null) return;
         setAppState((a) =>
-            a.copyWith({
-                viewerManager: a.viewerManager.setBody(() => body),
-            }),
+            a.setViewerManager((v) => v.viewerManager.setBody(() => body)),
         );
     }, [setAppState]);
 
@@ -91,10 +89,9 @@ export const ViewerBody = ({
             pullManager.current.reset();
         }
         setAppState((a) =>
-            a.copyWith({
-                chevronMark: pullManager.current.getChevronMark(),
-                isUserScrolled: true,
-            }),
+            a
+                .setChevronMark(() => pullManager.current.getChevronMark())
+                .setIsUserScrolled(() => true),
         );
     };
 
@@ -102,13 +99,11 @@ export const ViewerBody = ({
         clickGestureManager.current.cancelLongPress();
         pullManager.current.onLeftSidePull(onLeftSidePull);
         pullManager.current.onRightSidePull(onRightSidePull);
-        setAppState((a) =>
-            a.copyWith({ chevronMark: new ChevronMark("none") }),
-        );
+        setAppState((a) => a.setChevronMark(() => new ChevronMark("none")));
     };
 
     const handleWheel = (): void => {
-        setAppState((a) => a.copyWith({ isUserScrolled: true }));
+        setAppState((a) => a.setIsUserScrolled(() => true));
     };
 
     return (

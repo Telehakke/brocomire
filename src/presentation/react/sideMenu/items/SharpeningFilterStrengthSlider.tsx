@@ -12,11 +12,8 @@ export const SharpeningFilterStrengthSlider = (): JSX.Element => {
 
     const handleValueChangedEnd = (value: number): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    sharpeningFilterStrength:
-                        SharpeningFilterStrength.createSafe(value),
-                },
+            u.setSharpeningFilterStrength(
+                () => SharpeningFilterStrength.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

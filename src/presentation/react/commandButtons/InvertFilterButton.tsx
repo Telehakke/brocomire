@@ -22,7 +22,7 @@ const InvertIconBlueButton = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleClick = (): void => {
-        setAppState((a) => a.copyWith({ onInvertFilter: false }));
+        setAppState((a) => a.setOnInvertFilter(() => false));
     };
 
     return (
@@ -38,7 +38,7 @@ const InvertIconButton = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleClick = (): void => {
-        setAppState((a) => a.copyWith({ onInvertFilter: true }));
+        setAppState((a) => a.setOnInvertFilter(() => true));
     };
 
     return (

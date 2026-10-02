@@ -2,6 +2,8 @@ import type { FileManager } from "../../domain/models/file/fileManager";
 import { ScrollPct2D } from "../../domain/models/scroll/scrollPct2D";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 import type { UserSettingsStore } from "../../domain/models/userSettings/userSettingsStore";
+import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
+import type { AppState } from "../appState/appState";
 import type { AppStore } from "../appState/appStore";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
@@ -17,13 +19,9 @@ export const openZipFile = async (
     const { bookFormat } = userSettingsStore.get();
     const hashedFileName = await calculateHash(fileName);
     appStore.set((a) =>
-        a.copyWith({
-            fileManager,
-            hashedFileName,
-            onViewer: true,
-            scrollPct2D: ScrollPct2D.fromBookFormat(bookFormat, true),
-        }),
+        getNextAppState(a, fileManager, hashedFileName, bookFormat),
     );
+
     userSettingsStore.set((u) => {
         const histories = u.histories.tryPrepend(hashedFileName);
         moveToIndexPage(
@@ -31,9 +29,11 @@ export const openZipFile = async (
             appStore,
             userSettingsStore.get(),
         );
-        return u.copyWith({ histories }, userSettingsRepository);
+        return u.setHistories(() => histories, userSettingsRepository);
     });
 };
+
+/* -------------------------------------------------------------------------- */
 
 /** ハッシュ値を生成する */
 const calculateHash = async (value: string): Promise<string> => {
@@ -48,4 +48,17 @@ const calculateHash = async (value: string): Promise<string> => {
         // 開発サーバーではcryptoがエラーを投げる。その場合、入力値をそのまま返す
         return value;
     }
+};
+
+const getNextAppState = (
+    prev: AppState,
+    fileManager: FileManager,
+    fileName: string,
+    bookFormat: BookFormat,
+): AppState => {
+    return prev
+        .setFileManager(() => fileManager)
+        .setHashedFileName(() => fileName)
+        .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, true))
+        .setOnViewer(() => true);
 };

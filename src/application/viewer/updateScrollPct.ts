@@ -4,12 +4,13 @@ import type { AppStore } from "../appState/appStore";
 export const updateScrollPct2D = (appStore: AppStore): void => {
     if (!appStore.get().isUserScrolled) return;
     appStore.set((a) =>
-        a.copyWith({
-            isUserScrolled: false,
-            scrollPct2D: a.scrollPct2D.update(
-                a.viewerManager.scrollXPct(),
-                a.viewerManager.scrollYPct(),
+        a
+            .setIsUserScrolled(() => false)
+            .setScrollPct2D((v) =>
+                v.scrollPct2D.update(
+                    v.viewerManager.scrollXPct(),
+                    v.viewerManager.scrollYPct(),
+                ),
             ),
-        }),
     );
 };

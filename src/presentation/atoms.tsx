@@ -64,6 +64,7 @@ export const UserSettingsAtom = {
     isSafeAreaEnabled: selectAtom(Atom.userSettings, (u) => u.isSafeAreaEnabled),
     isSmoothScrollEnabled: selectAtom(Atom.userSettings, (u) => u.isSmoothScrollEnabled),
     longPressRecognitionTime: selectAtom(Atom.userSettings, (u) => u.longPressRecognitionTime),
+    safeAreaLength: selectAtom(Atom.userSettings, (u) => u.safeAreaLength),
     scrollSpeed: selectAtom(Atom.userSettings, (u) => u.scrollSpeed),
     scrollStepCount: selectAtom(Atom.userSettings, (u) => u.scrollStepCount),
     sharpeningFilterStrength: selectAtom(Atom.userSettings, (u) => u.sharpeningFilterStrength),

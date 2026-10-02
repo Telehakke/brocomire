@@ -21,7 +21,7 @@ export const Menu = (): JSX.Element | null => {
     const handleAnimationEnd = (): void => {
         if (infoVisibility.value !== "hidden") return;
         setAppState((a) =>
-            a.copyWith({ infoVisibility: new InfoVisibility("none") }),
+            a.setInfoVisibility(() => new InfoVisibility("none")),
         );
     };
 
@@ -34,7 +34,10 @@ export const Menu = (): JSX.Element | null => {
         >
             <div
                 className="fixed top-4 left-4 flex gap-4"
-                style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingLeft() }}
+                style={{
+                    ...safeAreaPaddingTop(),
+                    ...safeAreaPaddingLeft(),
+                }}
             >
                 <SideMenuOpenButton />
                 <SharpeningFilterButton />
@@ -43,7 +46,10 @@ export const Menu = (): JSX.Element | null => {
             </div>
             <div
                 className="fixed top-4 right-4 flex gap-2 text-xs"
-                style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingRight() }}
+                style={{
+                    ...safeAreaPaddingTop(),
+                    ...safeAreaPaddingRight(),
+                }}
             >
                 <PageNumber />
                 <ClockView />

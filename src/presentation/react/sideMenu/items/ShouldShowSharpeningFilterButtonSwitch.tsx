@@ -13,11 +13,8 @@ export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    shouldShowSharpeningFilterButton:
-                        ShouldShowSharpeningFilterButton.createSafe(checked),
-                },
+            u.setShouldShowSharpeningFilterButton(
+                () => ShouldShowSharpeningFilterButton.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

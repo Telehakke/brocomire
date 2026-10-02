@@ -7,10 +7,8 @@ export const scrollByXPct = (
     appStore: AppStore,
     userSettings: UserSettings,
 ): void => {
-    appStore.set((a) => {
-        a.viewerManager.scrollByPx(amount * userSettings.scrollSpeed.value, 0);
-        return a.copyWith({
-            isUserScrolled: true,
-        });
-    });
+    const { viewerManager } = appStore.get();
+    const { scrollSpeed } = userSettings;
+    viewerManager.scrollByPx(amount * scrollSpeed.value, 0);
+    appStore.set((a) => a.setIsUserScrolled(() => true));
 };

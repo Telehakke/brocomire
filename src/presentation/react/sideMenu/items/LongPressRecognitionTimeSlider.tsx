@@ -13,11 +13,8 @@ export const LongPressRecognitionTimeSlider = (): JSX.Element => {
 
     const handleValueChangeEnd = (value: number): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    longPressRecognitionTime:
-                        LongPressRecognitionTime.createSafe(value),
-                },
+            u.setLongPressRecognitionTime(
+                () => LongPressRecognitionTime.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

@@ -11,8 +11,8 @@ export const ShouldPreloadSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { shouldPreload: ShouldPreload.createSafe(checked) },
+            u.setShouldPreload(
+                () => ShouldPreload.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

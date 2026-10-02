@@ -10,13 +10,12 @@ export const updateHistory = (
     userSettingsRepository: UserSettingsRepository,
 ): void => {
     const { fileManager, hashedFileName } = appState;
-    userSettingsStore.set((a) =>
-        a.copyWith(
-            {
-                histories: a.histories.update(
+    userSettingsStore.set((u) =>
+        u.setHistories(
+            (v) =>
+                v.histories.update(
                     History.createSafe(hashedFileName, fileManager.getIndex()),
                 ),
-            },
             userSettingsRepository,
         ),
     );

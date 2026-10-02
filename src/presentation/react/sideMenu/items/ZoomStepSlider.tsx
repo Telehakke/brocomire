@@ -12,8 +12,8 @@ export const ZoomStepSlider = (): JSX.Element => {
 
     const handleValueChangedEnd = (value: number): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { zoomStep: ZoomStep.createSafe(value) },
+            u.setZoomStep(
+                () => ZoomStep.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

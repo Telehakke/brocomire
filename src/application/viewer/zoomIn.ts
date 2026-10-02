@@ -7,15 +7,17 @@ export const zoomIn = (
     userSettings: UserSettings,
 ): void => {
     const { zoomStep } = userSettings;
-    appStore.set((a) => {
-        const zoomPct = a.zoomPct.zoomIn(zoomStep.value);
-        return a.copyWith({
-            notification: a.notification.setMessage(`${zoomPct.value}%`),
-            scrollPct2D: a.scrollPct2D.update(
-                a.viewerManager.scrollXPct(),
-                a.viewerManager.scrollYPct(),
+    appStore.set((a) =>
+        a
+            .setZoomPct((v) => v.zoomPct.zoomIn(zoomStep.value))
+            .setNotification((v) =>
+                v.notification.setMessage(`${v.zoomPct.value}%`),
+            )
+            .setScrollPct2D((v) =>
+                v.scrollPct2D.update(
+                    v.viewerManager.scrollXPct(),
+                    v.viewerManager.scrollYPct(),
+                ),
             ),
-            zoomPct,
-        });
-    });
+    );
 };

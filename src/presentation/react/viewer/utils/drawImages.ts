@@ -22,7 +22,7 @@ export const drawImages = (
         const { scrollPct2D, viewerManager } = appStore.get();
         viewerManager.scrollToPct(scrollPct2D.x, scrollPct2D.y);
         appStore.set((a) =>
-            a.copyWith({ imageSize: new ImageSize({ width, height }) }),
+            a.setImageSize(() => new ImageSize({ width, height })),
         );
     }, 10);
 };

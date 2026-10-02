@@ -14,8 +14,8 @@ export const DisplayModeSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { displayMode: DisplayMode.createSafe(value) },
+            u.setDisplayMode(
+                () => DisplayMode.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

@@ -14,8 +14,8 @@ export const BookFormatSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { bookFormat: BookFormat.createSafe(value) },
+            u.setBookFormat(
+                () => BookFormat.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

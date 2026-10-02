@@ -8,7 +8,7 @@ export const SideMenuOpenButton = (): JSX.Element => {
     const setAppState = useSetAtom(Atom.appState);
 
     const handleClick = (): void => {
-        setAppState((a) => a.copyWith({ isOpenSideMenu: true }));
+        setAppState((a) => a.setIsOpenSideMenu(() => true));
     };
 
     return (

@@ -61,18 +61,19 @@ export const ImageViewer = (): JSX.Element => {
     const moveToRightPage = useSetAtom(moveToRightPageAtom);
 
     const handleResize = (): void => {
-        setAppState((a) =>
-            a.copyWith({ viewerManager: a.viewerManager.copy() }),
-        );
+        setAppState((a) => a.setViewerManager((v) => v.viewerManager.copy()));
     };
 
     const handleClick = (): void => {
         setAppState((a) =>
-            a.copyWith({
-                infoVisibility: new InfoVisibility(
-                    a.infoVisibility.value === "visible" ? "hidden" : "visible",
-                ),
-            }),
+            a.setInfoVisibility(
+                (v) =>
+                    new InfoVisibility(
+                        v.infoVisibility.value === "visible"
+                            ? "hidden"
+                            : "visible",
+                    ),
+            ),
         );
     };
 

@@ -14,12 +14,9 @@ export const TapAreaWidthSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    tapAreaSize: u.tapAreaSize.copyWith({
-                        width: value as TapAreaSizeType,
-                    }),
-                },
+            u.setTapAreaSize(
+                (v) =>
+                    v.tapAreaSize.copyWith({ width: value as TapAreaSizeType }),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

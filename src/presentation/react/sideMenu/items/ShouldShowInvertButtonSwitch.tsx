@@ -13,11 +13,8 @@ export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                {
-                    shouldShowInvertButton:
-                        ShouldShowInvertButton.createSafe(checked),
-                },
+            u.setShouldShowInvertButton(
+                () => ShouldShowInvertButton.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

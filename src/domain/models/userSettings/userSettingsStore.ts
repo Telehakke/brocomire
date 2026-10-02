@@ -2,5 +2,5 @@ import type { UserSettings } from "./userSettings";
 
 export interface UserSettingsStore {
     get(): UserSettings;
-    set(callback: (userSettings: UserSettings) => UserSettings): void;
+    set(callback: (prev: UserSettings) => UserSettings): void;
 }

@@ -14,8 +14,8 @@ export const ScrollStepCountSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { scrollStepCount: ScrollStepCount.createSafe(value) },
+            u.setScrollStepCount(
+                () => ScrollStepCount.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

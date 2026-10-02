@@ -98,7 +98,77 @@ export class AppState {
         return this.value.zoomPct;
     }
 
-    copyWith({
+    setCache(callback: (prev: AppStateValue) => Cache): AppState {
+        return this.copyWith({ cache: callback(this.value) });
+    }
+
+    setChevronMark(callback: (prev: AppStateValue) => ChevronMark): AppState {
+        return this.copyWith({ chevronMark: callback(this.value) });
+    }
+
+    setFileManager(callback: (prev: AppStateValue) => FileManager): AppState {
+        return this.copyWith({ fileManager: callback(this.value) });
+    }
+
+    setHashedFileName(callback: (prev: AppStateValue) => string): AppState {
+        return this.copyWith({ hashedFileName: callback(this.value) });
+    }
+
+    setImageSize(callback: (prev: AppStateValue) => ImageSize): AppState {
+        return this.copyWith({ imageSize: callback(this.value) });
+    }
+
+    setInfoVisibility(
+        callback: (prev: AppStateValue) => InfoVisibility,
+    ): AppState {
+        return this.copyWith({ infoVisibility: callback(this.value) });
+    }
+
+    setIsLandscape(callback: (prev: AppStateValue) => boolean): AppState {
+        return this.copyWith({ isLandscape: callback(this.value) });
+    }
+
+    setIsOpenSideMenu(callback: (prev: AppStateValue) => boolean): AppState {
+        return this.copyWith({ isOpenSideMenu: callback(this.value) });
+    }
+
+    setIsUserScrolled(callback: (prev: AppStateValue) => boolean): AppState {
+        return this.copyWith({ isUserScrolled: callback(this.value) });
+    }
+
+    setNotification(callback: (prev: AppStateValue) => Notification): AppState {
+        return this.copyWith({ notification: callback(this.value) });
+    }
+
+    setOnInvertFilter(callback: (prev: AppStateValue) => boolean): AppState {
+        return this.copyWith({ onInvertFilter: callback(this.value) });
+    }
+
+    setOnSharpeningFilter(
+        callback: (prev: AppStateValue) => boolean,
+    ): AppState {
+        return this.copyWith({ onSharpeningFilter: callback(this.value) });
+    }
+
+    setOnViewer(callback: (prev: AppStateValue) => boolean): AppState {
+        return this.copyWith({ onViewer: callback(this.value) });
+    }
+
+    setScrollPct2D(callback: (prev: AppStateValue) => ScrollPct2D): AppState {
+        return this.copyWith({ scrollPct2D: callback(this.value) });
+    }
+
+    setViewerManager(
+        callback: (prev: AppStateValue) => ViewerManager,
+    ): AppState {
+        return this.copyWith({ viewerManager: callback(this.value) });
+    }
+
+    setZoomPct(callback: (prev: AppStateValue) => ZoomPct): AppState {
+        return this.copyWith({ zoomPct: callback(this.value) });
+    }
+
+    private copyWith({
         cache,
         chevronMark,
         fileManager,

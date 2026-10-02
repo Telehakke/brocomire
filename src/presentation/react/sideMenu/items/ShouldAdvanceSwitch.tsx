@@ -11,8 +11,8 @@ export const ShouldAdvanceSwitch = (): JSX.Element => {
 
     const handleCheckedChange = (checked: boolean): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { shouldAdvance: ShouldAdvance.createSafe(checked) },
+            u.setShouldAdvance(
+                () => ShouldAdvance.createSafe(checked),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

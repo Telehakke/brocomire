@@ -12,8 +12,8 @@ export const ScrollSpeedSlider = (): JSX.Element => {
 
     const handleValueChangeEnd = (value: number): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { scrollSpeed: ScrollSpeed.createSafe(value) },
+            u.setScrollSpeed(
+                () => ScrollSpeed.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );

@@ -14,8 +14,8 @@ export const ContentFitSegmentGroup = (): JSX.Element => {
 
     const handleValueChange = (value: string | null): void => {
         setUserSettings((u) =>
-            u.copyWith(
-                { contentFit: ContentFit.createSafe(value) },
+            u.setContentFit(
+                () => ContentFit.createSafe(value),
                 new LocalStorageUserSettingsRepository(),
             ),
         );
