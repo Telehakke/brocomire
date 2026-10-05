@@ -22,10 +22,10 @@ export const LongPressRecognitionTimeSlider = (): JSX.Element => {
 
     return (
         <Slider
-            label={(v) => `長押しの認識時間：${(v / 1000).toFixed(1)}秒`}
+            label={(v) => `長押しの認識時間：${(v / 1000).toFixed(2)}秒`}
             min={LongPressRecognitionTime.MIN}
             max={LongPressRecognitionTime.MAX}
-            step={100}
+            step={50}
             value={value}
             onValueChange={setValue}
             onValueChangeEnd={handleValueChangeEnd}

@@ -26,7 +26,7 @@ export const ViewerBody = ({
     children: ReactNode;
 }): JSX.Element => {
     const bodyRef = useRef<Body>(null);
-    const clickGestureManager = useRef(new ClickGestureManager(true));
+    const clickGestureManager = useRef(new ClickGestureManager());
     const touchMoveManager = useRef(new TouchMoveManager(0, 0));
     const pullManager = useRef(new PullManager());
     const viewerManager = useAtomValue(AppStateAtom.viewerManager);
@@ -53,11 +53,7 @@ export const ViewerBody = ({
     }, [bodyRef, onResize]);
 
     const handleClick = (): void => {
-        clickGestureManager.current.onClick(onClick);
-    };
-
-    const handleDoubleClick = (): void => {
-        clickGestureManager.current.onDoubleClick(onDoubleClick);
+        clickGestureManager.current.onClick(onClick, onDoubleClick);
     };
 
     const handleContextMenu = (
@@ -111,7 +107,6 @@ export const ViewerBody = ({
             className="fixed inset-0 h-dvh w-dvw scrollbar-none overflow-scroll overscroll-none bg-black select-none"
             ref={bodyRef}
             onClick={handleClick}
-            onDoubleClick={handleDoubleClick}
             onContextMenu={handleContextMenu}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}

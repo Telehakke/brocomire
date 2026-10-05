@@ -8,8 +8,8 @@ declare const LongPressRecognitionTimeBrand: unique symbol;
 export class LongPressRecognitionTime extends ValueObject<LongPressRecognitionTimeJSON> {
     declare [LongPressRecognitionTimeBrand]: unknown;
 
-    static readonly MIN = 200;
-    static readonly MAX = 1000;
+    static readonly MIN = 100;
+    static readonly MAX = 500;
     static readonly DEFAULT = 500;
 
     private constructor(value: number) {

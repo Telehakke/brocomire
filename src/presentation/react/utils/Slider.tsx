@@ -63,12 +63,8 @@ const Root = (
 /* -------------------------------------------------------------------------- */
 
 const Label = (props: { children?: ReactNode }): JSX.Element => {
-    const className = {
-        _: "block text-sm",
-    };
-
     return (
-        <ArkSlider.Label className={Object.values(className).join(" ")}>
+        <ArkSlider.Label className="block text-sm tabular-nums">
             {props.children}
         </ArkSlider.Label>
     );
