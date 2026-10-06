@@ -25,7 +25,7 @@ export class TouchMoveManager {
     }
 
     private isScrolledPast(distance: number): boolean {
-        if (distance > 20) {
+        if (distance > 10) {
             this._isScrolled = true;
             return true;
         }
