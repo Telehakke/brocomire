@@ -6,24 +6,20 @@ import { previousOrigin } from "../shared/previousOrigin";
 import { VCenterValue } from "./values";
 
 export const VCenter: Origin = {
-    ...VCenterValue,
-    isInRange(value) {
-        return value === this.value;
-    },
-    isStart(bookFormat) {
-        return isOriginStart(this.name, bookFormat.value);
-    },
-    isEnd(bookFormat) {
-        return isOriginEnd(this.name, bookFormat.value);
-    },
-    next(bookFormat, scrollStepCount) {
-        return NextOrigin(this.name, bookFormat.value, scrollStepCount.value);
-    },
-    previous(bookFormat, scrollStepCount) {
-        return previousOrigin(
-            this.name,
-            bookFormat.value,
-            scrollStepCount.value,
-        );
-    },
+  ...VCenterValue,
+  isInRange(value) {
+    return value === this.value;
+  },
+  isStart(bookFormat) {
+    return isOriginStart(this.name, bookFormat.value);
+  },
+  isEnd(bookFormat) {
+    return isOriginEnd(this.name, bookFormat.value);
+  },
+  next(bookFormat, scrollStepCount) {
+    return NextOrigin(this.name, bookFormat.value, scrollStepCount.value);
+  },
+  previous(bookFormat, scrollStepCount) {
+    return previousOrigin(this.name, bookFormat.value, scrollStepCount.value);
+  },
 };

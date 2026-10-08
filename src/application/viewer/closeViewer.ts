@@ -7,21 +7,21 @@ import { updateHistory } from "./updateHistory";
 
 /** ビューアを閉じる */
 export const closeViewer = (
-    appStore: AppStore,
-    userSettingsStore: UserSettingsStore,
-    userSettingsRepository: UserSettingsRepository,
+  appStore: AppStore,
+  userSettingsStore: UserSettingsStore,
+  userSettingsRepository: UserSettingsRepository,
 ): void => {
-    updateHistory(appStore.get(), userSettingsStore, userSettingsRepository);
-    appStore.set(getNextAppState);
+  updateHistory(appStore.get(), userSettingsStore, userSettingsRepository);
+  appStore.set(getNextAppState);
 };
 
 /* -------------------------------------------------------------------------- */
 
 const getNextAppState = (prev: AppState): AppState => {
-    return prev
-        .setFileManager((a) => a.fileManager.clear())
-        .setHashedFileName(() => "")
-        .setZoomPct(() => ZoomPct.createSafe())
-        .setIsOpenSideMenu(() => false)
-        .setOnViewer(() => false);
+  return prev
+    .setFileManager((a) => a.fileManager.clear())
+    .setHashedFileName(() => "")
+    .setZoomPct(() => ZoomPct.createSafe())
+    .setIsOpenSideMenu(() => false)
+    .setOnViewer(() => false);
 };

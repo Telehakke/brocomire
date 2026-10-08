@@ -11,45 +11,39 @@ import { SideMenu } from "./presentation/react/sideMenu/SideMenu";
 import { ImageViewer } from "./presentation/react/viewer/ImageViewer";
 
 const updateHistoryAtom = atom(null, (get, set) => {
-    const appState = get(Atom.appState);
-    const userSettingsStore: UserSettingsStore = {
-        get: () => get(Atom.userSettings),
-        set: (callback) =>
-            set(Atom.userSettings, callback(get(Atom.userSettings))),
-    };
-    updateHistory(
-        appState,
-        userSettingsStore,
-        new LocalStorageUserSettingsRepository(),
-    );
+  const appState = get(Atom.appState);
+  const userSettingsStore: UserSettingsStore = {
+    get: () => get(Atom.userSettings),
+    set: (callback) => set(Atom.userSettings, callback(get(Atom.userSettings))),
+  };
+  updateHistory(appState, userSettingsStore, new LocalStorageUserSettingsRepository());
 });
 
 export const App = (): JSX.Element => {
-    const userSettings = useSetAtom(Atom.userSettings);
-    const updateHistory = useSetAtom(updateHistoryAtom);
-    const onViewer = useAtomValue(AppStateAtom.onViewer);
+  const userSettings = useSetAtom(Atom.userSettings);
+  const updateHistory = useSetAtom(updateHistoryAtom);
+  const onViewer = useAtomValue(AppStateAtom.onViewer);
 
-    useEffect(() => {
-        userSettings(new LocalStorageUserSettingsRepository().load());
-    }, [userSettings]);
+  useEffect(() => {
+    userSettings(new LocalStorageUserSettingsRepository().load());
+  }, [userSettings]);
 
-    useEffect(() => {
-        const handleChange = (): void => {
-            // ブラウザが最小化されたら履歴を更新
-            if (document.hidden) updateHistory();
-        };
-        document.addEventListener("visibilitychange", handleChange);
-        return (): void =>
-            document.removeEventListener("visibilitychange", handleChange);
-    }, [updateHistory]);
+  useEffect(() => {
+    const handleChange = (): void => {
+      // ブラウザが最小化されたら履歴を更新
+      if (document.hidden) updateHistory();
+    };
+    document.addEventListener("visibilitychange", handleChange);
+    return (): void => document.removeEventListener("visibilitychange", handleChange);
+  }, [updateHistory]);
 
-    if (!onViewer) return <Home />;
-    return (
-        <>
-            <ImageViewer />
-            <SideMenu />
-            <Menu />
-            <NotificationView />
-        </>
-    );
+  if (!onViewer) return <Home />;
+  return (
+    <>
+      <ImageViewer />
+      <SideMenu />
+      <Menu />
+      <NotificationView />
+    </>
+  );
 };

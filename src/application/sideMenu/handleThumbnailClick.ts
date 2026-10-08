@@ -6,18 +6,16 @@ import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
 /** サムネイルをクリックすると実行される処理 */
 export const handleThumbnailClick = (
-    index: number,
-    appStore: AppStore,
-    userSettings: UserSettings,
+  index: number,
+  appStore: AppStore,
+  userSettings: UserSettings,
 ): void => {
-    moveToIndexPage(index, appStore, userSettings);
-    appStore.set(getNextAppState);
+  moveToIndexPage(index, appStore, userSettings);
+  appStore.set(getNextAppState);
 };
 
 /* -------------------------------------------------------------------------- */
 
 const getNextAppState = (prev: AppState): AppState => {
-    return prev
-        .setZoomPct(() => ZoomPct.createSafe())
-        .setIsOpenSideMenu(() => false);
+  return prev.setZoomPct(() => ZoomPct.createSafe()).setIsOpenSideMenu(() => false);
 };

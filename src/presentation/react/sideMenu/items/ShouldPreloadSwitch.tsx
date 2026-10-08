@@ -6,23 +6,23 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldPreloadSwitch = (): JSX.Element => {
-    const shouldPreload = useAtomValue(UserSettingsAtom.shouldPreload);
-    const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldPreload = useAtomValue(UserSettingsAtom.shouldPreload);
+  const setUserSettings = useSetAtom(Atom.userSettings);
 
-    const handleCheckedChange = (checked: boolean): void => {
-        setUserSettings((u) =>
-            u.setShouldPreload(
-                () => ShouldPreload.createSafe(checked),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Switch
-            label="先読みの有効化"
-            checked={shouldPreload.value}
-            onCheckedChange={handleCheckedChange}
-        />
+  const handleCheckedChange = (checked: boolean): void => {
+    setUserSettings((u) =>
+      u.setShouldPreload(
+        () => ShouldPreload.createSafe(checked),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Switch
+      label="先読みの有効化"
+      checked={shouldPreload.value}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 };

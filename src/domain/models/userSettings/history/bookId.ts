@@ -6,18 +6,18 @@ export type BookIdJSON = string;
 declare const BookIdBrand: unique symbol;
 
 export class BookId extends ValueObject<BookIdJSON> {
-    declare [BookIdBrand]: unknown;
+  declare [BookIdBrand]: unknown;
 
-    constructor(value: string) {
-        super(value);
-    }
+  constructor(value: string) {
+    super(value);
+  }
 
-    static createSafe(value?: unknown): BookId {
-        if (!isString(value)) return new this("");
-        return new BookId(value);
-    }
+  static createSafe(value?: unknown): BookId {
+    if (!isString(value)) return new this("");
+    return new BookId(value);
+  }
 
-    equals(other: this): boolean {
-        return this.value === other.value;
-    }
+  equals(other: this): boolean {
+    return this.value === other.value;
+  }
 }

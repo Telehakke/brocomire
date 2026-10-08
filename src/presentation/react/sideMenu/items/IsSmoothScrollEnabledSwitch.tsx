@@ -6,25 +6,23 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const IsSmoothScrollEnabledSwitch = (): JSX.Element => {
-    const isSmoothScrollEnabled = useAtomValue(
-        UserSettingsAtom.isSmoothScrollEnabled,
-    );
-    const setUserSettings = useSetAtom(Atom.userSettings);
+  const isSmoothScrollEnabled = useAtomValue(UserSettingsAtom.isSmoothScrollEnabled);
+  const setUserSettings = useSetAtom(Atom.userSettings);
 
-    const handleCheckedChange = (checked: boolean): void => {
-        setUserSettings((u) =>
-            u.setIsSmoothScrollEnabled(
-                () => IsSmoothScrollEnabled.createSafe(checked),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Switch
-            label="滑らかスクロールの有効化"
-            checked={isSmoothScrollEnabled.value}
-            onCheckedChange={handleCheckedChange}
-        />
+  const handleCheckedChange = (checked: boolean): void => {
+    setUserSettings((u) =>
+      u.setIsSmoothScrollEnabled(
+        () => IsSmoothScrollEnabled.createSafe(checked),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Switch
+      label="滑らかスクロールの有効化"
+      checked={isSmoothScrollEnabled.value}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 };

@@ -6,21 +6,20 @@ export type ShouldShowFullscreenButtonJSON = boolean;
 declare const ShouldShowFullscreenButtonBrand: unique symbol;
 
 export class ShouldShowFullscreenButton extends ValueObject<ShouldShowFullscreenButtonJSON> {
-    declare [ShouldShowFullscreenButtonBrand]: unknown;
+  declare [ShouldShowFullscreenButtonBrand]: unknown;
 
-    static readonly DEFAULT = false;
+  static readonly DEFAULT = false;
 
-    constructor(value: boolean) {
-        super(value);
-    }
+  constructor(value: boolean) {
+    super(value);
+  }
 
-    static createSafe(value?: unknown): ShouldShowFullscreenButton {
-        if (!isBoolean(value))
-            return new ShouldShowFullscreenButton(this.DEFAULT);
-        return new ShouldShowFullscreenButton(value);
-    }
+  static createSafe(value?: unknown): ShouldShowFullscreenButton {
+    if (!isBoolean(value)) return new ShouldShowFullscreenButton(this.DEFAULT);
+    return new ShouldShowFullscreenButton(value);
+  }
 
-    equals(other: this): boolean {
-        return this.value === other.value;
-    }
+  equals(other: this): boolean {
+    return this.value === other.value;
+  }
 }

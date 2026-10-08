@@ -7,24 +7,20 @@ import { previousOrigin } from "../shared/previousOrigin";
 import { DownValue } from "./values";
 
 export const Down: Origin = {
-    ...DownValue,
-    isInRange(value) {
-        return ScrollPct.CENTER < value && value < ScrollPct.MAX;
-    },
-    isStart(bookFormat) {
-        return isOriginStart(this.name, bookFormat.value);
-    },
-    isEnd(bookFormat) {
-        return isOriginEnd(this.name, bookFormat.value);
-    },
-    next(bookFormat, scrollStepCount) {
-        return NextOrigin(this.name, bookFormat.value, scrollStepCount.value);
-    },
-    previous(bookFormat, scrollStepCount) {
-        return previousOrigin(
-            this.name,
-            bookFormat.value,
-            scrollStepCount.value,
-        );
-    },
+  ...DownValue,
+  isInRange(value) {
+    return ScrollPct.CENTER < value && value < ScrollPct.MAX;
+  },
+  isStart(bookFormat) {
+    return isOriginStart(this.name, bookFormat.value);
+  },
+  isEnd(bookFormat) {
+    return isOriginEnd(this.name, bookFormat.value);
+  },
+  next(bookFormat, scrollStepCount) {
+    return NextOrigin(this.name, bookFormat.value, scrollStepCount.value);
+  },
+  previous(bookFormat, scrollStepCount) {
+    return previousOrigin(this.name, bookFormat.value, scrollStepCount.value);
+  },
 };

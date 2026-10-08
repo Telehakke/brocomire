@@ -5,22 +5,22 @@ import { KeydownMonitor } from "../../../../infrastructure/keyboard/keydownMonit
 import { Atom } from "../../../atoms";
 
 const getKeydownMonitorAtom = atom(null, (get, set) => {
-    const appState = Atom.appState;
-    const appStore: AppStore = {
-        get: () => get(appState),
-        set: (callback) => set(appState, callback(get(appState))),
-    };
-    return new KeydownMonitor(appStore, get(Atom.userSettings));
+  const appState = Atom.appState;
+  const appStore: AppStore = {
+    get: () => get(appState),
+    set: (callback) => set(appState, callback(get(appState))),
+  };
+  return new KeydownMonitor(appStore, get(Atom.userSettings));
 });
 
 export const KeydownListener = (): null => {
-    const getKeydownMonitor = useSetAtom(getKeydownMonitorAtom);
+  const getKeydownMonitor = useSetAtom(getKeydownMonitorAtom);
 
-    useEffect(() => {
-        const keydownMonitor = getKeydownMonitor();
-        keydownMonitor.start();
-        return (): void => keydownMonitor.end();
-    }, [getKeydownMonitor]);
+  useEffect(() => {
+    const keydownMonitor = getKeydownMonitor();
+    keydownMonitor.start();
+    return (): void => keydownMonitor.end();
+  }, [getKeydownMonitor]);
 
-    return null;
+  return null;
 };

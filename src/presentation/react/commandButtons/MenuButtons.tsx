@@ -5,17 +5,15 @@ import { Atom } from "../../atoms";
 import { IconButton } from "../utils/IconButton";
 
 export const SideMenuOpenButton = (): JSX.Element => {
-    const setAppState = useSetAtom(Atom.appState);
+  const setAppState = useSetAtom(Atom.appState);
 
-    const handleClick = (): void => {
-        setAppState((a) => a.setIsOpenSideMenu(() => true));
-    };
+  const handleClick = (): void => {
+    setAppState((a) => a.setIsOpenSideMenu(() => true));
+  };
 
-    return (
-        <IconButton.Button onClick={handleClick}>
-            <EllipsisVertical
-                className={Object.values(IconButton.className).join(" ")}
-            />
-        </IconButton.Button>
-    );
+  return (
+    <IconButton.Button onClick={handleClick}>
+      <EllipsisVertical className={Object.values(IconButton.className).join(" ")} />
+    </IconButton.Button>
+  );
 };

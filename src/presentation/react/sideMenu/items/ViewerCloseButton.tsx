@@ -9,28 +9,23 @@ import { Atom } from "../../../atoms";
 import { LargeIconButton } from "../../utils/LargeIconButton";
 
 const closeViewerAtom = atom(null, (get, set) => {
-    const appStore: AppStore = {
-        get: () => get(Atom.appState),
-        set: (callback) => set(Atom.appState, callback(get(Atom.appState))),
-    };
-    const userSettingsStore: UserSettingsStore = {
-        get: () => get(Atom.userSettings),
-        set: (callback) =>
-            set(Atom.userSettings, callback(get(Atom.userSettings))),
-    };
-    closeViewer(
-        appStore,
-        userSettingsStore,
-        new LocalStorageUserSettingsRepository(),
-    );
+  const appStore: AppStore = {
+    get: () => get(Atom.appState),
+    set: (callback) => set(Atom.appState, callback(get(Atom.appState))),
+  };
+  const userSettingsStore: UserSettingsStore = {
+    get: () => get(Atom.userSettings),
+    set: (callback) => set(Atom.userSettings, callback(get(Atom.userSettings))),
+  };
+  closeViewer(appStore, userSettingsStore, new LocalStorageUserSettingsRepository());
 });
 
 export const ViewerCloseButton = (): JSX.Element => {
-    const closeViewer = useSetAtom(closeViewerAtom);
+  const closeViewer = useSetAtom(closeViewerAtom);
 
-    return (
-        <LargeIconButton text="本を閉じる" onClick={closeViewer}>
-            <BookX className="size-8" />
-        </LargeIconButton>
-    );
+  return (
+    <LargeIconButton text="本を閉じる" onClick={closeViewer}>
+      <BookX className="size-8" />
+    </LargeIconButton>
+  );
 };

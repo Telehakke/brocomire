@@ -1,52 +1,45 @@
 {
-    "name": "brocomire",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "tsc -b && vite build",
-        "lint": "eslint .",
-        "preview": "vite preview",
-        "test": "vitest",
-        "check": "tsc -b --watch"
-    },
-    "dependencies": {
-        "@ark-ui/react": "^5.39.0",
-        "@zip.js/zip.js": "^2.8.60",
-        "jotai": "^2.20.3",
-        "lucide-react": "^1.34.0",
-        "react": "^19.2.8",
-        "react-dom": "^19.2.8"
-    },
-    "devDependencies": {
-        "@babel/core": "^8.0.1",
-        "@eslint/js": "^10.0.1",
-        "@rolldown/plugin-babel": "^0.2.3",
-        "@tailwindcss/vite": "^4.3.3",
-        "@types/babel__core": "^7.20.5",
-        "@types/node": "^26.3.0",
-        "@types/react": "^19.2.18",
-        "@types/react-dom": "^19.2.5",
-        "@typescript-eslint/parser": "^8.70.0",
-        "@vitejs/plugin-react": "^6.1.0",
-        "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "^10.9.1",
-        "eslint-import-resolver-typescript": "^4.4.5",
-        "eslint-plugin-boundaries": "^7.2.0",
-        "eslint-plugin-react-hooks": "^7.1.1",
-        "eslint-plugin-react-refresh": "^0.5.5",
-        "globals": "^17.11.0",
-        "prettier": "^3.9.6",
-        "prettier-plugin-tailwindcss": "^0.8.1",
-        "tailwindcss": "^4.3.3",
-        "typescript": "^6.0.3",
-        "typescript-eslint": "^8.68.0",
-        "vite": "^8.2.2",
-        "vite-plugin-pwa": "^1.3.0",
-        "vitest": "^4.1.11"
-    },
-    "allowScripts": {
-        "fsevents@2.3.3": true
+  "name": "brocomire",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "tsc -b && vp build",
+    "lint": "vp lint",
+    "preview": "vp preview"
+  },
+  "dependencies": {
+    "@ark-ui/react": "^5.39.2",
+    "@zip.js/zip.js": "^2.22.0",
+    "jotai": "^3.0.1",
+    "lucide-react": "^1.49.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@rolldown/plugin-babel": "^0.2.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/babel__core": "^7.20.5",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^7.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
+    "vite": "catalog:",
+    "vite-plugin-pwa": "^1.3.0",
+    "vite-plus": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.10.1",
+      "onFail": "download"
     }
+  }
 }

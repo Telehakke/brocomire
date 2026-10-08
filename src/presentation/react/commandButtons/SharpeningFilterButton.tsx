@@ -6,46 +6,40 @@ import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 export const SharpeningFilterButton = (): JSX.Element | null => {
-    const shouldShowButton = useAtomValue(
-        UserSettingsAtom.shouldShowSharpeningFilterButton,
-    );
-    const onFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
+  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowSharpeningFilterButton);
+  const onFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
 
-    if (!shouldShowButton.value) return null;
-    if (onFilter) {
-        return <SharpeningFilterIconBlueButton />;
-    }
-    return <SharpeningFilterIconButton />;
+  if (!shouldShowButton.value) return null;
+  if (onFilter) {
+    return <SharpeningFilterIconBlueButton />;
+  }
+  return <SharpeningFilterIconButton />;
 };
 
 const SharpeningFilterIconBlueButton = (): JSX.Element => {
-    const setAppState = useSetAtom(Atom.appState);
+  const setAppState = useSetAtom(Atom.appState);
 
-    const handleClick = (): void => {
-        setAppState((a) => a.setOnSharpeningFilter(() => false));
-    };
+  const handleClick = (): void => {
+    setAppState((a) => a.setOnSharpeningFilter(() => false));
+  };
 
-    return (
-        <IconBlueButton.Button onClick={handleClick}>
-            <Sparkle
-                className={Object.values(IconBlueButton.className).join(" ")}
-            />
-        </IconBlueButton.Button>
-    );
+  return (
+    <IconBlueButton.Button onClick={handleClick}>
+      <Sparkle className={Object.values(IconBlueButton.className).join(" ")} />
+    </IconBlueButton.Button>
+  );
 };
 
 const SharpeningFilterIconButton = (): JSX.Element => {
-    const setAppState = useSetAtom(Atom.appState);
+  const setAppState = useSetAtom(Atom.appState);
 
-    const handleClick = (): void => {
-        setAppState((a) => a.setOnSharpeningFilter(() => true));
-    };
+  const handleClick = (): void => {
+    setAppState((a) => a.setOnSharpeningFilter(() => true));
+  };
 
-    return (
-        <IconButton.Button onClick={handleClick}>
-            <Sparkle
-                className={Object.values(IconButton.className).join(" ")}
-            />
-        </IconButton.Button>
-    );
+  return (
+    <IconButton.Button onClick={handleClick}>
+      <Sparkle className={Object.values(IconButton.className).join(" ")} />
+    </IconButton.Button>
+  );
 };

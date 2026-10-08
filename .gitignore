@@ -22,5 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+!.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
 
 *.af

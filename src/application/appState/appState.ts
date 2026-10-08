@@ -9,201 +9,194 @@ import type { ImageSize } from "./valueObjects/imageSize";
 import type { InfoVisibility } from "./valueObjects/infoVisibility";
 
 export type AppStateValue = Readonly<{
-    cache: Cache;
-    chevronMark: ChevronMark;
-    fileManager: FileManager;
-    hashedFileName: string;
-    imageSize: ImageSize;
-    infoVisibility: InfoVisibility;
-    isLandscape: boolean;
-    isOpenSideMenu: boolean;
-    isUserScrolled: boolean;
-    notification: Notification;
-    onInvertFilter: boolean;
-    onSharpeningFilter: boolean;
-    onViewer: boolean;
-    scrollPct2D: ScrollPct2D;
-    viewerManager: ViewerManager;
-    zoomPct: ZoomPct;
+  cache: Cache;
+  chevronMark: ChevronMark;
+  fileManager: FileManager;
+  hashedFileName: string;
+  imageSize: ImageSize;
+  infoVisibility: InfoVisibility;
+  isLandscape: boolean;
+  isOpenSideMenu: boolean;
+  isUserScrolled: boolean;
+  notification: Notification;
+  onInvertFilter: boolean;
+  onSharpeningFilter: boolean;
+  onViewer: boolean;
+  scrollPct2D: ScrollPct2D;
+  viewerManager: ViewerManager;
+  zoomPct: ZoomPct;
 }>;
 
 export class AppState {
-    private readonly value: AppStateValue;
+  private readonly value: AppStateValue;
 
-    constructor(value: AppStateValue) {
-        this.value = value;
-    }
+  constructor(value: AppStateValue) {
+    this.value = value;
+  }
 
-    get cache(): Cache {
-        return this.value.cache;
-    }
+  get cache(): Cache {
+    return this.value.cache;
+  }
 
-    get chevronMark(): ChevronMark {
-        return this.value.chevronMark;
-    }
+  get chevronMark(): ChevronMark {
+    return this.value.chevronMark;
+  }
 
-    get fileManager(): FileManager {
-        return this.value.fileManager;
-    }
+  get fileManager(): FileManager {
+    return this.value.fileManager;
+  }
 
-    get hashedFileName(): string | undefined {
-        return this.value.hashedFileName;
-    }
+  get hashedFileName(): string | undefined {
+    return this.value.hashedFileName;
+  }
 
-    get imageSize(): ImageSize {
-        return this.value.imageSize;
-    }
+  get imageSize(): ImageSize {
+    return this.value.imageSize;
+  }
 
-    get infoVisibility(): InfoVisibility {
-        return this.value.infoVisibility;
-    }
+  get infoVisibility(): InfoVisibility {
+    return this.value.infoVisibility;
+  }
 
-    get isLandscape(): boolean {
-        return this.value.isLandscape;
-    }
+  get isLandscape(): boolean {
+    return this.value.isLandscape;
+  }
 
-    get isOpenSideMenu(): boolean {
-        return this.value.isOpenSideMenu;
-    }
+  get isOpenSideMenu(): boolean {
+    return this.value.isOpenSideMenu;
+  }
 
-    get isUserScrolled(): boolean {
-        return this.value.isUserScrolled;
-    }
+  get isUserScrolled(): boolean {
+    return this.value.isUserScrolled;
+  }
 
-    get notification(): Notification {
-        return this.value.notification;
-    }
+  get notification(): Notification {
+    return this.value.notification;
+  }
 
-    get onInvertFIlter(): boolean {
-        return this.value.onInvertFilter;
-    }
+  get onInvertFIlter(): boolean {
+    return this.value.onInvertFilter;
+  }
 
-    get onSharpeningFilter(): boolean {
-        return this.value.onSharpeningFilter;
-    }
+  get onSharpeningFilter(): boolean {
+    return this.value.onSharpeningFilter;
+  }
 
-    get onViewer(): boolean {
-        return this.value.onViewer;
-    }
+  get onViewer(): boolean {
+    return this.value.onViewer;
+  }
 
-    get scrollPct2D(): ScrollPct2D {
-        return this.value.scrollPct2D;
-    }
+  get scrollPct2D(): ScrollPct2D {
+    return this.value.scrollPct2D;
+  }
 
-    get viewerManager(): ViewerManager {
-        return this.value.viewerManager;
-    }
+  get viewerManager(): ViewerManager {
+    return this.value.viewerManager;
+  }
 
-    get zoomPct(): ZoomPct {
-        return this.value.zoomPct;
-    }
+  get zoomPct(): ZoomPct {
+    return this.value.zoomPct;
+  }
 
-    setCache(callback: (prev: AppStateValue) => Cache): AppState {
-        return this.copyWith({ cache: callback(this.value) });
-    }
+  setCache(callback: (prev: AppStateValue) => Cache): AppState {
+    return this.copyWith({ cache: callback(this.value) });
+  }
 
-    setChevronMark(callback: (prev: AppStateValue) => ChevronMark): AppState {
-        return this.copyWith({ chevronMark: callback(this.value) });
-    }
+  setChevronMark(callback: (prev: AppStateValue) => ChevronMark): AppState {
+    return this.copyWith({ chevronMark: callback(this.value) });
+  }
 
-    setFileManager(callback: (prev: AppStateValue) => FileManager): AppState {
-        return this.copyWith({ fileManager: callback(this.value) });
-    }
+  setFileManager(callback: (prev: AppStateValue) => FileManager): AppState {
+    return this.copyWith({ fileManager: callback(this.value) });
+  }
 
-    setHashedFileName(callback: (prev: AppStateValue) => string): AppState {
-        return this.copyWith({ hashedFileName: callback(this.value) });
-    }
+  setHashedFileName(callback: (prev: AppStateValue) => string): AppState {
+    return this.copyWith({ hashedFileName: callback(this.value) });
+  }
 
-    setImageSize(callback: (prev: AppStateValue) => ImageSize): AppState {
-        return this.copyWith({ imageSize: callback(this.value) });
-    }
+  setImageSize(callback: (prev: AppStateValue) => ImageSize): AppState {
+    return this.copyWith({ imageSize: callback(this.value) });
+  }
 
-    setInfoVisibility(
-        callback: (prev: AppStateValue) => InfoVisibility,
-    ): AppState {
-        return this.copyWith({ infoVisibility: callback(this.value) });
-    }
+  setInfoVisibility(callback: (prev: AppStateValue) => InfoVisibility): AppState {
+    return this.copyWith({ infoVisibility: callback(this.value) });
+  }
 
-    setIsLandscape(callback: (prev: AppStateValue) => boolean): AppState {
-        return this.copyWith({ isLandscape: callback(this.value) });
-    }
+  setIsLandscape(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ isLandscape: callback(this.value) });
+  }
 
-    setIsOpenSideMenu(callback: (prev: AppStateValue) => boolean): AppState {
-        return this.copyWith({ isOpenSideMenu: callback(this.value) });
-    }
+  setIsOpenSideMenu(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ isOpenSideMenu: callback(this.value) });
+  }
 
-    setIsUserScrolled(callback: (prev: AppStateValue) => boolean): AppState {
-        return this.copyWith({ isUserScrolled: callback(this.value) });
-    }
+  setIsUserScrolled(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ isUserScrolled: callback(this.value) });
+  }
 
-    setNotification(callback: (prev: AppStateValue) => Notification): AppState {
-        return this.copyWith({ notification: callback(this.value) });
-    }
+  setNotification(callback: (prev: AppStateValue) => Notification): AppState {
+    return this.copyWith({ notification: callback(this.value) });
+  }
 
-    setOnInvertFilter(callback: (prev: AppStateValue) => boolean): AppState {
-        return this.copyWith({ onInvertFilter: callback(this.value) });
-    }
+  setOnInvertFilter(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ onInvertFilter: callback(this.value) });
+  }
 
-    setOnSharpeningFilter(
-        callback: (prev: AppStateValue) => boolean,
-    ): AppState {
-        return this.copyWith({ onSharpeningFilter: callback(this.value) });
-    }
+  setOnSharpeningFilter(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ onSharpeningFilter: callback(this.value) });
+  }
 
-    setOnViewer(callback: (prev: AppStateValue) => boolean): AppState {
-        return this.copyWith({ onViewer: callback(this.value) });
-    }
+  setOnViewer(callback: (prev: AppStateValue) => boolean): AppState {
+    return this.copyWith({ onViewer: callback(this.value) });
+  }
 
-    setScrollPct2D(callback: (prev: AppStateValue) => ScrollPct2D): AppState {
-        return this.copyWith({ scrollPct2D: callback(this.value) });
-    }
+  setScrollPct2D(callback: (prev: AppStateValue) => ScrollPct2D): AppState {
+    return this.copyWith({ scrollPct2D: callback(this.value) });
+  }
 
-    setViewerManager(
-        callback: (prev: AppStateValue) => ViewerManager,
-    ): AppState {
-        return this.copyWith({ viewerManager: callback(this.value) });
-    }
+  setViewerManager(callback: (prev: AppStateValue) => ViewerManager): AppState {
+    return this.copyWith({ viewerManager: callback(this.value) });
+  }
 
-    setZoomPct(callback: (prev: AppStateValue) => ZoomPct): AppState {
-        return this.copyWith({ zoomPct: callback(this.value) });
-    }
+  setZoomPct(callback: (prev: AppStateValue) => ZoomPct): AppState {
+    return this.copyWith({ zoomPct: callback(this.value) });
+  }
 
-    private copyWith({
-        cache,
-        chevronMark,
-        fileManager,
-        hashedFileName,
-        imageSize,
-        infoVisibility,
-        isLandscape,
-        isOpenSideMenu,
-        isUserScrolled,
-        notification,
-        onInvertFilter,
-        onSharpeningFilter,
-        onViewer,
-        scrollPct2D,
-        viewerManager,
-        zoomPct,
-    }: Partial<AppStateValue>): AppState {
-        return new AppState({
-            cache: cache ?? this.cache,
-            chevronMark: chevronMark ?? this.value.chevronMark,
-            fileManager: fileManager ?? this.value.fileManager,
-            hashedFileName: hashedFileName ?? this.value.hashedFileName,
-            imageSize: imageSize ?? this.value.imageSize,
-            infoVisibility: infoVisibility ?? this.value.infoVisibility,
-            isLandscape: isLandscape ?? this.value.isLandscape,
-            isOpenSideMenu: isOpenSideMenu ?? this.value.isOpenSideMenu,
-            isUserScrolled: isUserScrolled ?? this.value.isUserScrolled,
-            notification: notification ?? this.value.notification,
-            onInvertFilter: onInvertFilter ?? this.value.onInvertFilter,
-            onSharpeningFilter:
-                onSharpeningFilter ?? this.value.onSharpeningFilter,
-            onViewer: onViewer ?? this.value.onViewer,
-            scrollPct2D: scrollPct2D ?? this.value.scrollPct2D,
-            viewerManager: viewerManager ?? this.value.viewerManager,
-            zoomPct: zoomPct ?? this.value.zoomPct,
-        });
-    }
+  private copyWith({
+    cache,
+    chevronMark,
+    fileManager,
+    hashedFileName,
+    imageSize,
+    infoVisibility,
+    isLandscape,
+    isOpenSideMenu,
+    isUserScrolled,
+    notification,
+    onInvertFilter,
+    onSharpeningFilter,
+    onViewer,
+    scrollPct2D,
+    viewerManager,
+    zoomPct,
+  }: Partial<AppStateValue>): AppState {
+    return new AppState({
+      cache: cache ?? this.cache,
+      chevronMark: chevronMark ?? this.value.chevronMark,
+      fileManager: fileManager ?? this.value.fileManager,
+      hashedFileName: hashedFileName ?? this.value.hashedFileName,
+      imageSize: imageSize ?? this.value.imageSize,
+      infoVisibility: infoVisibility ?? this.value.infoVisibility,
+      isLandscape: isLandscape ?? this.value.isLandscape,
+      isOpenSideMenu: isOpenSideMenu ?? this.value.isOpenSideMenu,
+      isUserScrolled: isUserScrolled ?? this.value.isUserScrolled,
+      notification: notification ?? this.value.notification,
+      onInvertFilter: onInvertFilter ?? this.value.onInvertFilter,
+      onSharpeningFilter: onSharpeningFilter ?? this.value.onSharpeningFilter,
+      onViewer: onViewer ?? this.value.onViewer,
+      scrollPct2D: scrollPct2D ?? this.value.scrollPct2D,
+      viewerManager: viewerManager ?? this.value.viewerManager,
+      zoomPct: zoomPct ?? this.value.zoomPct,
+    });
+  }
 }

@@ -6,27 +6,27 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const SharpeningFilterStrengthSlider = (): JSX.Element => {
-    const strength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
-    const setUserSettings = useSetAtom(Atom.userSettings);
-    const [value, setValue] = useState(strength.value);
+  const strength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
+  const setUserSettings = useSetAtom(Atom.userSettings);
+  const [value, setValue] = useState(strength.value);
 
-    const handleValueChangedEnd = (value: number): void => {
-        setUserSettings((u) =>
-            u.setSharpeningFilterStrength(
-                () => SharpeningFilterStrength.createSafe(value),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Slider
-            label={(v) => `フィルター強度：${v}`}
-            min={SharpeningFilterStrength.MIN}
-            max={SharpeningFilterStrength.MAX}
-            value={value}
-            onValueChange={setValue}
-            onValueChangeEnd={handleValueChangedEnd}
-        />
+  const handleValueChangedEnd = (value: number): void => {
+    setUserSettings((u) =>
+      u.setSharpeningFilterStrength(
+        () => SharpeningFilterStrength.createSafe(value),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Slider
+      label={(v) => `フィルター強度：${v}`}
+      min={SharpeningFilterStrength.MIN}
+      max={SharpeningFilterStrength.MAX}
+      value={value}
+      onValueChange={setValue}
+      onValueChangeEnd={handleValueChangedEnd}
+    />
+  );
 };

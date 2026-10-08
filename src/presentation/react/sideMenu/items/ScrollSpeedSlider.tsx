@@ -6,27 +6,27 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const ScrollSpeedSlider = (): JSX.Element => {
-    const scrollSpeed = useAtomValue(UserSettingsAtom.scrollSpeed);
-    const setUserSettings = useSetAtom(Atom.userSettings);
-    const [value, setValue] = useState(scrollSpeed.value);
+  const scrollSpeed = useAtomValue(UserSettingsAtom.scrollSpeed);
+  const setUserSettings = useSetAtom(Atom.userSettings);
+  const [value, setValue] = useState(scrollSpeed.value);
 
-    const handleValueChangeEnd = (value: number): void => {
-        setUserSettings((u) =>
-            u.setScrollSpeed(
-                () => ScrollSpeed.createSafe(value),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Slider
-            label={(v) => `垂直・水平スクロール速度：${v}倍`}
-            min={ScrollSpeed.MIN}
-            max={ScrollSpeed.MAX}
-            value={value}
-            onValueChange={setValue}
-            onValueChangeEnd={handleValueChangeEnd}
-        />
+  const handleValueChangeEnd = (value: number): void => {
+    setUserSettings((u) =>
+      u.setScrollSpeed(
+        () => ScrollSpeed.createSafe(value),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Slider
+      label={(v) => `垂直・水平スクロール速度：${v}倍`}
+      min={ScrollSpeed.MIN}
+      max={ScrollSpeed.MAX}
+      value={value}
+      onValueChange={setValue}
+      onValueChangeEnd={handleValueChangeEnd}
+    />
+  );
 };

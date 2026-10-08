@@ -6,23 +6,23 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const IsSafeAreaEnabledSwitch = (): JSX.Element => {
-    const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
-    const setUserSettings = useSetAtom(Atom.userSettings);
+  const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+  const setUserSettings = useSetAtom(Atom.userSettings);
 
-    const handleCheckedChange = (checked: boolean): void => {
-        setUserSettings((u) =>
-            u.setIsSafeAreaEnabled(
-                () => IsSafeAreaEnabled.createSafe(checked),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Switch
-            label="セーフエリアの有効化"
-            checked={isSafeAreaEnabled.value}
-            onCheckedChange={handleCheckedChange}
-        />
+  const handleCheckedChange = (checked: boolean): void => {
+    setUserSettings((u) =>
+      u.setIsSafeAreaEnabled(
+        () => IsSafeAreaEnabled.createSafe(checked),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Switch
+      label="セーフエリアの有効化"
+      checked={isSafeAreaEnabled.value}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 };

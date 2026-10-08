@@ -5,18 +5,15 @@ import type { AppState } from "../appState/appState";
 
 /** 履歴の更新 */
 export const updateHistory = (
-    appState: AppState,
-    userSettingsStore: UserSettingsStore,
-    userSettingsRepository: UserSettingsRepository,
+  appState: AppState,
+  userSettingsStore: UserSettingsStore,
+  userSettingsRepository: UserSettingsRepository,
 ): void => {
-    const { fileManager, hashedFileName } = appState;
-    userSettingsStore.set((u) =>
-        u.setHistories(
-            (v) =>
-                v.histories.update(
-                    History.createSafe(hashedFileName, fileManager.getIndex()),
-                ),
-            userSettingsRepository,
-        ),
-    );
+  const { fileManager, hashedFileName } = appState;
+  userSettingsStore.set((u) =>
+    u.setHistories(
+      (v) => v.histories.update(History.createSafe(hashedFileName, fileManager.getIndex())),
+      userSettingsRepository,
+    ),
+  );
 };

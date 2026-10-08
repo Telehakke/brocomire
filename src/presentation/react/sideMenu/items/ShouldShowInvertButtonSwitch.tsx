@@ -6,25 +6,23 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
-    const shouldShowButton = useAtomValue(
-        UserSettingsAtom.shouldShowInvertButton,
-    );
-    const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowInvertButton);
+  const setUserSettings = useSetAtom(Atom.userSettings);
 
-    const handleCheckedChange = (checked: boolean): void => {
-        setUserSettings((u) =>
-            u.setShouldShowInvertButton(
-                () => ShouldShowInvertButton.createSafe(checked),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Switch
-            label="色反転ボタンをビューアに表示"
-            checked={shouldShowButton.value}
-            onCheckedChange={handleCheckedChange}
-        />
+  const handleCheckedChange = (checked: boolean): void => {
+    setUserSettings((u) =>
+      u.setShouldShowInvertButton(
+        () => ShouldShowInvertButton.createSafe(checked),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Switch
+      label="色反転ボタンをビューアに表示"
+      checked={shouldShowButton.value}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 };

@@ -5,19 +5,16 @@ import { moveToNextPage } from "./moveToNextPage";
 import { moveToPreviousPage } from "./moveToPreviousPage";
 
 /** 右側のページへ移動 */
-export const moveToRightPage = (
-    appStore: AppStore,
-    userSettings: UserSettings,
-): void => {
-    const { bookFormat } = userSettings;
-    switch (bookFormat.value) {
-        case "vertical":
-            moveToPreviousPage(appStore, userSettings);
-            break;
-        case "horizontal":
-            moveToNextPage(appStore, userSettings);
-            break;
-        default:
-            exhaustiveCheck(bookFormat.value);
-    }
+export const moveToRightPage = (appStore: AppStore, userSettings: UserSettings): void => {
+  const { bookFormat } = userSettings;
+  switch (bookFormat.value) {
+    case "vertical":
+      moveToPreviousPage(appStore, userSettings);
+      break;
+    case "horizontal":
+      moveToNextPage(appStore, userSettings);
+      break;
+    default:
+      exhaustiveCheck(bookFormat.value);
+  }
 };

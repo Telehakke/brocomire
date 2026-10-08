@@ -8,26 +8,26 @@ import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
 /** 画像ファイルを開く */
 export const openImageFiles = (
-    fileManager: FileManager,
-    appStore: AppStore,
-    userSettings: UserSettings,
+  fileManager: FileManager,
+  appStore: AppStore,
+  userSettings: UserSettings,
 ): void => {
-    if (!fileManager.hasFiles()) return;
+  if (!fileManager.hasFiles()) return;
 
-    const { bookFormat } = userSettings;
-    moveToIndexPage(0, appStore, userSettings);
-    appStore.set((a) => getNextAppState(a, fileManager, bookFormat));
+  const { bookFormat } = userSettings;
+  moveToIndexPage(0, appStore, userSettings);
+  appStore.set((a) => getNextAppState(a, fileManager, bookFormat));
 };
 
 /* -------------------------------------------------------------------------- */
 
 const getNextAppState = (
-    prev: AppState,
-    fileManager: FileManager,
-    bookFormat: BookFormat,
+  prev: AppState,
+  fileManager: FileManager,
+  bookFormat: BookFormat,
 ): AppState => {
-    return prev
-        .setFileManager(() => fileManager)
-        .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, true))
-        .setOnViewer(() => true);
+  return prev
+    .setFileManager(() => fileManager)
+    .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, true))
+    .setOnViewer(() => true);
 };

@@ -8,26 +8,26 @@ import type { OriginValue } from "../origin";
 // -----Bottom------ 100
 
 export const TopValue: OriginValue = {
-    name: "Top",
-    value: ScrollPct.MIN,
+  name: "Top",
+  value: ScrollPct.MIN,
 };
 
 export const UpValue: OriginValue = {
-    name: "Up",
-    value: undefined,
+  name: "Up",
+  value: undefined,
 };
 
 export const VCenterValue: OriginValue = {
-    name: "VCenter",
-    value: ScrollPct.CENTER,
+  name: "VCenter",
+  value: ScrollPct.CENTER,
 };
 
 export const DownValue: OriginValue = {
-    name: "Down",
-    value: undefined,
+  name: "Down",
+  value: undefined,
 };
 
 export const BottomValue: OriginValue = {
-    name: "Bottom",
-    value: ScrollPct.MAX,
+  name: "Bottom",
+  value: ScrollPct.MAX,
 };

@@ -6,25 +6,23 @@ import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
-    const shouldShowButton = useAtomValue(
-        UserSettingsAtom.shouldShowSharpeningFilterButton,
-    );
-    const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowSharpeningFilterButton);
+  const setUserSettings = useSetAtom(Atom.userSettings);
 
-    const handleCheckedChange = (checked: boolean): void => {
-        setUserSettings((u) =>
-            u.setShouldShowSharpeningFilterButton(
-                () => ShouldShowSharpeningFilterButton.createSafe(checked),
-                new LocalStorageUserSettingsRepository(),
-            ),
-        );
-    };
-
-    return (
-        <Switch
-            label="先鋭化ボタンをビューアに表示"
-            checked={shouldShowButton.value}
-            onCheckedChange={handleCheckedChange}
-        />
+  const handleCheckedChange = (checked: boolean): void => {
+    setUserSettings((u) =>
+      u.setShouldShowSharpeningFilterButton(
+        () => ShouldShowSharpeningFilterButton.createSafe(checked),
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
+  };
+
+  return (
+    <Switch
+      label="先鋭化ボタンをビューアに表示"
+      checked={shouldShowButton.value}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 };

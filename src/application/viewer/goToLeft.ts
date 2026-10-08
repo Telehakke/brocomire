@@ -5,19 +5,16 @@ import { goToNext } from "./goToNext";
 import { goToPrevious } from "./goToPrevious";
 
 /** 左側へ進む */
-export const goToLeft = (
-    appStore: AppStore,
-    userSettings: UserSettings,
-): void => {
-    const { bookFormat } = userSettings;
-    switch (bookFormat.value) {
-        case "vertical":
-            goToNext(appStore, userSettings);
-            break;
-        case "horizontal":
-            goToPrevious(appStore, userSettings);
-            break;
-        default:
-            exhaustiveCheck(bookFormat.value);
-    }
+export const goToLeft = (appStore: AppStore, userSettings: UserSettings): void => {
+  const { bookFormat } = userSettings;
+  switch (bookFormat.value) {
+    case "vertical":
+      goToNext(appStore, userSettings);
+      break;
+    case "horizontal":
+      goToPrevious(appStore, userSettings);
+      break;
+    default:
+      exhaustiveCheck(bookFormat.value);
+  }
 };

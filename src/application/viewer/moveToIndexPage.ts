@@ -6,26 +6,20 @@ import type { AppStore } from "../appState/appStore";
 
 /** 指定したindexのページへ移動 */
 export const moveToIndexPage = (
-    index: number,
-    appStore: AppStore,
-    userSettings: UserSettings,
+  index: number,
+  appStore: AppStore,
+  userSettings: UserSettings,
 ): void => {
-    const { bookFormat } = userSettings;
-    appStore.get().cache.clear();
-    appStore.set((a) => getNextAppState(a, index, bookFormat));
+  const { bookFormat } = userSettings;
+  appStore.get().cache.clear();
+  appStore.set((a) => getNextAppState(a, index, bookFormat));
 };
 
 /* -------------------------------------------------------------------------- */
 
-const getNextAppState = (
-    prev: AppState,
-    index: number,
-    bookFormat: BookFormat,
-): AppState => {
-    return prev
-        .setFileManager((v) => v.fileManager.setIndex(index))
-        .setNotification((v) =>
-            v.notification.setMessage(v.fileManager.progress()),
-        )
-        .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, true));
+const getNextAppState = (prev: AppState, index: number, bookFormat: BookFormat): AppState => {
+  return prev
+    .setFileManager((v) => v.fileManager.setIndex(index))
+    .setNotification((v) => v.notification.setMessage(v.fileManager.progress()))
+    .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, true));
 };
