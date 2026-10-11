@@ -1,12 +1,15 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import {
-  TapAreaSizeEnum,
-  type TapAreaSizeType,
+  SizeEnum,
+  TapAreaSize,
+  type SizeType,
 } from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
+import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
-import { SegmentGroup } from "../../utils/SegmentGroup";
+import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const TapAreaHeightSegmentGroup = (): JSX.Element => {
   const tapAreaSize = useAtomValue(UserSettingsAtom.tapAreaSize);
@@ -14,11 +17,9 @@ export const TapAreaHeightSegmentGroup = (): JSX.Element => {
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((u) =>
-      u.setTapAreaSize(
-        (v) =>
-          v.tapAreaSize.copyWith({
-            height: value as TapAreaSizeType,
-          }),
+      UserSettings.setTapAreaSize(
+        u,
+        TapAreaSize.copyWith(u.tapAreaSize, { height: value as SizeType }),
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -27,9 +28,29 @@ export const TapAreaHeightSegmentGroup = (): JSX.Element => {
   return (
     <SegmentGroup
       label="下タップエリアの高さ"
-      items={Object.values(TapAreaSizeEnum)}
-      value={tapAreaSize.value.height}
+      items={getItems()}
+      value={tapAreaSize.height}
       onValueChange={handleValueChange}
     />
   );
+};
+
+const getItems = (): SegmentGroupItem[] => {
+  return Object.values(SizeEnum).map((v) => ({ value: v, label: getSizeLabel(v) }));
+};
+
+const getSizeLabel = (value: SizeType): string => {
+  switch (value) {
+    case "none":
+      return "-";
+    case "s":
+      return "S";
+    case "m":
+      return "M";
+    case "l":
+      return "L";
+    default:
+      exhaustiveCheck(value);
+      throw new Error();
+  }
 };

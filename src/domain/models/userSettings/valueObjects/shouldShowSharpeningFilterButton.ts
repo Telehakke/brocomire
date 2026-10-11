@@ -1,25 +1,26 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ShouldShowSharpeningFilterButtonJSON = boolean;
 
 declare const ShouldShowSharpeningFilterButtonBrand: unique symbol;
 
-export class ShouldShowSharpeningFilterButton extends ValueObject<ShouldShowSharpeningFilterButtonJSON> {
-  declare [ShouldShowSharpeningFilterButtonBrand]: unknown;
+export type ShouldShowSharpeningFilterButton = boolean & {
+  [ShouldShowSharpeningFilterButtonBrand]: unknown;
+};
 
-  static readonly DEFAULT = false;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const ShouldShowSharpeningFilterButton = {
+  DEFAULT: false,
 
-  static createSafe(value?: unknown): ShouldShowSharpeningFilterButton {
-    if (!isBoolean(value)) return new ShouldShowSharpeningFilterButton(this.DEFAULT);
-    return new ShouldShowSharpeningFilterButton(value);
-  }
+  createSafe(value?: unknown): ShouldShowSharpeningFilterButton {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: ShouldShowSharpeningFilterButton, v2: ShouldShowSharpeningFilterButton): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): ShouldShowSharpeningFilterButton => {
+  return value as ShouldShowSharpeningFilterButton;
+};

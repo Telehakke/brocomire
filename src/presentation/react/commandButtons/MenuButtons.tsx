@@ -1,14 +1,15 @@
 import { useSetAtom } from "jotai";
 import { EllipsisVertical } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { Atom } from "../../atoms";
+import { IsOpenSideMenu } from "../../../application/appState/valueObjects/isOpenSideMenu";
+import { isOpenSideMenuAtom } from "../../atoms";
 import { IconButton } from "../utils/IconButton";
 
 export const SideMenuOpenButton = (): JSX.Element => {
-  const setAppState = useSetAtom(Atom.appState);
+  const setIsOpenSideMenu = useSetAtom(isOpenSideMenuAtom);
 
   const handleClick = (): void => {
-    setAppState((a) => a.setIsOpenSideMenu(() => true));
+    setIsOpenSideMenu(IsOpenSideMenu.create(true));
   };
 
   return (

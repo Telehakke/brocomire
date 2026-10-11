@@ -1,31 +1,30 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type SafeAreaLengthJSON = number;
 
 declare const SafeAreaLengthBrand: unique symbol;
 
-export class SafeAreaLength extends ValueObject<SafeAreaLengthJSON> {
-  declare [SafeAreaLengthBrand]: unknown;
+export type SafeAreaLength = number & { [SafeAreaLengthBrand]: unknown };
 
-  static readonly MIN = 0;
-  static readonly MAX = 100;
-  static readonly DEFAULT = 0;
+/* -------------------------------------------------------------------------- */
 
-  private constructor(value: number) {
-    super(value);
-  }
+export const SafeAreaLength = {
+  MIN: 0,
+  MAZ: 100,
+  DEFAULT: 0,
 
-  static createSafe(value?: unknown): SafeAreaLength {
-    if (!isNumber(value)) return new SafeAreaLength(this.DEFAULT);
-    return new SafeAreaLength(Math.max(Math.min(value, this.MAX), this.MIN));
-  }
+  createSafe(value?: unknown): SafeAreaLength {
+    if (!isNumber(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
+  equals(v1: SafeAreaLength, v2: SafeAreaLength): boolean {
+    return v1 === v2;
+  },
 
-  isMin(): boolean {
-    return this.value === SafeAreaLength.MIN;
-  }
-}
+  isMin(input: SafeAreaLength): boolean {
+    return input === this.MIN;
+  },
+} as const;
+
+const create = (value: number): SafeAreaLength => {
+  return value as SafeAreaLength;
+};

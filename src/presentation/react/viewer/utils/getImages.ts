@@ -1,5 +1,6 @@
 import type { Cache } from "../../../../domain/models/file/cache";
 import type { FileManager } from "../../../../domain/models/file/fileManager";
+import { FileNavigator } from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
 
@@ -13,10 +14,11 @@ export const getImages = async (
   bookFormat: BookFormat,
   displayMode: DisplayMode,
   fileManager: FileManager,
+  fileNavigator: FileNavigator,
   cache?: Cache,
 ): Promise<[Image, Image]> => {
-  const leftIndex = fileManager.getLeftIndex(bookFormat, displayMode);
-  const rightIndex = fileManager.getRightIndex(bookFormat, displayMode);
+  const leftIndex = FileNavigator.getLeftIndex(fileNavigator, bookFormat, displayMode);
+  const rightIndex = FileNavigator.getRightIndex(fileNavigator, bookFormat, displayMode);
   return await Promise.all([
     getImage(await getBlob(fileManager, leftIndex, cache)),
     getImage(await getBlob(fileManager, rightIndex, cache)),

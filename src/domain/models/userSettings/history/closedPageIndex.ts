@@ -1,34 +1,27 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ClosedPageIndexJSON = number;
 
 declare const ClosedPageIndexBrand: unique symbol;
 
-export class ClosedPageIndex extends ValueObject<ClosedPageIndexJSON> {
-  declare [ClosedPageIndexBrand]: unknown;
+export type ClosedPageIndex = number & { [ClosedPageIndexBrand]: unknown };
 
-  static readonly MIN = 0;
+/* -------------------------------------------------------------------------- */
 
-  private constructor(value: number) {
-    super(value);
-  }
+export const ClosedPageIndex = {
+  MIN: 0,
+  createSafe(value?: unknown): ClosedPageIndex {
+    if (!isNumber(value) || !validate(value)) return create(this.MIN);
+    return create(value);
+  },
 
-  static create(value: number): ClosedPageIndex | null {
-    if (!this.validate(value)) return null;
-    return new ClosedPageIndex(value);
-  }
+  equals(v1: ClosedPageIndex, v2: ClosedPageIndex): boolean {
+    return v1 === v2;
+  },
+} as const;
 
-  static createSafe(value?: unknown): ClosedPageIndex {
-    if (!isNumber(value)) return new ClosedPageIndex(this.MIN);
-    return new ClosedPageIndex(Math.max(value, this.MIN));
-  }
+const create = (value: number): ClosedPageIndex => {
+  return value as ClosedPageIndex;
+};
 
-  private static validate(value: number): boolean {
-    return value >= 0;
-  }
-
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+const validate = (value: number): boolean => {
+  return value >= ClosedPageIndex.MIN;
+};

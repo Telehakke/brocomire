@@ -1,27 +1,23 @@
-import { ScrollPct2D } from "../../domain/models/scroll/scrollPct2D";
-import type { UserSettings } from "../../domain/models/userSettings/userSettings";
-import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
-import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
-import type { AppState } from "../appState/appState";
-import type { AppStore } from "../appState/appStore";
+import { FileNavigator, type FileNavigatorStore } from "../../domain/models/file/fileNavigator";
+import {
+  Notification,
+  type NotificationStore,
+} from "../../domain/models/notification/notification";
+import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
+import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
 
 /** 前のページに戻る */
-export const moveToPreviousPage = (appStore: AppStore, userSettings: UserSettings): void => {
-  if (!appStore.get().fileManager.hasPreviousFile()) return;
+export const moveToPreviousPage = (
+  fileNavigatorStore: FileNavigatorStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsStore: UserSettingsStore,
+): void => {
+  if (!FileNavigator.hasPreviousFile(fileNavigatorStore.get())) return;
 
-  const { bookFormat, displayMode } = userSettings;
-  appStore.set((a) => getNextAppState(a, bookFormat, displayMode));
-};
-
-/* -------------------------------------------------------------------------- */
-
-const getNextAppState = (
-  prev: AppState,
-  bookFormat: BookFormat,
-  displayMode: DisplayMode,
-): AppState => {
-  return prev
-    .setFileManager((v) => v.fileManager.decrementIndex(displayMode))
-    .setNotification((v) => v.notification.setMessage(v.fileManager.progress()))
-    .setScrollPct2D(() => ScrollPct2D.fromBookFormat(bookFormat, false));
+  const { bookFormat, displayMode } = userSettingsStore.get();
+  const fn = FileNavigator.decrementIndex(fileNavigatorStore.get(), displayMode);
+  fileNavigatorStore.set(fn);
+  notificationStore.set(Notification.showMessage(FileNavigator.progress(fn)));
+  scrollPercentage2D.setEndPosition(bookFormat);
 };

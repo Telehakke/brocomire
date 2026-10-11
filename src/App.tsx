@@ -1,9 +1,10 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, type JSX } from "react";
 import { updateHistory } from "./application/viewer/updateHistory";
-import type { UserSettingsStore } from "./domain/models/userSettings/userSettingsStore";
+import { FileNavigator } from "./domain/models/file/fileNavigator";
+import { UserSettings } from "./domain/models/userSettings/userSettings";
 import { LocalStorageUserSettingsRepository } from "./infrastructure/userSettings/localStorageUserSettingsRepository";
-import { AppStateAtom, Atom } from "./presentation/atoms";
+import { Atom, fileManagerAtom, fileNavigatorAtom, onViewerAtom } from "./presentation/atoms";
 import { Home } from "./presentation/react/home/Home";
 import { Menu } from "./presentation/react/menu/Menu";
 import { NotificationView } from "./presentation/react/notification/NotificationView";
@@ -11,18 +12,26 @@ import { SideMenu } from "./presentation/react/sideMenu/SideMenu";
 import { ImageViewer } from "./presentation/react/viewer/ImageViewer";
 
 const updateHistoryAtom = atom(null, (get, set) => {
-  const appState = get(Atom.appState);
-  const userSettingsStore: UserSettingsStore = {
-    get: () => get(Atom.userSettings),
-    set: (callback) => set(Atom.userSettings, callback(get(Atom.userSettings))),
-  };
-  updateHistory(appState, userSettingsStore, new LocalStorageUserSettingsRepository());
+  const fileNavigatorStore = FileNavigator.getStore(
+    () => get(fileNavigatorAtom),
+    (v) => set(fileNavigatorAtom, v),
+  );
+  const userSettingsStore = UserSettings.getStore(
+    () => get(Atom.userSettings),
+    (v) => set(Atom.userSettings, v),
+  );
+  updateHistory(
+    get(fileManagerAtom),
+    fileNavigatorStore,
+    userSettingsStore,
+    new LocalStorageUserSettingsRepository(),
+  );
 });
 
 export const App = (): JSX.Element => {
   const userSettings = useSetAtom(Atom.userSettings);
   const updateHistory = useSetAtom(updateHistoryAtom);
-  const onViewer = useAtomValue(AppStateAtom.onViewer);
+  const onViewer = useAtomValue(onViewerAtom);
 
   useEffect(() => {
     userSettings(new LocalStorageUserSettingsRepository().load());

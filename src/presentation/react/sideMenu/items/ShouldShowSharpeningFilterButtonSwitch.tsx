@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { ShouldShowSharpeningFilterButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowSharpeningFilterButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -11,8 +12,9 @@ export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((u) =>
-      u.setShouldShowSharpeningFilterButton(
-        () => ShouldShowSharpeningFilterButton.createSafe(checked),
+      UserSettings.setShouldShowSharpeningFilterButton(
+        u,
+        checked as ShouldShowSharpeningFilterButton,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -21,7 +23,7 @@ export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
   return (
     <Switch
       label="先鋭化ボタンをビューアに表示"
-      checked={shouldShowButton.value}
+      checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />
   );

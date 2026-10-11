@@ -1,4 +1,4 @@
-import { ScrollPct } from "../../scrollPct";
+import { ScrollPercentage } from "../../scrollPercentage";
 import type { Origin } from "../origin";
 import { isOriginEnd } from "../shared/isOriginEnd";
 import { isOriginStart } from "../shared/isOriginStart";
@@ -8,19 +8,24 @@ import { LeftValue } from "./values";
 
 export const Left: Origin = {
   ...LeftValue,
+
   isInRange(value) {
-    return ScrollPct.MIN < value && value < ScrollPct.CENTER;
+    return ScrollPercentage.MIN < value && value < ScrollPercentage.CENTER;
   },
+
   isStart(bookFormat) {
-    return isOriginStart(this.name, bookFormat.value);
+    return isOriginStart(this.name, bookFormat);
   },
+
   isEnd(bookFormat) {
-    return isOriginEnd(this.name, bookFormat.value);
+    return isOriginEnd(this.name, bookFormat);
   },
+
   next(bookFormat, scrollStepCount) {
-    return NextOrigin(this.name, bookFormat.value, scrollStepCount.value);
+    return NextOrigin(this.name, bookFormat, scrollStepCount);
   },
+
   previous(bookFormat, scrollStepCount) {
-    return previousOrigin(this.name, bookFormat.value, scrollStepCount.value);
+    return previousOrigin(this.name, bookFormat, scrollStepCount);
   },
 };

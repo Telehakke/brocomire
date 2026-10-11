@@ -1,6 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import type { JSX } from "react/jsx-runtime";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { SafeAreaLength } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -9,12 +10,13 @@ import { Slider } from "../../utils/Slider";
 export const SafeAreaLengthSlider = (): JSX.Element => {
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
   const setUserSettings = useSetAtom(Atom.userSettings);
-  const [value, setValue] = useState(safeAreaLength.value);
+  const [value, setValue] = useState(safeAreaLength);
 
   const handleValueChangedEnd = (value: number): void => {
     setUserSettings((u) =>
-      u.setSafeAreaLength(
-        () => SafeAreaLength.createSafe(value),
+      UserSettings.setSafeAreaLength(
+        u,
+        value as SafeAreaLength,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -24,9 +26,9 @@ export const SafeAreaLengthSlider = (): JSX.Element => {
     <Slider
       label={getLabel}
       min={SafeAreaLength.MIN}
-      max={SafeAreaLength.MAX}
+      max={SafeAreaLength.MAZ}
       value={value}
-      onValueChange={setValue}
+      onValueChange={(v) => setValue(v as SafeAreaLength)}
       onValueChangeEnd={handleValueChangedEnd}
     />
   );

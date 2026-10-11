@@ -1,25 +1,24 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ShouldShowInvertButtonJSON = boolean;
 
 declare const ShouldShowInvertButtonBrand: unique symbol;
 
-export class ShouldShowInvertButton extends ValueObject<ShouldShowInvertButtonJSON> {
-  declare [ShouldShowInvertButtonBrand]: unknown;
+export type ShouldShowInvertButton = boolean & { [ShouldShowInvertButtonBrand]: unknown };
 
-  static readonly DEFAULT = false;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const ShouldShowInvertButton = {
+  DEFAULT: false,
 
-  static createSafe(value?: unknown): ShouldShowInvertButton {
-    if (!isBoolean(value)) return new ShouldShowInvertButton(this.DEFAULT);
-    return new ShouldShowInvertButton(value);
-  }
+  createSafe(value?: unknown): ShouldShowInvertButton {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: ShouldShowInvertButton, v2: ShouldShowInvertButton): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): ShouldShowInvertButton => {
+  return value as ShouldShowInvertButton;
+};

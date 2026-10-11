@@ -1,6 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { AppStateAtom, Atom } from "../../atoms";
+import { IsOpenSideMenu } from "../../../application/appState/valueObjects/isOpenSideMenu";
+import { isOpenSideMenuAtom } from "../../atoms";
 import { Card } from "../utils/Card";
 import { SideMenuDialog } from "../utils/SideMenuDialog";
 import {
@@ -30,11 +31,11 @@ import { ViewerCloseButton } from "./items/ViewerCloseButton";
 import { ZoomStepSlider } from "./items/ZoomStepSlider";
 
 export const SideMenu = (): JSX.Element => {
-  const isOpenSideMenu = useAtomValue(AppStateAtom.isOpenSideMenu);
-  const setAppState = useSetAtom(Atom.appState);
+  const isOpenSideMenu = useAtomValue(isOpenSideMenuAtom);
+  const setIsOpenSideMenu = useSetAtom(isOpenSideMenuAtom);
 
   const handleOpenChange = (open: boolean): void => {
-    setAppState((a) => a.setIsOpenSideMenu(() => open));
+    setIsOpenSideMenu(IsOpenSideMenu.create(open));
   };
 
   return (
@@ -58,9 +59,9 @@ export const SideMenu = (): JSX.Element => {
         <SelectPageSlider />
         <Card>
           <BookFormatSegmentGroup />
+          <ContentFitSegmentGroup />
         </Card>
         <Card footer="ディスプレイのノッチやパンチホールなどを避けてコンテンツを表示します">
-          <ContentFitSegmentGroup />
           <IsSafeAreaEnabledSwitch />
           <SafeAreaLengthSlider />
         </Card>

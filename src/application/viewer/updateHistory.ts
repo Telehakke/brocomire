@@ -1,19 +1,26 @@
+import type { FileManager } from "../../domain/models/file/fileManager";
+import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
 import { History } from "../../domain/models/userSettings/history/history";
+import { HistoryList } from "../../domain/models/userSettings/history/historyList";
+import {
+  UserSettings,
+  type UserSettingsStore,
+} from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
-import type { UserSettingsStore } from "../../domain/models/userSettings/userSettingsStore";
-import type { AppState } from "../appState/appState";
 
 /** 履歴の更新 */
 export const updateHistory = (
-  appState: AppState,
+  fileManager: FileManager,
+  fileNavigatorStore: FileNavigatorStore,
   userSettingsStore: UserSettingsStore,
   userSettingsRepository: UserSettingsRepository,
 ): void => {
-  const { fileManager, hashedFileName } = appState;
-  userSettingsStore.set((u) =>
-    u.setHistories(
-      (v) => v.histories.update(History.createSafe(hashedFileName, fileManager.getIndex())),
-      userSettingsRepository,
-    ),
+  const userSettings = userSettingsStore.get();
+  const historyList = HistoryList.update(
+    userSettings.historyList,
+    History.createSafe(fileManager.getHashedFileName(), fileNavigatorStore.get().currentIndex),
+  );
+  userSettingsStore.set(
+    UserSettings.setHistoryList(userSettings, historyList, userSettingsRepository),
   );
 };

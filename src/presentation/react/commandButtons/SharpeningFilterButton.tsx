@@ -1,15 +1,15 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { Sparkle } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { AppStateAtom, Atom, UserSettingsAtom } from "../../atoms";
+import { onSharpeningFilterAtom, UserSettingsAtom } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 export const SharpeningFilterButton = (): JSX.Element | null => {
   const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowSharpeningFilterButton);
-  const onFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
+  const onFilter = useAtomValue(onSharpeningFilterAtom);
 
-  if (!shouldShowButton.value) return null;
+  if (!shouldShowButton) return null;
   if (onFilter) {
     return <SharpeningFilterIconBlueButton />;
   }
@@ -17,10 +17,10 @@ export const SharpeningFilterButton = (): JSX.Element | null => {
 };
 
 const SharpeningFilterIconBlueButton = (): JSX.Element => {
-  const setAppState = useSetAtom(Atom.appState);
+  const setOnFilter = useSetAtom(onSharpeningFilterAtom);
 
   const handleClick = (): void => {
-    setAppState((a) => a.setOnSharpeningFilter(() => false));
+    setOnFilter(false);
   };
 
   return (
@@ -31,10 +31,10 @@ const SharpeningFilterIconBlueButton = (): JSX.Element => {
 };
 
 const SharpeningFilterIconButton = (): JSX.Element => {
-  const setAppState = useSetAtom(Atom.appState);
+  const setOnFilter = useSetAtom(onSharpeningFilterAtom);
 
   const handleClick = (): void => {
-    setAppState((a) => a.setOnSharpeningFilter(() => true));
+    setOnFilter(true);
   };
 
   return (

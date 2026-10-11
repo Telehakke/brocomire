@@ -1,7 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
 import { InfoVisibility } from "../../../application/appState/valueObjects/infoVisibility";
-import { AppStateAtom, Atom } from "../../atoms";
+import { infoVisibilityAtom } from "../../atoms";
 import { ClockView } from "../clock/ClockView";
 import { FullscreenButton } from "../commandButtons/FullscreenButton";
 import { InvertFilterButton } from "../commandButtons/InvertFilterButton";
@@ -15,19 +15,19 @@ import {
 } from "../utils/safeAreaPadding";
 
 export const Menu = (): JSX.Element | null => {
-  const infoVisibility = useAtomValue(AppStateAtom.infoVisibility);
-  const setAppState = useSetAtom(Atom.appState);
+  const infoVisibility = useAtomValue(infoVisibilityAtom);
+  const setInfoVisibility = useSetAtom(infoVisibilityAtom);
 
   const handleAnimationEnd = (): void => {
-    if (infoVisibility.value !== "hidden") return;
-    setAppState((a) => a.setInfoVisibility(() => new InfoVisibility("none")));
+    if (!InfoVisibility.isFadeOut(infoVisibility)) return;
+    setInfoVisibility(() => InfoVisibility.create("none"));
   };
 
-  if (infoVisibility.value === "none") return null;
+  if (InfoVisibility.isNone(infoVisibility)) return null;
   return (
     <div
-      className="data-[state=visible]:animate-fade-in data-[state=hidden]:animate-fade-out data-[state=hidden]:opacity-0"
-      data-state={infoVisibility.value}
+      className="data-[state=visible]:animate-fade-in data-[state=fade-out]:animate-fade-out data-[state=fade-out]:opacity-0"
+      data-state={infoVisibility}
       onAnimationEnd={handleAnimationEnd}
     >
       <div

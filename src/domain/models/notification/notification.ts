@@ -1,15 +1,64 @@
-export type Visibility = "visible" | "hidden" | "none";
+export type Visibility = "visible" | "fade-out" | "none";
 
-export interface Notification {
-  readonly value: string | undefined;
-  readonly visibility: Visibility;
+type NotificationType = Readonly<{
+  message: string | undefined;
+  visibility: Visibility;
+}>;
 
-  /** 通知メッセージを変更した新しいインスタンスを返す */
-  setMessage(value?: string): Notification;
+declare const NotificationBrand: unique symbol;
 
-  /** 通知ウィンドウを隠す状態にした新しいインスタンスを返す */
-  hidden(): Notification;
+export type Notification = NotificationType & { [NotificationBrand]: unknown };
 
-  /** 通知ウィンドウを無くす状態にした新しいインスタンスを返す */
-  none(): Notification;
-}
+/* -------------------------------------------------------------------------- */
+
+export type NotificationStore = Readonly<{
+  get(): Notification;
+
+  set(value: Notification): void;
+}>;
+
+/* -------------------------------------------------------------------------- */
+
+export const Notification = {
+  init(): Notification {
+    return create({ message: undefined, visibility: "none" });
+  },
+
+  getStore(getter: () => Notification, setter: (value: Notification) => void): NotificationStore {
+    return { get: () => getter(), set: (v) => setter(v) };
+  },
+
+  /** メッセージを表示 */
+  showMessage(message?: string): Notification {
+    return create({ message, visibility: "visible" });
+  },
+
+  /** メッセージをフェードアウト */
+  fadeOut(input: Notification): Notification {
+    return create({ ...input, visibility: "fade-out" });
+  },
+
+  /** メッセージを無くす */
+  none(input: Notification): Notification {
+    return create({ ...input, visibility: "none" });
+  },
+
+  /** メッセージが表示されているかどうか */
+  isVisible(input: Notification): boolean {
+    return input.visibility === "visible";
+  },
+
+  /** メッセージがフェードアウトしているかどうか */
+  isFadeOut(input: Notification): boolean {
+    return input.visibility === "fade-out";
+  },
+
+  /** メッセージが無くされたかどうか */
+  isNone(input: Notification): boolean {
+    return input.visibility === "none";
+  },
+} as const;
+
+const create = (value: NotificationType): Notification => {
+  return value as Notification;
+};

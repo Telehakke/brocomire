@@ -1,5 +1,9 @@
-import type { AppStore } from "../../../../application/appState/appStore";
-import { ImageSize } from "../../../../application/appState/valueObjects/imageSize";
+import {
+  ImageSize,
+  type ImageSizeStore,
+} from "../../../../application/appState/valueObjects/imageSize";
+import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
+import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
 
 type Image = HTMLImageElement | undefined;
 
@@ -8,7 +12,9 @@ export const drawImages = (
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   images: [Image, Image],
-  appStore: AppStore,
+  imageSizeStore: ImageSizeStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  viewerManager: ViewerManager,
 ): void => {
   // Canvasのstyleが変化した時に発生する描画のチラつきと、
   // スクロール位置がズレる問題を解消するため処理を遅延させる
@@ -19,9 +25,8 @@ export const drawImages = (
     canvas.height = height;
     drawLeftImage(ctx, images);
     drawRightImage(ctx, images);
-    const { scrollPct2D, viewerManager } = appStore.get();
-    viewerManager.scrollToPct(scrollPct2D.x, scrollPct2D.y);
-    appStore.set((a) => a.setImageSize(() => new ImageSize({ width, height })));
+    viewerManager.scrollToPct(scrollPercentage2D.x, scrollPercentage2D.y);
+    imageSizeStore.set(ImageSize.create({ width, height }));
   }, 10);
 };
 

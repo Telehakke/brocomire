@@ -2,9 +2,10 @@ import type {
   BookFormat,
   BookFormatType,
 } from "../../domain/models/userSettings/valueObjects/bookFormat";
-import type {
-  DisplayMode,
-  DisplayModeType,
+import {
+  DisplayModeEnum,
+  type DisplayMode,
+  type DisplayModeType,
 } from "../../domain/models/userSettings/valueObjects/displayMode";
 
 type Parity = "odd" | "even";
@@ -28,12 +29,12 @@ export class CurrentIndex {
   }
 
   decrementIndex(displayMode: DisplayMode): CurrentIndex {
-    const amount = displayMode.value === "single" ? 1 : 2;
+    const amount = displayMode === DisplayModeEnum.single ? 1 : 2;
     return new CurrentIndex(Math.max(this.value - amount, 0), this.maxIndex);
   }
 
   incrementIndex(displayMode: DisplayMode): CurrentIndex {
-    const amount = displayMode.value === "single" ? 1 : 2;
+    const amount = displayMode === DisplayModeEnum.single ? 1 : 2;
     return new CurrentIndex(Math.min(this.value + amount, this.maxIndex), this.maxIndex);
   }
 
@@ -52,7 +53,9 @@ export class CurrentIndex {
 
   getLeftIndex(bookFormat: BookFormat, displayMode: DisplayMode): number | undefined {
     const amount =
-      this.leftIndexMap[displayMode.value][bookFormat.value][this.getParity(this.value)];
+      this.leftIndexMap[displayMode as DisplayModeType][bookFormat as BookFormatType][
+        this.getParity(this.value)
+      ];
     const index = this.value + amount;
     if (index < 0 || index > this.maxIndex) return undefined;
     return index;
@@ -60,7 +63,9 @@ export class CurrentIndex {
 
   getRightIndex(bookFormat: BookFormat, displayMode: DisplayMode): number | undefined {
     const amount =
-      this.rightIndexMap[displayMode.value][bookFormat.value][this.getParity(this.value)];
+      this.rightIndexMap[displayMode as DisplayModeType][bookFormat as BookFormatType][
+        this.getParity(this.value)
+      ];
     if (amount == null) return undefined;
     const index = this.value + amount;
     if (index < 0 || index > this.maxIndex) return undefined;

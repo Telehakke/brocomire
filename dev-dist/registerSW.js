@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/brocomire/dev-sw.js?dev-sw', { scope: '/brocomire/', type: 'classic' })

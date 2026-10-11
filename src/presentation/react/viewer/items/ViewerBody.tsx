@@ -1,10 +1,16 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type JSX, type ReactNode } from "react";
 import { ChevronMark } from "../../../../application/appState/valueObjects/chevronMark";
+import { IsUserScrolled } from "../../../../application/appState/valueObjects/isUserScrolled";
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { PullManager } from "../../../../infrastructure/viewer/pullManager";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
-import { AppStateAtom, Atom, UserSettingsAtom } from "../../../atoms";
+import {
+  chevronMarkAtom,
+  isUserScrolledAtom,
+  UserSettingsAtom,
+  viewerManagerAtom,
+} from "../../../atoms";
 
 export type Body = HTMLDivElement | null;
 
@@ -29,15 +35,16 @@ export const ViewerBody = ({
   const clickGestureManager = useRef(new ClickGestureManager());
   const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const pullManager = useRef(new PullManager());
-  const viewerManager = useAtomValue(AppStateAtom.viewerManager);
   const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
-  const setAppState = useSetAtom(Atom.appState);
+  const setChevronMark = useSetAtom(chevronMarkAtom);
+  const setIsUserScrolled = useSetAtom(isUserScrolledAtom);
+  const viewerManager = useAtomValue(viewerManagerAtom);
 
   useEffect(() => {
     const body = bodyRef.current;
     if (body == null) return;
-    setAppState((a) => a.setViewerManager((v) => v.viewerManager.setBody(() => body)));
-  }, [setAppState]);
+    viewerManager.setBody(() => body);
+  }, [viewerManager]);
 
   useEffect(() => {
     const body = bodyRef.current;
@@ -61,7 +68,7 @@ export const ViewerBody = ({
     const { clientX, clientY } = ev.targetTouches[0];
     touchMoveManager.current = new TouchMoveManager(clientX, clientY);
     clickGestureManager.current.reset();
-    clickGestureManager.current.onLongPress(onSubClick, longPressRecognitionTime.value);
+    clickGestureManager.current.onLongPress(onSubClick, longPressRecognitionTime);
     pullManager.current.reset();
   };
 
@@ -75,20 +82,19 @@ export const ViewerBody = ({
     } else {
       pullManager.current.reset();
     }
-    setAppState((a) =>
-      a.setChevronMark(() => pullManager.current.getChevronMark()).setIsUserScrolled(() => true),
-    );
+    setChevronMark(pullManager.current.getChevronMark());
+    setIsUserScrolled(IsUserScrolled.create(true));
   };
 
   const handleTouchEnd = (): void => {
     clickGestureManager.current.cancelLongPress();
     pullManager.current.onLeftSidePull(onLeftSidePull);
     pullManager.current.onRightSidePull(onRightSidePull);
-    setAppState((a) => a.setChevronMark(() => new ChevronMark("none")));
+    setChevronMark(ChevronMark.create("none"));
   };
 
   const handleWheel = (): void => {
-    setAppState((a) => a.setIsUserScrolled(() => true));
+    setIsUserScrolled(IsUserScrolled.create(true));
   };
 
   return (

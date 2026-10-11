@@ -26,4 +26,6 @@ dist-ssr
 !.vscode/settings.json
 !.vscode/extensions.json
 
+dev-dist
 *.af
+.vitest/

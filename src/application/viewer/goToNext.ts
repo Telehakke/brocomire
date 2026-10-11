@@ -1,38 +1,50 @@
-import type { UserSettings } from "../../domain/models/userSettings/userSettings";
-import type { AppStore } from "../appState/appStore";
+import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
+import type { NotificationStore } from "../../domain/models/notification/notification";
+import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
+import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
+import type { IsUserScrolledStore } from "../appState/valueObjects/isUserScrolled";
 import { moveToNextPage } from "./moveToNextPage";
 import { updateScrollPct2D } from "./updateScrollPct";
 
 /** 次へ進む */
-export const goToNext = (appStore: AppStore, userSettings: UserSettings): void => {
-  updateScrollPct2D(appStore);
-  if (canMoveToNextPage(appStore, userSettings)) {
-    moveToNextPage(appStore, userSettings);
+export const goToNext = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsStore: UserSettingsStore,
+  viewerManager: ViewerManager,
+): void => {
+  updateScrollPct2D(isUserScrolledStore, scrollPercentage2D, viewerManager);
+  if (canMoveToNextPage(scrollPercentage2D, userSettingsStore, viewerManager)) {
+    moveToNextPage(fileNavigatorStore, notificationStore, scrollPercentage2D, userSettingsStore);
     return;
   }
-  goToNextOrigin(appStore, userSettings);
+  goToNextOrigin(scrollPercentage2D, userSettingsStore, viewerManager);
 };
 
 /* -------------------------------------------------------------------------- */
 
-const canMoveToNextPage = (appStore: AppStore, userSetting: UserSettings): boolean => {
-  const { scrollPct2D, viewerManager } = appStore.get();
-  return scrollPct2D.canMoveToNextPage(
-    userSetting.bookFormat,
+const canMoveToNextPage = (
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingStore: UserSettingsStore,
+  viewerManager: ViewerManager,
+): boolean => {
+  const { bookFormat } = userSettingStore.get();
+  return scrollPercentage2D.canMoveToNextPage(
+    bookFormat,
     viewerManager.canScrollX(),
     viewerManager.canScrollY(),
   );
 };
 
-const goToNextOrigin = (appStore: AppStore, userSetting: UserSettings): void => {
-  const { bookFormat, scrollStepCount } = userSetting;
-  appStore.set((a) => {
-    const scrollPct2D = a.scrollPct2D.next(
-      bookFormat,
-      scrollStepCount,
-      a.viewerManager.canScrollY(),
-    );
-    a.viewerManager.scrollToPct(scrollPct2D.x, scrollPct2D.y);
-    return a.setScrollPct2D(() => scrollPct2D);
-  });
+const goToNextOrigin = (
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingStore: UserSettingsStore,
+  viewerManager: ViewerManager,
+): void => {
+  const { bookFormat, scrollStepCount } = userSettingStore.get();
+  scrollPercentage2D.setNextPosition(bookFormat, scrollStepCount, viewerManager.canScrollY());
+  viewerManager.scrollToPct(scrollPercentage2D.x, scrollPercentage2D.y);
 };

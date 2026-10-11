@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { ShouldShowInvertButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowInvertButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -11,8 +12,9 @@ export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((u) =>
-      u.setShouldShowInvertButton(
-        () => ShouldShowInvertButton.createSafe(checked),
+      UserSettings.setShouldShowInvertButton(
+        u,
+        checked as ShouldShowInvertButton,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -21,7 +23,7 @@ export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
   return (
     <Switch
       label="色反転ボタンをビューアに表示"
-      checked={shouldShowButton.value}
+      checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />
   );

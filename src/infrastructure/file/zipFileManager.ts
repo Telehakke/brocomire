@@ -1,17 +1,14 @@
 import { BlobReader, BlobWriter, ZipReader, type Entry, type FileEntry } from "@zip.js/zip.js";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
-import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
 import type { BlobCache } from "./blobCache";
-import { CurrentIndex } from "./currentIndex";
 
 export class ZipFileManager implements FileManager {
   private readonly entries: readonly Entry[];
-  private readonly currentIndex: CurrentIndex;
+  private readonly hashedFileName: string | undefined;
 
-  private constructor(entries: readonly Entry[], currentIndex: CurrentIndex) {
+  private constructor(entries: readonly Entry[], hashedFileName?: string) {
     this.entries = entries;
-    this.currentIndex = currentIndex;
+    this.hashedFileName = hashedFileName;
   }
 
   static async create(file: File): Promise<ZipFileManager> {
@@ -20,7 +17,7 @@ export class ZipFileManager implements FileManager {
     const entries = await zipReader.getEntries();
     const imageFiles = this.filterImages(entries);
     await zipReader.close();
-    return new this(imageFiles, CurrentIndex.createSafe(0, imageFiles.length - 1));
+    return new this(imageFiles, await this.calculateHash(file.name));
   }
 
   private static filterImages(entries: Entry[]): Entry[] {
@@ -43,17 +40,35 @@ export class ZipFileManager implements FileManager {
       .sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
-  clear(): FileManager {
-    return new ZipFileManager([], CurrentIndex.createSafe(0, 0));
+  /** ハッシュ値を生成する */
+  private static async calculateHash(value: string): Promise<string> {
+    const data = new TextEncoder().encode(value);
+    try {
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map((v) => v.toString(16).padStart(2, "0"))
+        .join("");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      // 開発サーバーではcryptoがエラーを投げる。その場合、入力値をそのまま返す
+      return value;
+    }
   }
 
-  size(): number {
+  clear(): FileManager {
+    return new ZipFileManager([], undefined);
+  }
+
+  length(): number {
     return this.entries.length;
   }
+
   hasFiles(): boolean {
     return this.entries.length > 0;
   }
+
   async getBlob(index: number, blobCache?: BlobCache): Promise<Blob | undefined> {
+    if (index < 0 || index >= this.length()) return undefined;
     const blob = await this._getBlob(index, blobCache);
     this.cache(index, blob, blobCache);
     return blob;
@@ -71,39 +86,7 @@ export class ZipFileManager implements FileManager {
     blobCache.add(index, blob);
   }
 
-  getIndex(): number {
-    return this.currentIndex.value;
-  }
-
-  setIndex(index: number): FileManager {
-    return new ZipFileManager(this.entries, this.currentIndex.setIndex(index));
-  }
-
-  decrementIndex(displayMode: DisplayMode): FileManager {
-    return new ZipFileManager(this.entries, this.currentIndex.decrementIndex(displayMode));
-  }
-
-  incrementIndex(displayMode: DisplayMode): FileManager {
-    return new ZipFileManager(this.entries, this.currentIndex.incrementIndex(displayMode));
-  }
-
-  progress(): string | undefined {
-    return this.currentIndex.progress(this.size());
-  }
-
-  hasPreviousFile(): boolean {
-    return this.currentIndex.hasPreviousFile();
-  }
-
-  hasNextFile(): boolean {
-    return this.currentIndex.hasNextFile(this.size());
-  }
-
-  getLeftIndex(bookFormat: BookFormat, displayMode: DisplayMode): number | undefined {
-    return this.currentIndex.getLeftIndex(bookFormat, displayMode);
-  }
-
-  getRightIndex(bookFormat: BookFormat, displayMode: DisplayMode): number | undefined {
-    return this.currentIndex.getRightIndex(bookFormat, displayMode);
+  getHashedFileName(): string | undefined {
+    return this.hashedFileName;
   }
 }

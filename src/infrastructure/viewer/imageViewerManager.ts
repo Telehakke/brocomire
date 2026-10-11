@@ -13,19 +13,15 @@ export class ImageViewerManager implements ViewerManager {
     this.canvas = canvas;
   }
 
-  setBody(body: () => ViewerBodyProperties): ViewerManager {
-    return new ImageViewerManager(body, this.canvas);
+  setBody(body: () => ViewerBodyProperties): void {
+    this.body = body;
   }
 
-  setCanvas(canvas: () => ViewerCanvasProperties): ViewerManager {
-    return new ImageViewerManager(this.body, canvas);
+  setCanvas(canvas: () => ViewerCanvasProperties): void {
+    this.canvas = canvas;
   }
 
-  copy(): ViewerManager {
-    return new ImageViewerManager(this.body, this.canvas);
-  }
-
-  scrollXPct(): number | undefined {
+  getScrollXPercentage(): number | undefined {
     const maxScrollX = this.maxScrollXPx();
     if (this.body == null || maxScrollX <= 0) return undefined;
     // 限界までスクロールしても`scrollLeft / maxScrollX = 1`にならない場合があるので、
@@ -33,7 +29,7 @@ export class ImageViewerManager implements ViewerManager {
     return (Math.ceil(this.body().scrollLeft) / maxScrollX) * 100;
   }
 
-  scrollYPct(): number | undefined {
+  getScrollYPercentage(): number | undefined {
     const maxScrollY = this.maxScrollYPx();
     if (this.body == null || maxScrollY <= 0) return undefined;
     // 限界までスクロールしても`scrollTop / maxScrollY = 1`にならない場合があるので、
@@ -60,7 +56,7 @@ export class ImageViewerManager implements ViewerManager {
   }
 
   isReachedLimitX(): boolean {
-    const x = this.scrollXPct() ?? 0;
+    const x = this.getScrollXPercentage() ?? 0;
     return x <= 0 || x >= 100;
   }
 
@@ -69,10 +65,6 @@ export class ImageViewerManager implements ViewerManager {
     const bodyRatio = this.body().clientWidth / this.body().clientHeight;
     const imageRatio = imageWidth / imageHeight;
     return bodyRatio <= imageRatio;
-  }
-
-  scrollToPx(x: number, y: number): void {
-    this.body?.().scroll(x, y);
   }
 
   scrollByPx(x: number, y: number): void {

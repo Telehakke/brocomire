@@ -1,27 +1,26 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type SharpeningFilterStrengthJSON = number;
 
 declare const SharpeningFilterStrengthBrand: unique symbol;
 
-export class SharpeningFilterStrength extends ValueObject<SharpeningFilterStrengthJSON> {
-  declare [SharpeningFilterStrengthBrand]: unknown;
+export type SharpeningFilterStrength = number & { [SharpeningFilterStrengthBrand]: unknown };
 
-  static readonly MIN = 1;
-  static readonly MAX = 10;
-  static readonly DEFAULT = 3;
+/* -------------------------------------------------------------------------- */
 
-  private constructor(value: number) {
-    super(value);
-  }
+export const SharpeningFilterStrength = {
+  MIN: 1,
+  MAX: 10,
+  DEFAULT: 3,
 
-  static createSafe(value?: unknown): SharpeningFilterStrength {
-    if (!isNumber(value)) return new SharpeningFilterStrength(this.DEFAULT);
-    return new SharpeningFilterStrength(Math.max(Math.min(value, this.MAX), this.MIN));
-  }
+  createSafe(value?: unknown): SharpeningFilterStrength {
+    if (!isNumber(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: SharpeningFilterStrength, v2: SharpeningFilterStrength): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: number): SharpeningFilterStrength => {
+  return value as SharpeningFilterStrength;
+};

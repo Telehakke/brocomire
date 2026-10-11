@@ -9,7 +9,7 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 const eslintBoundariesConfig: Config = {
   settings: {
     ...recommended.settings,
-    // @ts-ignore
+    // @ts-expect-error 型定義なし
     "import/resolver": {
       typescript: {
         alwaysTryTypes: true,
@@ -88,6 +88,32 @@ const eslintBoundariesConfig: Config = {
   },
 };
 
+const typescriptEslintRecommended = {
+  "@typescript-eslint/ban-ts-comment": "error",
+  "no-array-constructor": "off",
+  "@typescript-eslint/no-array-constructor": "error",
+  "@typescript-eslint/no-duplicate-enum-values": "error",
+  "@typescript-eslint/no-empty-object-type": "error",
+  "@typescript-eslint/no-explicit-any": "error",
+  "@typescript-eslint/no-extra-non-null-assertion": "error",
+  "@typescript-eslint/no-misused-new": "error",
+  "@typescript-eslint/no-namespace": "error",
+  "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
+  "@typescript-eslint/no-require-imports": "error",
+  "@typescript-eslint/no-this-alias": "error",
+  "@typescript-eslint/no-unnecessary-type-constraint": "error",
+  "@typescript-eslint/no-unsafe-declaration-merging": "error",
+  "@typescript-eslint/no-unsafe-function-type": "error",
+  "no-unused-expressions": "off",
+  "@typescript-eslint/no-unused-expressions": "error",
+  "no-unused-vars": "off",
+  "@typescript-eslint/no-unused-vars": "error",
+  "@typescript-eslint/no-wrapper-object-types": "error",
+  "@typescript-eslint/prefer-as-const": "error",
+  "@typescript-eslint/prefer-namespace-keyword": "error",
+  "@typescript-eslint/triple-slash-reference": "error",
+} as const;
+
 // https://vite.dev/config/
 export default defineConfig({
   fmt: {
@@ -108,10 +134,10 @@ export default defineConfig({
         },
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
+      ...eslintBoundariesConfig.rules,
+      ...typescriptEslintRecommended,
       "typescript/explicit-function-return-type": "error",
       "typescript/strict-boolean-expressions": "error",
-      "typescript/unbound-method": "error",
-      ...eslintBoundariesConfig.rules,
     },
     options: {
       typeAware: true,
@@ -126,7 +152,6 @@ export default defineConfig({
     ],
     ignorePatterns: ["dev-dist/**", "docs/**"],
   },
-  // @ts-ignore
   plugins: lazyPlugins(() => [
     react(),
     babel({ presets: [reactCompilerPreset()] }),

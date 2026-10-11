@@ -1,38 +1,32 @@
-import { ValueObject } from "../../utils/valueObject";
+export const ContentFitEnum = { all: "all", fill: "fill" } as const;
 
-type ContentFitEnumValue = Readonly<{ value: ContentFitType; label: string }>;
+export type ContentFitType = (typeof ContentFitEnum)[keyof typeof ContentFitEnum];
 
-export const ContentFitEnum: Readonly<{
-  all: ContentFitEnumValue;
-  fill: ContentFitEnumValue;
-}> = {
-  all: { value: "all", label: "全体" },
-  fill: { value: "fill", label: "満たす" },
-};
-
-export type ContentFitType = keyof typeof ContentFitEnum;
+/* -------------------------------------------------------------------------- */
 
 declare const ContentFitBrand: unique symbol;
 
-export class ContentFit extends ValueObject<ContentFitType> {
-  declare [ContentFitBrand]: unknown;
+export type ContentFit = ContentFitType & { [ContentFitBrand]: unknown };
 
-  static readonly DEFAULT: ContentFitType = "all";
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: ContentFitType) {
-    super(value);
-  }
+export const ContentFit = {
+  DEFAULT: ContentFitEnum.all,
 
-  static createSafe(value?: unknown): ContentFit {
-    if (!this.isContentFit(value)) return new ContentFit(this.DEFAULT);
-    return new ContentFit(value);
-  }
+  createSafe(value?: unknown): ContentFit {
+    if (!isContentFitType(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  private static isContentFit(value: unknown): value is ContentFitType {
-    return Object.keys(ContentFitEnum).some((v) => v === value);
-  }
+  equals(v1: ContentFit, v2: ContentFit): boolean {
+    return v1 === v2;
+  },
+} as const;
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+const create = (value: ContentFitType): ContentFit => {
+  return value as ContentFit;
+};
+
+const isContentFitType = (value: unknown): value is ContentFitType => {
+  return Object.keys(ContentFitEnum).some((v) => v === value);
+};

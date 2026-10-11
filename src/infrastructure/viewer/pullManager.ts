@@ -20,9 +20,9 @@ export class PullManager {
 
   /** 表示するアイコンの種類 */
   getChevronMark(): ChevronMark {
-    if (this.canLeftPull()) return new ChevronMark("left");
-    if (this.canRightPull()) return new ChevronMark("right");
-    return new ChevronMark("none");
+    if (this.canLeftPull()) return ChevronMark.create("left");
+    if (this.canRightPull()) return ChevronMark.create("right");
+    return ChevronMark.create("none");
   }
 
   /** 左端の限界を超えて引っ張るとactionを実行 */

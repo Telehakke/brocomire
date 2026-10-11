@@ -1,6 +1,6 @@
 import type { Cache } from "../../domain/models/file/cache";
 
-type BlobCacheValue = { fileIndex: number; blob: Blob };
+type BlobCacheValue = Readonly<{ fileIndex: number; blob: Blob }>;
 
 export class BlobCache implements Cache {
   private values: BlobCacheValue[];
@@ -9,24 +9,18 @@ export class BlobCache implements Cache {
     this.values = [];
   }
 
-  get(index: number): Blob | undefined {
-    return this.values.find((v) => v.fileIndex === index)?.blob;
+  get(fileIndex: number): Blob | undefined {
+    return this.values.find((v) => v.fileIndex === fileIndex)?.blob;
   }
 
-  add(index: number, blob: Blob): void {
-    this.values.push({ fileIndex: index, blob });
+  add(fileIndex: number, blob: Blob): void {
+    if (this.values.find((v) => v.fileIndex === fileIndex)) return;
+
+    this.values.push({ fileIndex, blob });
   }
 
-  trimBefore(fileIndex: number): void {
-    this.values = this.values
-      .sort((a, b) => b.fileIndex - a.fileIndex)
-      .filter((v) => v.fileIndex >= fileIndex);
-  }
-
-  trimAfter(fileIndex: number): void {
-    this.values = this.values
-      .sort((a, b) => a.fileIndex - b.fileIndex)
-      .filter((v) => v.fileIndex <= fileIndex);
+  trim(minIndex: number, maxIndex: number): void {
+    this.values = this.values.filter((v) => minIndex <= v.fileIndex && v.fileIndex <= maxIndex);
   }
 
   clear(): void {

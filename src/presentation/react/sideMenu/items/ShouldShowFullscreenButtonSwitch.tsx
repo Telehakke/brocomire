@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { ShouldShowFullscreenButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowFullscreenButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -11,8 +12,9 @@ export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((u) =>
-      u.setShouldShowFullscreenButton(
-        () => ShouldShowFullscreenButton.createSafe(checked),
+      UserSettings.setShouldShowFullscreenButton(
+        u,
+        checked as ShouldShowFullscreenButton,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -21,7 +23,7 @@ export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
   return (
     <Switch
       label="全画面ボタンをビューアに表示"
-      checked={shouldShowButton.value}
+      checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />
   );

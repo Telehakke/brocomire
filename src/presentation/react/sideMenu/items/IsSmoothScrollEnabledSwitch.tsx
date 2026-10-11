@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { IsSmoothScrollEnabled } from "../../../../domain/models/userSettings/valueObjects/isSmoothScrollEnabled";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -11,8 +12,9 @@ export const IsSmoothScrollEnabledSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((u) =>
-      u.setIsSmoothScrollEnabled(
-        () => IsSmoothScrollEnabled.createSafe(checked),
+      UserSettings.setIsSmoothScrollEnabled(
+        u,
+        checked as IsSmoothScrollEnabled,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -21,7 +23,7 @@ export const IsSmoothScrollEnabledSwitch = (): JSX.Element => {
   return (
     <Switch
       label="滑らかスクロールの有効化"
-      checked={isSmoothScrollEnabled.value}
+      checked={isSmoothScrollEnabled}
       onCheckedChange={handleCheckedChange}
     />
   );

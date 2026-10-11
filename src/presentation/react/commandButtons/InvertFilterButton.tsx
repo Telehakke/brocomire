@@ -1,15 +1,15 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { Droplet } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { AppStateAtom, Atom, UserSettingsAtom } from "../../atoms";
+import { onInvertFilterAtom, UserSettingsAtom } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 export const InvertFilterButton = (): JSX.Element | null => {
   const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowInvertButton);
-  const onFilter = useAtomValue(AppStateAtom.onInvertFilter);
+  const onFilter = useAtomValue(onInvertFilterAtom);
 
-  if (!shouldShowButton.value) return null;
+  if (!shouldShowButton) return null;
   if (onFilter) {
     return <InvertIconBlueButton />;
   }
@@ -17,10 +17,10 @@ export const InvertFilterButton = (): JSX.Element | null => {
 };
 
 const InvertIconBlueButton = (): JSX.Element => {
-  const setAppState = useSetAtom(Atom.appState);
+  const setOnFilter = useSetAtom(onInvertFilterAtom);
 
   const handleClick = (): void => {
-    setAppState((a) => a.setOnInvertFilter(() => false));
+    setOnFilter(false);
   };
 
   return (
@@ -31,10 +31,10 @@ const InvertIconBlueButton = (): JSX.Element => {
 };
 
 const InvertIconButton = (): JSX.Element => {
-  const setAppState = useSetAtom(Atom.appState);
+  const setOnFilter = useSetAtom(onInvertFilterAtom);
 
   const handleClick = (): void => {
-    setAppState((a) => a.setOnInvertFilter(() => true));
+    setOnFilter(true);
   };
 
   return (

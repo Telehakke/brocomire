@@ -1,23 +1,33 @@
-import { ValueObject } from "../../../domain/models/utils/valueObject";
-
-export const InfoVisibilityEnum = {
+const InfoVisibilityEnum = {
   visible: "visible",
-  hidden: "hidden",
+  fadeOut: "fade-out",
   none: "none",
 } as const;
 
-export type InfoVisibilityType = keyof typeof InfoVisibilityEnum;
+type InfoVisibilityType = (typeof InfoVisibilityEnum)[keyof typeof InfoVisibilityEnum];
+
+/* -------------------------------------------------------------------------- */
 
 declare const InfoVisibilityBrand: unique symbol;
 
-export class InfoVisibility extends ValueObject<InfoVisibilityType> {
-  declare [InfoVisibilityBrand]: unknown;
+export type InfoVisibility = InfoVisibilityType & { [InfoVisibilityBrand]: unknown };
 
-  constructor(value: InfoVisibilityType) {
-    super(value);
-  }
+/* -------------------------------------------------------------------------- */
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+export const InfoVisibility = {
+  create(value: InfoVisibilityType): InfoVisibility {
+    return value as InfoVisibility;
+  },
+
+  toggle(input: InfoVisibility): InfoVisibility {
+    return input === InfoVisibilityEnum.visible ? this.create("fade-out") : this.create("visible");
+  },
+
+  isFadeOut(input: InfoVisibility): boolean {
+    return input === InfoVisibilityEnum.fadeOut;
+  },
+
+  isNone(input: InfoVisibility): boolean {
+    return input === InfoVisibilityEnum.none;
+  },
+} as const;

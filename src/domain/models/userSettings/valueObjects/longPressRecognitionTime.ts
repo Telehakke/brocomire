@@ -1,27 +1,26 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type LongPressRecognitionTimeJSON = number;
 
 declare const LongPressRecognitionTimeBrand: unique symbol;
 
-export class LongPressRecognitionTime extends ValueObject<LongPressRecognitionTimeJSON> {
-  declare [LongPressRecognitionTimeBrand]: unknown;
+export type LongPressRecognitionTime = number & { [LongPressRecognitionTimeBrand]: unknown };
 
-  static readonly MIN = 200;
-  static readonly MAX = 500;
-  static readonly DEFAULT = 500;
+/* -------------------------------------------------------------------------- */
 
-  private constructor(value: number) {
-    super(value);
-  }
+export const LongPressRecognitionTime = {
+  MIN: 200,
+  MAZ: 500,
+  DEFAULT: 500,
 
-  static createSafe(value?: unknown): LongPressRecognitionTime {
-    if (!isNumber(value)) return new LongPressRecognitionTime(this.DEFAULT);
-    return new LongPressRecognitionTime(Math.max(Math.min(value, this.MAX), this.MIN));
-  }
+  createSafe(value?: unknown): LongPressRecognitionTime {
+    if (!isNumber(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: LongPressRecognitionTime, v2: LongPressRecognitionTime): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: number): LongPressRecognitionTime => {
+  return value as LongPressRecognitionTime;
+};

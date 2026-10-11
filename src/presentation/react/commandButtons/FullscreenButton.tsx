@@ -11,7 +11,7 @@ export const FullscreenButton = (): JSX.Element | null => {
   const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowFullscreenButton);
   const [onFullscreen, setOnFullscreen] = useState(false);
 
-  if (!shouldShowButton.value) return null;
+  if (!shouldShowButton) return null;
   if (onFullscreen) {
     return <FullscreenIconBlueButton setOnFullscreen={setOnFullscreen} />;
   }

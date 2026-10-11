@@ -1,25 +1,24 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type IsSafeAreaEnabledJSON = boolean;
 
 declare const IsSafeAreaEnabledBrand: unique symbol;
 
-export class IsSafeAreaEnabled extends ValueObject<IsSafeAreaEnabledJSON> {
-  declare [IsSafeAreaEnabledBrand]: unknown;
+export type IsSafeAreaEnabled = boolean & { [IsSafeAreaEnabledBrand]: unknown };
 
-  static readonly DEFAULT = true;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const IsSafeAreaEnabled = {
+  DEFAULT: true,
 
-  static createSafe(value?: unknown): IsSafeAreaEnabled {
-    if (!isBoolean(value)) return new IsSafeAreaEnabled(this.DEFAULT);
-    return new IsSafeAreaEnabled(value);
-  }
+  createSafe(value?: unknown): IsSafeAreaEnabled {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: IsSafeAreaEnabled, v2: IsSafeAreaEnabled): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): IsSafeAreaEnabled => {
+  return value as IsSafeAreaEnabled;
+};

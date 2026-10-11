@@ -1,40 +1,35 @@
-import { ValueObject } from "../../utils/valueObject";
+export const DisplayModeEnum = { single: "single", book: "book", double: "double" } as const;
 
-type DisplayModeEnumValue = Readonly<{ value: DisplayModeType; label: string }>;
+export type DisplayModeType = (typeof DisplayModeEnum)[keyof typeof DisplayModeEnum];
 
-export const DisplayModeEnum: Readonly<{
-  single: DisplayModeEnumValue;
-  book: DisplayModeEnumValue;
-  double: DisplayModeEnumValue;
-}> = {
-  single: { value: "single", label: "1" },
-  book: { value: "book", label: "1・2" },
-  double: { value: "double", label: "2" },
-};
-
-export type DisplayModeType = keyof typeof DisplayModeEnum;
+/* -------------------------------------------------------------------------- */
 
 declare const DisplayModeBrand: unique symbol;
 
-export class DisplayMode extends ValueObject<DisplayModeType> {
-  declare [DisplayModeBrand]: unknown;
+export type DisplayMode = DisplayModeType & { [DisplayModeBrand]: unknown };
 
-  static readonly DEFAULT: DisplayModeType = "single";
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: DisplayModeType) {
-    super(value);
-  }
+export const DisplayMode = {
+  DEFAULT: DisplayModeEnum.single,
 
-  static createSafe(value?: unknown): DisplayMode {
-    if (!this.isDisplayModeType(value)) return new DisplayMode(this.DEFAULT);
-    return new DisplayMode(value);
-  }
+  createSafe(value?: unknown): DisplayMode {
+    if (!isDisplayModeType(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  private static isDisplayModeType(value: unknown): value is DisplayModeType {
-    return Object.keys(DisplayModeEnum).some((v) => v === value);
-  }
+  equals(v1: DisplayMode, v2: DisplayMode): boolean {
+    return v1 === v2;
+  },
+  isSingle(input: DisplayMode): boolean {
+    return input === DisplayModeEnum.single;
+  },
+} as const;
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+const create = (value: DisplayModeType): DisplayMode => {
+  return value as DisplayMode;
+};
+
+const isDisplayModeType = (value: unknown): value is DisplayModeType => {
+  return Object.keys(DisplayModeEnum).some((v) => v === value);
+};

@@ -1,18 +1,22 @@
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
+import { FileNavigator, type FileNavigatorStore } from "../../domain/models/file/fileNavigator";
 import type { UserSettings } from "../../domain/models/userSettings/userSettings";
 import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
 import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
-import type { AppState } from "../appState/appState";
 
 /** 前後ページの画像ファイルを先読み */
-export const preloadFiles = (appState: AppState, userSettings: UserSettings): void => {
-  if (!userSettings.shouldPreload.value) return;
-  const { cache, fileManager } = appState;
+export const preloadFiles = (
+  userSettings: UserSettings,
+  cache: Cache,
+  fileManager: FileManager,
+  fileNavigatorStore: FileNavigatorStore,
+): void => {
+  if (!userSettings.shouldPreload) return;
   const { bookFormat, displayMode } = userSettings;
-  preloadAfterFiles(cache, fileManager, bookFormat, displayMode);
-  preloadBeforeFiles(cache, fileManager, bookFormat, displayMode);
-  trimCache(cache, fileManager, bookFormat, displayMode);
+  preloadAfterFiles(cache, fileManager, fileNavigatorStore.get(), bookFormat, displayMode);
+  preloadBeforeFiles(cache, fileManager, fileNavigatorStore.get(), bookFormat, displayMode);
+  trimCache(cache, fileNavigatorStore.get(), bookFormat, displayMode);
 };
 
 /* -------------------------------------------------------------------------- */
@@ -20,12 +24,13 @@ export const preloadFiles = (appState: AppState, userSettings: UserSettings): vo
 const preloadAfterFiles = (
   cache: Cache,
   fileManager: FileManager,
+  fileNavigator: FileNavigator,
   bookFormat: BookFormat,
   displayMode: DisplayMode,
 ): void => {
-  const fm = fileManager.incrementIndex(displayMode);
-  const leftIndex = fm.getLeftIndex(bookFormat, displayMode);
-  const rightIndex = fm.getRightIndex(bookFormat, displayMode);
+  const fn = FileNavigator.incrementIndex(fileNavigator, displayMode);
+  const leftIndex = FileNavigator.getLeftIndex(fn, bookFormat, displayMode);
+  const rightIndex = FileNavigator.getRightIndex(fn, bookFormat, displayMode);
   saveCache(cache, fileManager, leftIndex);
   saveCache(cache, fileManager, rightIndex);
 };
@@ -33,12 +38,13 @@ const preloadAfterFiles = (
 const preloadBeforeFiles = (
   cache: Cache,
   fileManager: FileManager,
+  fileNavigator: FileNavigator,
   bookFormat: BookFormat,
   displayMode: DisplayMode,
 ): void => {
-  const fm = fileManager.decrementIndex(displayMode);
-  const leftIndex = fm.getLeftIndex(bookFormat, displayMode);
-  const rightIndex = fm.getRightIndex(bookFormat, displayMode);
+  const fn = FileNavigator.decrementIndex(fileNavigator, displayMode);
+  const leftIndex = FileNavigator.getLeftIndex(fn, bookFormat, displayMode);
+  const rightIndex = FileNavigator.getRightIndex(fn, bookFormat, displayMode);
   saveCache(cache, fileManager, leftIndex);
   saveCache(cache, fileManager, rightIndex);
 };
@@ -52,23 +58,22 @@ const saveCache = (cache: Cache, fileManager: FileManager, index?: number): void
 
 const trimCache = (
   cache: Cache,
-  fileManager: FileManager,
+  fileNavigator: FileNavigator,
   bookFormat: BookFormat,
   displayMode: DisplayMode,
 ): void => {
-  const increasedFM = fileManager.incrementIndex(displayMode);
+  const increasedFN = FileNavigator.incrementIndex(fileNavigator, displayMode);
   const maxIndex = calculateMaxIndex(
-    increasedFM.getLeftIndex(bookFormat, displayMode),
-    increasedFM.getRightIndex(bookFormat, displayMode),
+    FileNavigator.getLeftIndex(increasedFN, bookFormat, displayMode),
+    FileNavigator.getRightIndex(increasedFN, bookFormat, displayMode),
   );
-  if (maxIndex != null) cache.trimAfter(maxIndex);
 
-  const decreasedFM = fileManager.decrementIndex(displayMode);
+  const decreasedFN = FileNavigator.decrementIndex(fileNavigator, displayMode);
   const minIndex = calculateMinIndex(
-    decreasedFM.getLeftIndex(bookFormat, displayMode),
-    increasedFM.getRightIndex(bookFormat, displayMode),
+    FileNavigator.getLeftIndex(decreasedFN, bookFormat, displayMode),
+    FileNavigator.getRightIndex(decreasedFN, bookFormat, displayMode),
   );
-  if (minIndex != null) cache.trimBefore(minIndex);
+  if (minIndex != null && maxIndex != null) cache.trim(minIndex, maxIndex);
 };
 
 const calculateMaxIndex = (leftIndex?: number, rightIndex?: number): number | undefined => {

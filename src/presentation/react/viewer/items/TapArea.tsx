@@ -34,7 +34,7 @@ export const TapArea = (props: {
       clickGestureManager.current.cancelLongPress();
       let deltaX = touchMoveManager.current.deltaX(clientX);
       let deltaY = touchMoveManager.current.deltaY(clientY);
-      if (isSmoothScrollEnabled.value) {
+      if (isSmoothScrollEnabled) {
         smoothScroll.current.push(deltaX, deltaY);
         const { x, y } = smoothScroll.current.getPosition();
         deltaX = x;
@@ -48,7 +48,7 @@ export const TapArea = (props: {
 
       let deltaX = ev.deltaX;
       let deltaY = ev.deltaY;
-      if (isSmoothScrollEnabled.value) {
+      if (isSmoothScrollEnabled) {
         smoothScroll.current.push(deltaX, deltaY);
         const { x, y } = smoothScroll.current.getPosition();
         deltaX = x;
@@ -92,7 +92,7 @@ export const TapArea = (props: {
     const { clientX, clientY } = ev.targetTouches[0];
     touchMoveManager.current = new TouchMoveManager(clientX, clientY);
     clickGestureManager.current.reset();
-    clickGestureManager.current.onLongPress(props.onSubClick, longPressRecognitionTime.value);
+    clickGestureManager.current.onLongPress(props.onSubClick, longPressRecognitionTime);
     smoothScroll.current = new SmoothScroll();
   };
 

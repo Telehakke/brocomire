@@ -1,25 +1,24 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ShouldPreloadJSON = boolean;
 
 declare const ShouldPreloadBrand: unique symbol;
 
-export class ShouldPreload extends ValueObject<ShouldPreloadJSON> {
-  declare [ShouldPreloadBrand]: unknown;
+export type ShouldPreload = boolean & { [ShouldPreloadBrand]: unknown };
 
-  static readonly DEFAULT = false;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const ShouldPreload = {
+  DEFAULT: false,
 
-  static createSafe(value?: unknown): ShouldPreload {
-    if (!isBoolean(value)) return new ShouldPreload(this.DEFAULT);
-    return new ShouldPreload(value);
-  }
+  createSafe(value?: unknown): ShouldPreload {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: ShouldPreload, v2: ShouldPreload): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): ShouldPreload => {
+  return value as ShouldPreload;
+};

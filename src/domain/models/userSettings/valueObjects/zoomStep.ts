@@ -1,27 +1,26 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ZoomStepJSON = number;
 
 declare const ZoomStepBrand: unique symbol;
 
-export class ZoomStep extends ValueObject<ZoomStepJSON> {
-  declare [ZoomStepBrand]: unknown;
+export type ZoomStep = number & { [ZoomStepBrand]: unknown };
 
-  static readonly MIN = 10;
-  static readonly MAX = 200;
-  static readonly DEFAULT = 50;
+/* -------------------------------------------------------------------------- */
 
-  private constructor(value: number) {
-    super(value);
-  }
+export const ZoomStep = {
+  MIN: 10,
+  MAX: 200,
+  DEFAULT: 50,
 
-  static createSafe(value?: unknown): ZoomStep {
-    if (!isNumber(value)) return new ZoomStep(this.DEFAULT);
-    return new ZoomStep(Math.max(Math.min(value, this.MAX), this.MIN));
-  }
+  createSafe(value?: unknown): ZoomStep {
+    if (!isNumber(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: ZoomStep, v2: ZoomStep): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: number): ZoomStep => {
+  return value as ZoomStep;
+};

@@ -1,27 +1,25 @@
 import { isNumber } from "../../utils/isNumber";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ScrollSpeedJSON = number;
 
 declare const ScrollSpeedBrand: unique symbol;
 
-export class ScrollSpeed extends ValueObject<ScrollSpeedJSON> {
-  declare [ScrollSpeedBrand]: unknown;
+export type ScrollSpeed = number & { [ScrollSpeedBrand]: unknown };
+/* -------------------------------------------------------------------------- */
 
-  static readonly MIN = 1;
-  static readonly MAX = 10;
-  static readonly DEFAULT = 4;
+export const ScrollSpeed = {
+  MIN: 1,
+  MAX: 10,
+  DEFAULT: 4,
 
-  private constructor(value: number) {
-    super(value);
-  }
+  createSafe(value?: unknown): ScrollSpeed {
+    if (!isNumber(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  static createSafe(value?: unknown): ScrollSpeed {
-    if (!isNumber(value)) return new ScrollSpeed(this.DEFAULT);
-    return new ScrollSpeed(Math.max(Math.min(value, this.MAX), this.MIN));
-  }
+  equals(v1: ScrollSpeed, v2: ScrollSpeed): boolean {
+    return v1 === v2;
+  },
+} as const;
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+const create = (value: number): ScrollSpeed => {
+  return value as ScrollSpeed;
+};

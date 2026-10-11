@@ -1,21 +1,18 @@
 import { useAtomValue } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { AppStateAtom, UserSettingsAtom } from "../../../atoms";
+import { onSharpeningFilterAtom, UserSettingsAtom } from "../../../atoms";
 
 export const SharpeningFilter = {
   className: "filter-[url(#sharpen)] ",
   Component: (): JSX.Element | null => {
-    const onFilter = useAtomValue(AppStateAtom.onSharpeningFilter);
+    const onFilter = useAtomValue(onSharpeningFilterAtom);
     const strength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
 
     if (!onFilter) return null;
     return (
       <svg>
         <filter id="sharpen">
-          <feConvolveMatrix
-            order={3}
-            kernelMatrix={createMatrix(strength.value)}
-          ></feConvolveMatrix>
+          <feConvolveMatrix order={3} kernelMatrix={createMatrix(strength)}></feConvolveMatrix>
         </filter>
       </svg>
     );

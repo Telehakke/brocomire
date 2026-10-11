@@ -1,23 +1,22 @@
 import { isString } from "../../utils/isString";
-import { ValueObject } from "../../utils/valueObject";
-
-export type BookIdJSON = string;
 
 declare const BookIdBrand: unique symbol;
 
-export class BookId extends ValueObject<BookIdJSON> {
-  declare [BookIdBrand]: unknown;
+export type BookId = string & { [BookIdBrand]: unknown };
 
-  constructor(value: string) {
-    super(value);
-  }
+/* -------------------------------------------------------------------------- */
 
-  static createSafe(value?: unknown): BookId {
-    if (!isString(value)) return new this("");
-    return new BookId(value);
-  }
+export const BookId = {
+  createSafe(value?: unknown): BookId {
+    if (!isString(value)) return create("");
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: BookId, v2: BookId): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: string): BookId => {
+  return value as BookId;
+};

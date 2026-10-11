@@ -1,7 +1,5 @@
 import { isNotNull } from "../utils/isNotNull";
-import { ValueObject } from "../utils/valueObject";
 import { HistoryList } from "./history/historyList";
-import type { UserSettingsJSON } from "./userSettingsJSON";
 import type { UserSettingsRepository } from "./userSettingsRepository";
 import { BookFormat } from "./valueObjects/bookFormat";
 import { ContentFit } from "./valueObjects/contentFit";
@@ -21,11 +19,11 @@ import { ShouldShowSharpeningFilterButton } from "./valueObjects/shouldShowSharp
 import { TapAreaSize } from "./valueObjects/tapAreaSize";
 import { ZoomStep } from "./valueObjects/zoomStep";
 
-type UserSettingsValue = Readonly<{
+type UserSettingsType = Readonly<{
   bookFormat: BookFormat;
   contentFit: ContentFit;
   displayMode: DisplayMode;
-  histories: HistoryList;
+  historyList: HistoryList;
   isSafeAreaEnabled: IsSafeAreaEnabled;
   isSmoothScrollEnabled: IsSmoothScrollEnabled;
   longPressRecognitionTime: LongPressRecognitionTime;
@@ -44,20 +42,26 @@ type UserSettingsValue = Readonly<{
 
 declare const UserSettingsBrand: unique symbol;
 
-export class UserSettings extends ValueObject<UserSettingsValue> {
-  declare [UserSettingsBrand]: unknown;
+export type UserSettings = UserSettingsType & { [UserSettingsBrand]: unknown };
 
-  private constructor(value: UserSettingsValue) {
-    super(value);
-  }
+/* -------------------------------------------------------------------------- */
 
-  static createSafe(value?: unknown): UserSettings {
+export type UserSettingsStore = {
+  get(): UserSettings;
+
+  set(value: UserSettings): void;
+};
+
+/* -------------------------------------------------------------------------- */
+
+export const UserSettings = {
+  createSafe(value?: unknown): UserSettings {
     if (!isNotNull(value))
-      return new UserSettings({
+      return create({
         bookFormat: BookFormat.createSafe(),
         contentFit: ContentFit.createSafe(),
         displayMode: DisplayMode.createSafe(),
-        histories: new HistoryList(),
+        historyList: HistoryList.createSafe(),
         isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(),
         isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(),
         longPressRecognitionTime: LongPressRecognitionTime.createSafe(),
@@ -74,12 +78,12 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
         zoomStep: ZoomStep.createSafe(),
       });
 
-    const v = value as UserSettingsJSON;
-    return new UserSettings({
+    const v = value as UserSettingsType;
+    return create({
       bookFormat: BookFormat.createSafe(v.bookFormat),
       contentFit: ContentFit.createSafe(v.contentFit),
       displayMode: DisplayMode.createSafe(v.displayMode),
-      histories: HistoryList.fromHistoryJSON(v.histories),
+      historyList: HistoryList.createSafe(v.historyList),
       isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(v.isSafeAreaEnabled),
       isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(v.isSmoothScrollEnabled),
       longPressRecognitionTime: LongPressRecognitionTime.createSafe(v.longPressRecognitionTime),
@@ -99,276 +103,249 @@ export class UserSettings extends ValueObject<UserSettingsValue> {
       tapAreaSize: TapAreaSize.createSafe(v.tapAreaSize),
       zoomStep: ZoomStep.createSafe(v.zoomStep),
     });
-  }
+  },
 
-  get bookFormat(): BookFormat {
-    return this.value.bookFormat;
-  }
-
-  get contentFit(): ContentFit {
-    return this.value.contentFit;
-  }
-
-  get displayMode(): DisplayMode {
-    return this.value.displayMode;
-  }
-
-  get histories(): HistoryList {
-    return this.value.histories;
-  }
-
-  get isSafeAreaEnabled(): IsSafeAreaEnabled {
-    return this.value.isSafeAreaEnabled;
-  }
-
-  get isSmoothScrollEnabled(): IsSmoothScrollEnabled {
-    return this.value.isSmoothScrollEnabled;
-  }
-
-  get longPressRecognitionTime(): LongPressRecognitionTime {
-    return this.value.longPressRecognitionTime;
-  }
-
-  get safeAreaLength(): SafeAreaLength {
-    return this.value.safeAreaLength;
-  }
-
-  get scrollSpeed(): ScrollSpeed {
-    return this.value.scrollSpeed;
-  }
-
-  get scrollStepCount(): ScrollStepCount {
-    return this.value.scrollStepCount;
-  }
-
-  get sharpeningFilterStrength(): SharpeningFilterStrength {
-    return this.value.sharpeningFilterStrength;
-  }
-
-  get shouldAdvance(): ShouldAdvance {
-    return this.value.shouldAdvance;
-  }
-
-  get shouldPreload(): ShouldPreload {
-    return this.value.shouldPreload;
-  }
-
-  get shouldShowFullscreenButton(): ShouldShowFullscreenButton {
-    return this.value.shouldShowFullscreenButton;
-  }
-
-  get shouldShowInvertButton(): ShouldShowInvertButton {
-    return this.value.shouldShowInvertButton;
-  }
-
-  get shouldShowSharpeningFilterButton(): ShouldShowSharpeningFilterButton {
-    return this.value.shouldShowSharpeningFilterButton;
-  }
-
-  get tapAreaSize(): TapAreaSize {
-    return this.value.tapAreaSize;
-  }
-
-  get zoomStep(): ZoomStep {
-    return this.value.zoomStep;
-  }
-
-  equals(other: this): boolean {
+  equals(v1: UserSettings, v2: UserSettings): boolean {
     return (
-      this.value.contentFit.equals(other.value.contentFit) &&
-      this.value.displayMode.equals(other.value.displayMode) &&
-      this.value.histories.equals(other.value.histories) &&
-      this.value.isSafeAreaEnabled.equals(other.value.isSafeAreaEnabled) &&
-      this.value.isSmoothScrollEnabled.equals(other.value.isSmoothScrollEnabled) &&
-      this.value.safeAreaLength.equals(other.value.safeAreaLength) &&
-      this.value.scrollSpeed.equals(other.value.scrollSpeed) &&
-      this.value.scrollStepCount.equals(other.value.scrollStepCount) &&
-      this.value.sharpeningFilterStrength.equals(other.value.sharpeningFilterStrength) &&
-      this.value.shouldAdvance.equals(other.value.shouldAdvance) &&
-      this.value.shouldPreload.equals(other.value.shouldPreload) &&
-      this.value.shouldShowFullscreenButton.equals(other.value.shouldShowFullscreenButton) &&
-      this.value.shouldShowInvertButton.equals(other.value.shouldShowInvertButton) &&
-      this.value.shouldShowSharpeningFilterButton.equals(
-        other.value.shouldShowSharpeningFilterButton,
+      BookFormat.equals(v1.bookFormat, v2.bookFormat) &&
+      ContentFit.equals(v1.contentFit, v2.contentFit) &&
+      DisplayMode.equals(v1.displayMode, v2.displayMode) &&
+      HistoryList.equals(v1.historyList, v2.historyList) &&
+      IsSafeAreaEnabled.equals(v1.isSafeAreaEnabled, v2.isSafeAreaEnabled) &&
+      IsSmoothScrollEnabled.equals(v1.isSmoothScrollEnabled, v2.isSmoothScrollEnabled) &&
+      LongPressRecognitionTime.equals(v1.longPressRecognitionTime, v2.longPressRecognitionTime) &&
+      SafeAreaLength.equals(v1.safeAreaLength, v2.safeAreaLength) &&
+      ScrollSpeed.equals(v1.scrollSpeed, v2.scrollSpeed) &&
+      ScrollStepCount.equals(v1.scrollStepCount, v2.scrollStepCount) &&
+      SharpeningFilterStrength.equals(v1.sharpeningFilterStrength, v2.sharpeningFilterStrength) &&
+      ShouldAdvance.equals(v1.shouldAdvance, v2.shouldAdvance) &&
+      ShouldPreload.equals(v1.shouldPreload, v2.shouldPreload) &&
+      ShouldShowFullscreenButton.equals(
+        v1.shouldShowFullscreenButton,
+        v2.shouldShowFullscreenButton,
       ) &&
-      this.value.tapAreaSize.equals(other.value.tapAreaSize) &&
-      this.value.zoomStep.equals(other.value.zoomStep)
+      ShouldShowInvertButton.equals(v1.shouldShowInvertButton, v2.shouldShowInvertButton) &&
+      ShouldShowSharpeningFilterButton.equals(
+        v1.shouldShowSharpeningFilterButton,
+        v2.shouldShowSharpeningFilterButton,
+      ) &&
+      TapAreaSize.equals(v1.tapAreaSize, v2.tapAreaSize) &&
+      ZoomStep.equals(v1.zoomStep, v2.zoomStep)
     );
-  }
+  },
+
+  getStore(getter: () => UserSettings, setter: (value: UserSettings) => void): UserSettingsStore {
+    return { get: () => getter(), set: (v) => setter(v) };
+  },
 
   setBookFormat(
-    callback: (prev: UserSettingsValue) => BookFormat,
+    userSettings: UserSettings,
+    bookFormat: BookFormat,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ bookFormat: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { bookFormat });
+    repository.save(result);
+    return result;
+  },
 
   setContentFit(
-    callback: (prev: UserSettingsValue) => ContentFit,
+    userSettings: UserSettings,
+    contentFit: ContentFit,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ contentFit: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { contentFit });
+    repository.save(result);
+    return result;
+  },
 
   setDisplayMode(
-    callback: (prev: UserSettingsValue) => DisplayMode,
+    userSettings: UserSettings,
+    displayMode: DisplayMode,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ displayMode: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { displayMode });
+    repository.save(result);
+    return result;
+  },
 
-  setHistories(
-    callback: (prev: UserSettingsValue) => HistoryList,
+  setHistoryList(
+    userSettings: UserSettings,
+    historyList: HistoryList,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ histories: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { historyList });
+    repository.save(result);
+    return result;
+  },
 
   setIsSafeAreaEnabled(
-    callback: (prev: UserSettingsValue) => IsSafeAreaEnabled,
+    userSettings: UserSettings,
+    isSafeAreaEnabled: IsSafeAreaEnabled,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ isSafeAreaEnabled: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { isSafeAreaEnabled });
+    repository.save(result);
+    return result;
+  },
 
   setIsSmoothScrollEnabled(
-    callback: (prev: UserSettingsValue) => IsSmoothScrollEnabled,
+    userSettings: UserSettings,
+    isSmoothScrollEnabled: IsSmoothScrollEnabled,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ isSmoothScrollEnabled: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { isSmoothScrollEnabled });
+    repository.save(result);
+    return result;
+  },
 
   setLongPressRecognitionTime(
-    callback: (prev: UserSettingsValue) => LongPressRecognitionTime,
+    userSettings: UserSettings,
+    longPressRecognitionTime: LongPressRecognitionTime,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ longPressRecognitionTime: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { longPressRecognitionTime });
+    repository.save(result);
+    return result;
+  },
 
   setSafeAreaLength(
-    callback: (prev: UserSettingsValue) => SafeAreaLength,
+    userSettings: UserSettings,
+    safeAreaLength: SafeAreaLength,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ safeAreaLength: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { safeAreaLength });
+    repository.save(result);
+    return result;
+  },
 
   setScrollSpeed(
-    callback: (prev: UserSettingsValue) => ScrollSpeed,
+    userSettings: UserSettings,
+    scrollSpeed: ScrollSpeed,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ scrollSpeed: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { scrollSpeed });
+    repository.save(result);
+    return result;
+  },
 
   setScrollStepCount(
-    callback: (prev: UserSettingsValue) => ScrollStepCount,
+    userSettings: UserSettings,
+    scrollStepCount: ScrollStepCount,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ scrollStepCount: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { scrollStepCount });
+    repository.save(result);
+    return result;
+  },
 
   setSharpeningFilterStrength(
-    callback: (prev: UserSettingsValue) => SharpeningFilterStrength,
+    userSettings: UserSettings,
+    sharpeningFilterStrength: SharpeningFilterStrength,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ sharpeningFilterStrength: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { sharpeningFilterStrength });
+    repository.save(result);
+    return result;
+  },
 
   setShouldAdvance(
-    callback: (prev: UserSettingsValue) => ShouldAdvance,
+    userSettings: UserSettings,
+    shouldAdvance: ShouldAdvance,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ shouldAdvance: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { shouldAdvance });
+    repository.save(result);
+    return result;
+  },
 
   setShouldPreload(
-    callback: (prev: UserSettingsValue) => ShouldPreload,
+    userSettings: UserSettings,
+    shouldPreload: ShouldPreload,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ shouldPreload: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { shouldPreload });
+    repository.save(result);
+    return result;
+  },
 
   setShouldShowFullscreenButton(
-    callback: (prev: UserSettingsValue) => ShouldShowFullscreenButton,
+    userSettings: UserSettings,
+    shouldShowFullscreenButton: ShouldShowFullscreenButton,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ shouldShowFullscreenButton: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { shouldShowFullscreenButton });
+    repository.save(result);
+    return result;
+  },
 
   setShouldShowInvertButton(
-    callback: (prev: UserSettingsValue) => ShouldShowInvertButton,
+    userSettings: UserSettings,
+    shouldShowInvertButton: ShouldShowInvertButton,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ shouldShowInvertButton: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { shouldShowInvertButton });
+    repository.save(result);
+    return result;
+  },
 
   setShouldShowSharpeningFilterButton(
-    callback: (prev: UserSettingsValue) => ShouldShowSharpeningFilterButton,
+    userSettings: UserSettings,
+    shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ shouldShowSharpeningFilterButton: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { shouldShowSharpeningFilterButton });
+    repository.save(result);
+    return result;
+  },
 
   setTapAreaSize(
-    callback: (prev: UserSettingsValue) => TapAreaSize,
+    userSettings: UserSettings,
+    tapAreaSize: TapAreaSize,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ tapAreaSize: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { tapAreaSize });
+    repository.save(result);
+    return result;
+  },
 
   setZoomStep(
-    callback: (prev: UserSettingsValue) => ZoomStep,
+    userSettings: UserSettings,
+    zoomStep: ZoomStep,
     repository: UserSettingsRepository,
   ): UserSettings {
-    return this.copyWith({ zoomStep: callback(this.value) }, repository);
-  }
+    const result = copyWith(userSettings, { zoomStep });
+    repository.save(result);
+    return result;
+  },
+} as const;
 
-  /** 指定した項目を上書きした新しいインスタンスを返す */
-  private copyWith(
-    {
-      bookFormat,
-      contentFit,
-      displayMode,
-      histories,
-      isSafeAreaEnabled,
-      isSmoothScrollEnabled,
-      longPressRecognitionTime,
-      safeAreaLength,
-      scrollSpeed,
-      scrollStepCount,
-      sharpeningFilterStrength,
-      shouldAdvance,
-      shouldPreload,
-      shouldShowFullscreenButton,
-      shouldShowInvertButton,
-      shouldShowSharpeningFilterButton,
-      tapAreaSize,
-      zoomStep,
-    }: Partial<UserSettingsValue>,
-    userSettingsRepository: UserSettingsRepository,
-  ): UserSettings {
-    const obj = new UserSettings({
-      bookFormat: bookFormat ?? this.value.bookFormat,
-      contentFit: contentFit ?? this.value.contentFit,
-      displayMode: displayMode ?? this.value.displayMode,
-      histories: histories ?? this.value.histories,
-      isSafeAreaEnabled: isSafeAreaEnabled ?? this.value.isSafeAreaEnabled,
-      isSmoothScrollEnabled: isSmoothScrollEnabled ?? this.value.isSmoothScrollEnabled,
-      longPressRecognitionTime: longPressRecognitionTime ?? this.value.longPressRecognitionTime,
-      safeAreaLength: safeAreaLength ?? this.value.safeAreaLength,
-      scrollSpeed: scrollSpeed ?? this.value.scrollSpeed,
-      scrollStepCount: scrollStepCount ?? this.value.scrollStepCount,
-      sharpeningFilterStrength: sharpeningFilterStrength ?? this.value.sharpeningFilterStrength,
-      shouldAdvance: shouldAdvance ?? this.value.shouldAdvance,
-      shouldPreload: shouldPreload ?? this.value.shouldPreload,
-      shouldShowFullscreenButton:
-        shouldShowFullscreenButton ?? this.value.shouldShowFullscreenButton,
-      shouldShowInvertButton: shouldShowInvertButton ?? this.value.shouldShowInvertButton,
-      shouldShowSharpeningFilterButton:
-        shouldShowSharpeningFilterButton ?? this.value.shouldShowSharpeningFilterButton,
-      tapAreaSize: tapAreaSize ?? this.value.tapAreaSize,
-      zoomStep: zoomStep ?? this.value.zoomStep,
-    });
-    userSettingsRepository.save(obj);
-    return obj;
-  }
-}
+const create = (value: UserSettingsType): UserSettings => {
+  return value as UserSettings;
+};
+
+const copyWith = (userSettings: UserSettings, value: Partial<UserSettingsType>): UserSettings => {
+  return create({
+    bookFormat: value.bookFormat ?? userSettings.bookFormat,
+    contentFit: value.contentFit ?? userSettings.contentFit,
+    displayMode: value.displayMode ?? userSettings.displayMode,
+    historyList: value.historyList ?? userSettings.historyList,
+    isSafeAreaEnabled: value.isSafeAreaEnabled ?? userSettings.isSafeAreaEnabled,
+    isSmoothScrollEnabled: value.isSmoothScrollEnabled ?? userSettings.isSmoothScrollEnabled,
+    longPressRecognitionTime:
+      value.longPressRecognitionTime ?? userSettings.longPressRecognitionTime,
+    safeAreaLength: value.safeAreaLength ?? userSettings.safeAreaLength,
+    scrollSpeed: value.scrollSpeed ?? userSettings.scrollSpeed,
+    scrollStepCount: value.scrollStepCount ?? userSettings.scrollStepCount,
+    sharpeningFilterStrength:
+      value.sharpeningFilterStrength ?? userSettings.sharpeningFilterStrength,
+    shouldAdvance: value.shouldAdvance ?? userSettings.shouldAdvance,
+    shouldPreload: value.shouldPreload ?? userSettings.shouldPreload,
+    shouldShowFullscreenButton:
+      value.shouldShowFullscreenButton ?? userSettings.shouldShowFullscreenButton,
+    shouldShowInvertButton: value.shouldShowInvertButton ?? userSettings.shouldShowInvertButton,
+    shouldShowSharpeningFilterButton:
+      value.shouldShowSharpeningFilterButton ?? userSettings.shouldShowSharpeningFilterButton,
+    tapAreaSize: value.tapAreaSize ?? userSettings.tapAreaSize,
+    zoomStep: value.zoomStep ?? userSettings.zoomStep,
+  });
+};

@@ -1,13 +1,38 @@
-import type { UserSettings } from "../../domain/models/userSettings/userSettings";
-import type { AppStore } from "../appState/appStore";
+import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
+import type { NotificationStore } from "../../domain/models/notification/notification";
+import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
+import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
+import type { IsUserScrolledStore } from "../appState/valueObjects/isUserScrolled";
 import { goToNext } from "./goToNext";
 import { goToRight } from "./goToRight";
 
 /** ビューアの右端をクリック */
-export const handleRightEdgeClick = (appStore: AppStore, userSettings: UserSettings): void => {
-  if (userSettings.shouldAdvance.value) {
-    goToNext(appStore, userSettings);
+export const handleRightEdgeClick = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsStore: UserSettingsStore,
+  viewerManager: ViewerManager,
+): void => {
+  if (userSettingsStore.get().shouldAdvance) {
+    goToNext(
+      fileNavigatorStore,
+      isUserScrolledStore,
+      notificationStore,
+      scrollPercentage2D,
+      userSettingsStore,
+      viewerManager,
+    );
     return;
   }
-  goToRight(appStore, userSettings);
+  goToRight(
+    fileNavigatorStore,
+    isUserScrolledStore,
+    notificationStore,
+    scrollPercentage2D,
+    userSettingsStore,
+    viewerManager,
+  );
 };

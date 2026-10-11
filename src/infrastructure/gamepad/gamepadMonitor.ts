@@ -1,19 +1,42 @@
-import type { AppStore } from "../../application/appState/appStore";
+import type { IsUserScrolledStore } from "../../application/appState/valueObjects/isUserScrolled";
 import { goToLeft } from "../../application/viewer/goToLeft";
 import { goToRight } from "../../application/viewer/goToRight";
-import { scrollByPct } from "../../application/viewer/scrollByPct";
+import { scrollByPercentage } from "../../application/viewer/scrollByPercentage";
 import { zoomIn } from "../../application/viewer/zoomIn";
 import { zoomOut } from "../../application/viewer/zoomOut";
-import type { UserSettings } from "../../domain/models/userSettings/userSettings";
+import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
+import type { NotificationStore } from "../../domain/models/notification/notification";
+import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
+import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
+import type { ZoomPercentageStore } from "../../domain/models/zoom/zoomPercentage";
 
 export class GamepadMonitor {
-  private readonly appStore: AppStore;
-  private readonly userSettings: UserSettings;
+  private readonly fileNavigationStore: FileNavigatorStore;
+  private readonly isUserScrolledStore: IsUserScrolledStore;
+  private readonly notificationStore: NotificationStore;
+  private readonly scrollPercentage2D: ScrollPercentage2D;
+  private readonly userSettingsStore: UserSettingsStore;
+  private readonly viewerManager: ViewerManager;
+  private readonly zoomPercentageStore: ZoomPercentageStore;
   private readonly prevPressed: boolean[];
 
-  constructor(appStore: AppStore, userSettings: UserSettings) {
-    this.appStore = appStore;
-    this.userSettings = userSettings;
+  constructor(
+    fileNavigationStore: FileNavigatorStore,
+    isUserScrolledStore: IsUserScrolledStore,
+    notificationStore: NotificationStore,
+    scrollPercentage2D: ScrollPercentage2D,
+    userSettingsStore: UserSettingsStore,
+    viewerManager: ViewerManager,
+    zoomPercentageStore: ZoomPercentageStore,
+  ) {
+    this.fileNavigationStore = fileNavigationStore;
+    this.isUserScrolledStore = isUserScrolledStore;
+    this.notificationStore = notificationStore;
+    this.scrollPercentage2D = scrollPercentage2D;
+    this.userSettingsStore = userSettingsStore;
+    this.viewerManager = viewerManager;
+    this.zoomPercentageStore = zoomPercentageStore;
     this.prevPressed = [];
   }
 
@@ -31,12 +54,52 @@ export class GamepadMonitor {
     const gamepad = navigator.getGamepads()[ev.gamepad.index];
     this.handleButtonPress(
       gamepad,
-      () => zoomIn(this.appStore, this.userSettings),
-      () => zoomOut(this.appStore, this.userSettings),
-      () => goToLeft(this.appStore, this.userSettings),
-      () => goToRight(this.appStore, this.userSettings),
+      () =>
+        zoomIn(
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsStore,
+          this.viewerManager,
+          this.zoomPercentageStore,
+        ),
+      () =>
+        zoomOut(
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsStore,
+          this.viewerManager,
+          this.zoomPercentageStore,
+        ),
+      () =>
+        goToLeft(
+          this.fileNavigationStore,
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsStore,
+          this.viewerManager,
+        ),
+      () =>
+        goToRight(
+          this.fileNavigationStore,
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsStore,
+          this.viewerManager,
+        ),
     );
-    this.handleLeftStickTilt(gamepad, (x, y) => scrollByPct(x, y, this.appStore));
+    this.handleLeftStickTilt(gamepad, (x, y) =>
+      scrollByPercentage(
+        x,
+        y,
+        this.isUserScrolledStore,
+        this.scrollPercentage2D,
+        this.viewerManager,
+      ),
+    );
     requestAnimationFrame(() => this.handleGamepadEvent(ev));
   };
 

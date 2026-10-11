@@ -1,25 +1,24 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type IsSmoothScrollEnabledJSON = boolean;
 
 declare const IsSmoothScrollEnabledBrand: unique symbol;
 
-export class IsSmoothScrollEnabled extends ValueObject<IsSmoothScrollEnabledJSON> {
-  declare [IsSmoothScrollEnabledBrand]: unknown;
+export type IsSmoothScrollEnabled = boolean & { [IsSmoothScrollEnabledBrand]: unknown };
 
-  static readonly DEFAULT = false;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const IsSmoothScrollEnabled = {
+  DEFAULT: false,
 
-  static createSafe(value?: unknown): IsSmoothScrollEnabled {
-    if (!isBoolean(value)) return new IsSmoothScrollEnabled(this.DEFAULT);
-    return new IsSmoothScrollEnabled(value);
-  }
+  createSafe(value?: unknown): IsSmoothScrollEnabled {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: IsSmoothScrollEnabled, v2: IsSmoothScrollEnabled): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): IsSmoothScrollEnabled => {
+  return value as IsSmoothScrollEnabled;
+};

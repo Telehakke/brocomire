@@ -1,71 +1,32 @@
-import { Leftmost } from "../../scroll/origin/horizontal/leftmost";
-import { Rightmost } from "../../scroll/origin/horizontal/rightmost";
-import { Bottom } from "../../scroll/origin/vertical/bottom";
-import { Top } from "../../scroll/origin/vertical/top";
-import { ScrollPct } from "../../scroll/scrollPct";
-import { ScrollPct2D } from "../../scroll/scrollPct2D";
-import { ValueObject } from "../../utils/valueObject";
+export const BookFormatEnum = { vertical: "vertical", horizontal: "horizontal" } as const;
 
-type BookFormatEnumValue = Readonly<{
-  value: BookFormatType;
-  label: string;
-  startScrollPct2D: ScrollPct2D;
-  endScrollPct2D: ScrollPct2D;
-}>;
+export type BookFormatType = (typeof BookFormatEnum)[keyof typeof BookFormatEnum];
 
-export const BookFormatEnum: Readonly<{
-  vertical: BookFormatEnumValue;
-  horizontal: BookFormatEnumValue;
-}> = {
-  vertical: {
-    value: "vertical",
-    label: "縦書き",
-    startScrollPct2D: new ScrollPct2D({
-      x: ScrollPct.createSafe(Rightmost.value),
-      y: ScrollPct.createSafe(Top.value),
-    }),
-    endScrollPct2D: new ScrollPct2D({
-      x: ScrollPct.createSafe(Leftmost.value),
-      y: ScrollPct.createSafe(Bottom.value),
-    }),
-  },
-  horizontal: {
-    value: "horizontal",
-    label: "横書き",
-    startScrollPct2D: new ScrollPct2D({
-      x: ScrollPct.createSafe(Leftmost.value),
-      y: ScrollPct.createSafe(Top.value),
-    }),
-    endScrollPct2D: new ScrollPct2D({
-      x: ScrollPct.createSafe(Rightmost.value),
-      y: ScrollPct.createSafe(Bottom.value),
-    }),
-  },
-};
-
-export type BookFormatType = keyof typeof BookFormatEnum;
+/* -------------------------------------------------------------------------- */
 
 declare const BookFormatBrand: unique symbol;
 
-export class BookFormat extends ValueObject<BookFormatType> {
-  declare [BookFormatBrand]: unknown;
+export type BookFormat = BookFormatType & { [BookFormatBrand]: unknown };
 
-  static readonly DEFAULT: BookFormatType = "vertical";
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: BookFormatType) {
-    super(value);
-  }
+export const BookFormat = {
+  DEFAULT: BookFormatEnum.vertical,
 
-  static createSafe(value?: unknown): BookFormat {
-    if (!this.isBookFormat(value)) return new BookFormat(this.DEFAULT);
-    return new BookFormat(value);
-  }
+  createSafe(value?: unknown): BookFormat {
+    if (!isBookFormatType(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  private static isBookFormat(value: unknown): value is BookFormatType {
-    return Object.keys(BookFormatEnum).some((v) => v === value);
-  }
+  equals(v1: BookFormat, v2: BookFormat): boolean {
+    return v1 === v2;
+  },
+} as const;
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+const create = (value: BookFormatType): BookFormat => {
+  return value as BookFormat;
+};
+
+const isBookFormatType = (value: unknown): value is BookFormatType => {
+  return Object.keys(BookFormatEnum).some((v) => v === value);
+};

@@ -1,56 +1,65 @@
-import { ValueObject } from "../../utils/valueObject";
+import { BookId } from "./bookId";
+import { ClosedPageIndex } from "./closedPageIndex";
 import { History } from "./history";
-import type { HistoryJSON } from "./historyJSON";
 
-export class HistoryList extends ValueObject<readonly History[]> {
-  constructor(histories?: readonly History[]) {
-    super(histories ?? []);
-  }
+declare const HistoryListBrand: unique symbol;
 
-  static fromHistoryJSON(objs: readonly HistoryJSON[]): HistoryList {
-    return new HistoryList(
-      objs.map((v) => History.create(v.id, v.closedPageIndex)).filter((v) => v != null),
-    );
-  }
+export type HistoryList = readonly History[] & { [HistoryListBrand]: unknown };
 
-  equals(other: this): boolean {
-    if (this.value.length !== other.value.length) return false;
-    return this.value.every((v, i) => other.value[i].equals(v));
-  }
+/* -------------------------------------------------------------------------- */
+
+export const HistoryList = {
+  createSafe(value?: unknown): HistoryList {
+    if (!Array.isArray(value)) return create([]);
+    return create(toHistoryList(value));
+  },
+
+  equals(v1: HistoryList, v2: HistoryList): boolean {
+    if (v1.length !== v2.length) return false;
+    return v1.every((v, i) => History.equals(v, v2[i]));
+  },
+
+  /** 履歴を更新した新しいインスタンスを返す */
+  update(input: HistoryList, history: History): HistoryList {
+    return create(input.map((v) => (History.equals(v, history) ? history : v)));
+  },
+
+  /** bookIdに紐付く最後に閉じたページのインデックスを返す */
+  getClosedPageIndex(input: HistoryList, bookId: BookId): number | undefined {
+    return input.find((v) => BookId.equals(v.bookId, bookId))?.closedPageIndex;
+  },
 
   /**
    * 新たな履歴をリストの先頭に追加する（最大100件）\
    * すでに存在する場合、リストの先頭に移動する
    */
-  tryPrepend(id: string): HistoryList {
-    const index = this.value.findIndex((v) => v.id === id);
-    if (index === -1) return new HistoryList(this.prepend(id));
-    return new HistoryList(this.moveToHead(index));
-  }
+  tryPrepend(input: HistoryList, bookId: BookId): HistoryList {
+    const index = input.findIndex((v) => BookId.equals(v.bookId, bookId));
+    if (index === -1) return prepend(input, bookId);
+    if (index === 0) return input;
+    return moveToHead(input, index);
+  },
+} as const;
 
-  private prepend(id: string): readonly History[] {
-    const histories = [History.createSafe(id), ...this.value];
-    if (histories.length <= 100) return histories;
-    return histories.slice(0, 100);
-  }
+const create = (value: readonly History[]): HistoryList => {
+  return value as HistoryList;
+};
 
-  private moveToHead(index: number): readonly History[] {
-    if (index <= 0) return this.value;
+const toHistoryList = (array: Record<string, unknown>[]): History[] => {
+  return array.map((v) =>
+    History.createSafe(BookId.createSafe(v.bookId), ClosedPageIndex.createSafe(v.closedPageIndex)),
+  );
+};
 
-    const array = [...this.value];
-    const [element] = array.splice(index, 1);
-    array.unshift(element);
-    return array;
-  }
+const prepend = (input: HistoryList, bookId: BookId): HistoryList => {
+  const histories = [History.createSafe(bookId), ...input];
+  if (histories.length <= 100) return create(histories);
+  return create(histories.slice(0, 100));
+};
 
-  /** 履歴を更新した新しいインスタンスを返す */
-  update(history: History): HistoryList {
-    const newHistories = this.value.map((v) => (v.equals(history) ? history : v));
-    return new HistoryList(newHistories);
-  }
-
-  /** idに紐付く最後に閉じたページのインデックスを返す */
-  getClosedPageIndex(id: string): number | undefined {
-    return this.value.find((v) => v.id === id)?.closedPageIndex;
-  }
-}
+const moveToHead = (input: HistoryList, index: number): HistoryList => {
+  const array = [...input];
+  const [element] = array.splice(index, 1);
+  array.unshift(element);
+  return create(array);
+};

@@ -1,6 +1,5 @@
 import { UserSettings } from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
-import { serializeUserSettings } from "./serializeUserSettings";
 
 export class LocalStorageUserSettingsRepository implements UserSettingsRepository {
   static readonly KEY = "appState";
@@ -14,7 +13,7 @@ export class LocalStorageUserSettingsRepository implements UserSettingsRepositor
   save(userSetting: UserSettings): void {
     window.localStorage.setItem(
       LocalStorageUserSettingsRepository.KEY,
-      serializeUserSettings(userSetting),
+      JSON.stringify(userSetting),
     );
   }
 }

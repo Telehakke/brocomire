@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState, type JSX } from "react";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { ScrollSpeed } from "../../../../domain/models/userSettings/valueObjects/scrollSpeed";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -8,12 +9,13 @@ import { Slider } from "../../utils/Slider";
 export const ScrollSpeedSlider = (): JSX.Element => {
   const scrollSpeed = useAtomValue(UserSettingsAtom.scrollSpeed);
   const setUserSettings = useSetAtom(Atom.userSettings);
-  const [value, setValue] = useState(scrollSpeed.value);
+  const [value, setValue] = useState(scrollSpeed);
 
   const handleValueChangeEnd = (value: number): void => {
     setUserSettings((u) =>
-      u.setScrollSpeed(
-        () => ScrollSpeed.createSafe(value),
+      UserSettings.setScrollSpeed(
+        u,
+        value as ScrollSpeed,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -25,7 +27,7 @@ export const ScrollSpeedSlider = (): JSX.Element => {
       min={ScrollSpeed.MIN}
       max={ScrollSpeed.MAX}
       value={value}
-      onValueChange={setValue}
+      onValueChange={(v) => setValue(v as ScrollSpeed)}
       onValueChangeEnd={handleValueChangeEnd}
     />
   );

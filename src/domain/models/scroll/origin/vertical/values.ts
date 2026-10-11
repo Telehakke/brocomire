@@ -1,4 +1,4 @@
-import { ScrollPct } from "../../scrollPct";
+import { ScrollPercentage } from "../../scrollPercentage";
 import type { OriginValue } from "../origin";
 
 // -----Top--------- 0
@@ -9,7 +9,7 @@ import type { OriginValue } from "../origin";
 
 export const TopValue: OriginValue = {
   name: "Top",
-  value: ScrollPct.MIN,
+  value: ScrollPercentage.MIN,
 };
 
 export const UpValue: OriginValue = {
@@ -19,7 +19,7 @@ export const UpValue: OriginValue = {
 
 export const VCenterValue: OriginValue = {
   name: "VCenter",
-  value: ScrollPct.CENTER,
+  value: ScrollPercentage.CENTER,
 };
 
 export const DownValue: OriginValue = {
@@ -29,5 +29,5 @@ export const DownValue: OriginValue = {
 
 export const BottomValue: OriginValue = {
   name: "Bottom",
-  value: ScrollPct.MAX,
+  value: ScrollPercentage.MAX,
 };

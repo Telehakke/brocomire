@@ -1,16 +1,15 @@
 import { atom, useSetAtom } from "jotai";
 import { useEffect } from "react";
-import type { AppStore } from "../../../../application/appState/appStore";
+import { IsLandscape } from "../../../../application/appState/valueObjects/isLandscape";
 import { LandscapeMonitor } from "../../../../infrastructure/device/landscapeMonitor";
-import { Atom } from "../../../atoms";
+import { isLandscapeAtom } from "../../../atoms";
 
 const getLandscapeMonitorAtom = atom(null, (get, set) => {
-  const appState = Atom.appState;
-  const appStore: AppStore = {
-    get: () => get(appState),
-    set: (callback) => set(appState, callback(get(appState))),
-  };
-  return new LandscapeMonitor(appStore);
+  const isLandscapeStore = IsLandscape.getStore(
+    () => get(isLandscapeAtom),
+    (v) => set(isLandscapeAtom, v),
+  );
+  return new LandscapeMonitor(isLandscapeStore);
 });
 
 export const LandscapeListener = (): null => {

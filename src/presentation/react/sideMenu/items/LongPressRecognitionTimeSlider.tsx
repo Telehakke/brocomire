@@ -1,6 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import type { JSX } from "react/jsx-runtime";
+import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
 import { LongPressRecognitionTime } from "../../../../domain/models/userSettings/valueObjects/longPressRecognitionTime";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -9,12 +10,13 @@ import { Slider } from "../../utils/Slider";
 export const LongPressRecognitionTimeSlider = (): JSX.Element => {
   const time = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
   const setUserSettings = useSetAtom(Atom.userSettings);
-  const [value, setValue] = useState(time.value);
+  const [value, setValue] = useState(time);
 
   const handleValueChangeEnd = (value: number): void => {
     setUserSettings((u) =>
-      u.setLongPressRecognitionTime(
-        () => LongPressRecognitionTime.createSafe(value),
+      UserSettings.setLongPressRecognitionTime(
+        u,
+        value as LongPressRecognitionTime,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -24,10 +26,10 @@ export const LongPressRecognitionTimeSlider = (): JSX.Element => {
     <Slider
       label={(v) => `長押しの認識時間：${(v / 1000).toFixed(2)}秒`}
       min={LongPressRecognitionTime.MIN}
-      max={LongPressRecognitionTime.MAX}
+      max={LongPressRecognitionTime.MAZ}
       step={50}
       value={value}
-      onValueChange={setValue}
+      onValueChange={(v) => setValue(v as LongPressRecognitionTime)}
       onValueChangeEnd={handleValueChangeEnd}
     />
   );

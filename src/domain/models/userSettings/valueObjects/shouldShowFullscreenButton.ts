@@ -1,25 +1,26 @@
 import { isBoolean } from "../../utils/isBoolean";
-import { ValueObject } from "../../utils/valueObject";
-
-export type ShouldShowFullscreenButtonJSON = boolean;
 
 declare const ShouldShowFullscreenButtonBrand: unique symbol;
 
-export class ShouldShowFullscreenButton extends ValueObject<ShouldShowFullscreenButtonJSON> {
-  declare [ShouldShowFullscreenButtonBrand]: unknown;
+export type ShouldShowFullscreenButton = boolean & {
+  [ShouldShowFullscreenButtonBrand]: unknown;
+};
 
-  static readonly DEFAULT = false;
+/* -------------------------------------------------------------------------- */
 
-  constructor(value: boolean) {
-    super(value);
-  }
+export const ShouldShowFullscreenButton = {
+  DEFAULT: false,
 
-  static createSafe(value?: unknown): ShouldShowFullscreenButton {
-    if (!isBoolean(value)) return new ShouldShowFullscreenButton(this.DEFAULT);
-    return new ShouldShowFullscreenButton(value);
-  }
+  createSafe(value?: unknown): ShouldShowFullscreenButton {
+    if (!isBoolean(value)) return create(this.DEFAULT);
+    return create(value);
+  },
 
-  equals(other: this): boolean {
-    return this.value === other.value;
-  }
-}
+  equals(v1: ShouldShowFullscreenButton, v2: ShouldShowFullscreenButton): boolean {
+    return v1 === v2;
+  },
+} as const;
+
+const create = (value: boolean): ShouldShowFullscreenButton => {
+  return value as ShouldShowFullscreenButton;
+};
