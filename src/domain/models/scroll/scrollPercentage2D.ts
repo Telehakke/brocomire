@@ -1,5 +1,5 @@
-import type { BookFormat, BookFormatType } from "../userSettings/valueObjects/bookFormat";
-import { ScrollStepCount } from "../userSettings/valueObjects/scrollStepCount";
+import type { BookFormat, BookFormatValue } from "../userSettings/valueObjects/bookFormat";
+import type { ScrollStepCount } from "../userSettings/valueObjects/scrollStepCount";
 import { exhaustiveCheck } from "../utils/exhaustiveCheck";
 import { HCenter } from "./origin/horizontal/hCenter";
 import { Left } from "./origin/horizontal/left";
@@ -12,15 +12,17 @@ import { Down } from "./origin/vertical/down";
 import { Top } from "./origin/vertical/top";
 import { Up } from "./origin/vertical/up";
 import { VCenter } from "./origin/vertical/vCenter";
-import { ScrollPercentage } from "./scrollPercentage";
+import * as ScrollPercentage from "./scrollPercentage";
+
+type Position = { x: number | undefined; y: number | undefined };
 
 export class ScrollPercentage2D {
-  private _x: ScrollPercentage;
-  private _y: ScrollPercentage;
+  private _x: ScrollPercentage.ScrollPercentage;
+  private _y: ScrollPercentage.ScrollPercentage;
 
   constructor() {
-    this._x = ScrollPercentage.createSafe(0);
-    this._y = ScrollPercentage.createSafe(0);
+    this._x = ScrollPercentage.createMin();
+    this._y = ScrollPercentage.createMin();
   }
 
   get x(): number {
@@ -45,7 +47,7 @@ export class ScrollPercentage2D {
   }
 
   /** 開始位置の座標をセットする */
-  setStartPosition(bookFormat: BookFormatType): void {
+  setStartPosition(bookFormat: BookFormatValue): void {
     switch (bookFormat) {
       case "vertical":
         this._x = ScrollPercentage.createSafe(Rightmost.value);
@@ -61,7 +63,7 @@ export class ScrollPercentage2D {
   }
 
   /** 終了位置の座標をセットする */
-  setEndPosition(bookFormat: BookFormatType): void {
+  setEndPosition(bookFormat: BookFormatValue): void {
     switch (bookFormat) {
       case "vertical":
         this._x = ScrollPercentage.createSafe(Leftmost.value);
@@ -82,16 +84,14 @@ export class ScrollPercentage2D {
     scrollStepCount: ScrollStepCount,
     canScrollY: boolean,
   ): void {
+    let position: Position;
     if (canScrollY) {
-      const { x, y } = this.getNextXY(bookFormat, scrollStepCount);
-      if (x != null) this._x = ScrollPercentage.createSafe(x);
-      if (y != null) this._y = ScrollPercentage.createSafe(y);
-      return;
+      position = this.getNextXY(bookFormat, scrollStepCount);
+    } else {
+      position = this.getNextX(bookFormat, scrollStepCount);
     }
-
-    const { x, y } = this.getNextX(bookFormat, scrollStepCount);
-    if (x != null) this._x = ScrollPercentage.createSafe(x);
-    if (y != null) this._y = ScrollPercentage.createSafe(y);
+    if (position.x != null) this._x = ScrollPercentage.createSafe(position.x);
+    if (position.y != null) this._y = ScrollPercentage.createSafe(position.y);
   }
 
   /** 前のスクロール座標をセットする */
@@ -100,16 +100,14 @@ export class ScrollPercentage2D {
     scrollStepCount: ScrollStepCount,
     canScrollY: boolean,
   ): void {
+    let position: Position;
     if (canScrollY) {
-      const { x, y } = this.getPreviousXY(bookFormat, scrollStepCount);
-      if (x != null) this._x = ScrollPercentage.createSafe(x);
-      if (y != null) this._y = ScrollPercentage.createSafe(y);
-      return;
+      position = this.getPreviousXY(bookFormat, scrollStepCount);
+    } else {
+      position = this.getPreviousX(bookFormat, scrollStepCount);
     }
-
-    const { x, y } = this.getPreviousX(bookFormat, scrollStepCount);
-    if (x != null) this._x = ScrollPercentage.createSafe(x);
-    if (y != null) this._y = ScrollPercentage.createSafe(y);
+    if (position.x != null) this._x = ScrollPercentage.createSafe(position.x);
+    if (position.y != null) this._y = ScrollPercentage.createSafe(position.y);
   }
 
   /** 次のページに移動できるかどうか */
@@ -117,8 +115,8 @@ export class ScrollPercentage2D {
     return (
       // 左右にスクロール不可、または水平方向が終了原点であり、かつ
       // 上下にスクロール不可、または垂直方向が終了原点であればページ移動可能
-      (!canScrollX || this.getHOrigin().isEnd(bookFormat)) &&
-      (!canScrollY || this.getVOrigin().isEnd(bookFormat))
+      (!canScrollX || this.getHOrigin().isEndPosition(bookFormat)) &&
+      (!canScrollY || this.getVOrigin().isEndPosition(bookFormat))
     );
   }
 
@@ -127,51 +125,45 @@ export class ScrollPercentage2D {
     return (
       // 左右にスクロール不可、または水平方向が開始原点であり、かつ
       // 上下にスクロール不可、または垂直方向が開始原点であればページ移動可能
-      (!canScrollX || this.getHOrigin().isStart(bookFormat)) &&
-      (!canScrollY || this.getVOrigin().isStart(bookFormat))
+      (!canScrollX || this.getHOrigin().isStartPosition(bookFormat)) &&
+      (!canScrollY || this.getVOrigin().isStartPosition(bookFormat))
     );
   }
 
-  private getNextXY = (
-    bookFormat: BookFormat,
-    scrollStepCount: ScrollStepCount,
-  ): { x: number | undefined; y: number | undefined } => {
+  private getNextXY = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
     const hOrigin = this.getHOrigin();
     const vOrigin = this.getVOrigin();
     return {
-      x: vOrigin.isEnd(bookFormat) ? hOrigin.next(bookFormat, scrollStepCount).value : undefined,
-      y: vOrigin.next(bookFormat, scrollStepCount).value,
-    };
-  };
-
-  private getNextX = (
-    bookFormat: BookFormat,
-    scrollStepCount: ScrollStepCount,
-  ): { x: number | undefined; y: number | undefined } => {
-    const hOrigin = this.getHOrigin();
-    return { x: hOrigin.next(bookFormat, scrollStepCount).value, y: undefined };
-  };
-
-  private getPreviousXY = (
-    bookFormat: BookFormat,
-    scrollStepCount: ScrollStepCount,
-  ): { x: number | undefined; y: number | undefined } => {
-    const hOrigin = this.getHOrigin();
-    const vOrigin = this.getVOrigin();
-    return {
-      x: vOrigin.isStart(bookFormat)
-        ? hOrigin.previous(bookFormat, scrollStepCount).value
+      x: vOrigin.isEndPosition(bookFormat)
+        ? hOrigin.getNextOrigin(bookFormat, scrollStepCount).value
         : undefined,
-      y: vOrigin.previous(bookFormat, scrollStepCount).value,
+      y: vOrigin.getNextOrigin(bookFormat, scrollStepCount).value,
     };
   };
 
-  private getPreviousX = (
-    bookFormat: BookFormat,
-    scrollStepCount: ScrollStepCount,
-  ): { x: number | undefined; y: number | undefined } => {
+  private getNextX = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+    return {
+      x: this.getHOrigin().getNextOrigin(bookFormat, scrollStepCount).value,
+      y: undefined,
+    };
+  };
+
+  private getPreviousXY = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
     const hOrigin = this.getHOrigin();
-    return { x: hOrigin.previous(bookFormat, scrollStepCount).value, y: undefined };
+    const vOrigin = this.getVOrigin();
+    return {
+      x: vOrigin.isStartPosition(bookFormat)
+        ? hOrigin.getPreviousOrigin(bookFormat, scrollStepCount).value
+        : undefined,
+      y: vOrigin.getPreviousOrigin(bookFormat, scrollStepCount).value,
+    };
+  };
+
+  private getPreviousX = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+    return {
+      x: this.getHOrigin().getPreviousOrigin(bookFormat, scrollStepCount).value,
+      y: undefined,
+    };
   };
 
   private getHOrigin = (): Origin => {

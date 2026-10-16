@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { FileNavigator } from "../../../domain/models/file/fileNavigator";
+import * as FileNavigator from "../../../domain/models/file/fileNavigator";
 import { fileNavigatorAtom } from "../../atoms";
 
 export const PageNumber = (): JSX.Element => {
@@ -8,7 +8,9 @@ export const PageNumber = (): JSX.Element => {
 
   return (
     <div className="rounded-sm bg-neutral-300/75 px-1 select-none">
-      <p className="font-bold text-black tabular-nums">{FileNavigator.progress(fileNavigator)}</p>
+      <p className="font-bold text-black tabular-nums">
+        {FileNavigator.getProgress(fileNavigator)}
+      </p>
     </div>
   );
 };

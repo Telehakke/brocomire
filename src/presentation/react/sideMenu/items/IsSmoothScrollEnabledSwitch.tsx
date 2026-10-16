@@ -1,7 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { IsSmoothScrollEnabled } from "../../../../domain/models/userSettings/valueObjects/isSmoothScrollEnabled";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import type { IsSmoothScrollEnabled } from "../../../../domain/models/userSettings/valueObjects/isSmoothScrollEnabled";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
@@ -11,9 +11,9 @@ export const IsSmoothScrollEnabledSwitch = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleCheckedChange = (checked: boolean): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setIsSmoothScrollEnabled(
-        u,
+        v,
         checked as IsSmoothScrollEnabled,
         new LocalStorageUserSettingsRepository(),
       ),

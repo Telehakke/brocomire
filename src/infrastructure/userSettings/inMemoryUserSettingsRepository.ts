@@ -1,14 +1,14 @@
-import { UserSettings } from "../../domain/models/userSettings/userSettings";
+import * as UserSettings from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 
 export class InMemoryUserSettingsRepository implements UserSettingsRepository {
-  value: UserSettings | undefined;
+  value: UserSettings.UserSettings | undefined;
 
-  load(): UserSettings {
+  load(): UserSettings.UserSettings {
     return UserSettings.createSafe();
   }
 
-  save(userSettings: UserSettings): void {
+  save(userSettings: UserSettings.UserSettings): void {
     this.value = userSettings;
   }
 }

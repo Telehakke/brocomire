@@ -1,7 +1,7 @@
 import { useAtomValue } from "jotai";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import type { JSX } from "react";
-import { ChevronMark } from "../../../../application/appState/valueObjects/chevronMark";
+import * as ChevronMark from "../../../../application/appState/chevronMark";
 import { chevronMarkAtom } from "../../../atoms";
 import { safeAreaPaddingLeft, safeAreaPaddingRight } from "../../utils/safeAreaPadding";
 

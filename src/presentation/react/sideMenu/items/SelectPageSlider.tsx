@@ -1,14 +1,13 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useRef, useState, type JSX } from "react";
-import { IsOpenSideMenu } from "../../../../application/appState/valueObjects/isOpenSideMenu";
+import { useEffect, useRef, useState, type Dispatch, type JSX, type SetStateAction } from "react";
+import * as IsOpenSideMenu from "../../../../application/appState/isOpenSideMenu";
 import { handleThumbnailClick } from "../../../../application/sideMenu/handleThumbnailClick";
 import type { FileManager } from "../../../../domain/models/file/fileManager";
-import { FileNavigator } from "../../../../domain/models/file/fileNavigator";
-import { Notification } from "../../../../domain/models/notification/notification";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { type BookFormatType } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
+import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
+import * as Notification from "../../../../domain/models/notification/notification";
+import { type BookFormatValue } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
-import { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
+import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
 import {
   Atom,
   cacheAtom,
@@ -29,6 +28,8 @@ export const SelectPageSlider = (): JSX.Element => {
   return <Container key={bookFormat} />;
 };
 
+/* -------------------------------------------------------------------------- */
+
 const Container = (): JSX.Element => {
   const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
   const fileManager = useAtomValue(fileManagerAtom);
@@ -40,16 +41,20 @@ const Container = (): JSX.Element => {
 
   return (
     <div>
-      <PageSlider index={index} setIndex={setIndex} setBlob={setBlob} />
-      <Thumbnail blob={blob} index={index} />
+      <PageSlider {...{ index, setIndex, setBlob }} />
+      <Thumbnail {...{ blob, index }} />
     </div>
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
+type SetState<T> = Dispatch<SetStateAction<T>>;
+
 const PageSlider = (props: {
   index: number;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
-  setBlob: React.Dispatch<React.SetStateAction<Blob | undefined>>;
+  setIndex: SetState<number>;
+  setBlob: SetState<Blob | undefined>;
 }): JSX.Element => {
   const fileManager = useAtomValue(fileManagerAtom);
   const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
@@ -63,7 +68,7 @@ const PageSlider = (props: {
       label={(v) => helper(bookFormat).sliderLabel(v, fileManager)}
       origin={helper(bookFormat).sliderOrigin()}
       min={0}
-      max={fileManager.length() - 1}
+      max={fileManager.getLength() - 1}
       value={props.index}
       onValueChange={props.setIndex}
       onValueChangeEnd={handleValueChangedEnd}
@@ -71,7 +76,7 @@ const PageSlider = (props: {
   );
 };
 
-type Image = HTMLImageElement | null;
+/* -------------------------------------------------------------------------- */
 
 const handleThumbnailClickAtom = atom(null, (get, set, index: number) => {
   const fileNavigatorStore = FileNavigator.getStore(
@@ -86,48 +91,30 @@ const handleThumbnailClickAtom = atom(null, (get, set, index: number) => {
     () => get(notificationAtom),
     (v) => set(notificationAtom, v),
   );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
   const zoomPercentageStore = ZoomPercentage.getStore(
     () => get(zoomPercentageAtom),
     (v) => set(zoomPercentageAtom, v),
   );
-  handleThumbnailClick(
-    get(cacheAtom),
+  handleThumbnailClick({
+    cache: get(cacheAtom),
     fileNavigatorStore,
     index,
     isOpenSideMenuStore,
     notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
     zoomPercentageStore,
-  );
+  });
 });
+
+type Image = HTMLImageElement | null;
 
 const Thumbnail = (props: { blob?: Blob; index: number }): JSX.Element | null => {
   const imageRef = useRef<Image>(null);
   const fileManager = useAtomValue(fileManagerAtom);
   const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
   const handleThumbnailClick = useSetAtom(handleThumbnailClickAtom);
-
-  const createURL = (blob?: Blob): string | undefined => {
-    if (blob == null) return undefined;
-    return URL.createObjectURL(blob);
-  };
-
-  const loadImage = (image: Image, imageURL?: string): void => {
-    if (image == null || imageURL == null) return;
-    image.src = imageURL;
-  };
-
-  const unloadImage = (image: Image, imageURL?: string): void => {
-    if (image == null || imageURL == null) return;
-    image.src = "";
-    URL.revokeObjectURL(imageURL);
-  };
 
   useEffect(() => {
     const image = imageRef.current;
@@ -148,23 +135,39 @@ const Thumbnail = (props: { blob?: Blob; index: number }): JSX.Element | null =>
   );
 };
 
+const createURL = (blob?: Blob): string | undefined => {
+  if (blob == null) return undefined;
+  return URL.createObjectURL(blob);
+};
+
+const loadImage = (image: Image, imageURL?: string): void => {
+  if (image == null || imageURL == null) return;
+  image.src = imageURL;
+};
+
+const unloadImage = (image: Image, imageURL?: string): void => {
+  if (image == null || imageURL == null) return;
+  image.src = "";
+  URL.revokeObjectURL(imageURL);
+};
+
 /* -------------------------------------------------------------------------- */
 
-type BookFormatFuncs = {
+type BookFormatFuncs = Readonly<{
   /** 書式に応じた正確なインデックスを返す */
   correctIndex: (index: number, fileManager: FileManager) => number;
   /** スライダーのラベル */
   sliderLabel: (value: number, fileManager: FileManager) => string;
   /** スライダーの原点 */
   sliderOrigin: () => "start" | "end";
-};
+}>;
 
 const horizontalFuncs: BookFormatFuncs = {
   correctIndex(index) {
     return index;
   },
   sliderLabel(value, fileManager) {
-    return `ページ：${value + 1} / ${fileManager.length()}`;
+    return `ページ：${value + 1} / ${fileManager.getLength()}`;
   },
   sliderOrigin() {
     return "start";
@@ -173,17 +176,17 @@ const horizontalFuncs: BookFormatFuncs = {
 
 const verticalFuncs: BookFormatFuncs = {
   correctIndex(index, fileManager) {
-    return fileManager.length() - index - 1;
+    return fileManager.getLength() - index - 1;
   },
   sliderLabel(value, fileManager) {
-    return `ページ：${fileManager.length() - value} / ${fileManager.length()}`;
+    return `ページ：${fileManager.getLength() - value} / ${fileManager.getLength()}`;
   },
   sliderOrigin() {
     return "end";
   },
 };
 
-const helper = (value: BookFormatType): BookFormatFuncs => {
+const helper = (value: BookFormatValue): BookFormatFuncs => {
   switch (value) {
     case "horizontal":
       return horizontalFuncs;

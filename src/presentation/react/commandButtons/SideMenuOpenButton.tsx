@@ -1,7 +1,7 @@
 import { useSetAtom } from "jotai";
 import { EllipsisVertical } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { IsOpenSideMenu } from "../../../application/appState/valueObjects/isOpenSideMenu";
+import * as IsOpenSideMenu from "../../../application/appState/isOpenSideMenu";
 import { isOpenSideMenuAtom } from "../../atoms";
 import { IconButton } from "../utils/IconButton";
 

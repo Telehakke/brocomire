@@ -1,13 +1,10 @@
-import {
-  IsLandscape,
-  type IsLandscapeStore,
-} from "../../application/appState/valueObjects/isLandscape";
+import * as IsLandscape from "../../application/appState/isLandscape";
 
 export class LandscapeMonitor {
-  private readonly isLandscapeStore: IsLandscapeStore;
+  private readonly isLandscapeStore: IsLandscape.IsLandscapeStore;
   private readonly mediaQuery: MediaQueryList;
 
-  constructor(isLandscapeStore: IsLandscapeStore) {
+  constructor(isLandscapeStore: IsLandscape.IsLandscapeStore) {
     this.isLandscapeStore = isLandscapeStore;
     this.mediaQuery = window.matchMedia("(orientation: landscape)");
   }

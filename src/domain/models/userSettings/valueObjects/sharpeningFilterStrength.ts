@@ -6,20 +6,18 @@ export type SharpeningFilterStrength = number & { [SharpeningFilterStrengthBrand
 
 /* -------------------------------------------------------------------------- */
 
-export const SharpeningFilterStrength = {
-  MIN: 1,
-  MAX: 10,
-  DEFAULT: 3,
+export const MIN = 1;
+export const MAX = 10;
+export const DEFAULT = 3;
 
-  createSafe(value?: unknown): SharpeningFilterStrength {
-    if (!isNumber(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): SharpeningFilterStrength => {
+  if (!isNumber(value)) return create(DEFAULT);
+  return create(Math.max(Math.min(value, MAX), MIN));
+};
 
-  equals(v1: SharpeningFilterStrength, v2: SharpeningFilterStrength): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: SharpeningFilterStrength, v2: SharpeningFilterStrength): boolean => {
+  return v1 === v2;
+};
 
 const create = (value: number): SharpeningFilterStrength => {
   return value as SharpeningFilterStrength;

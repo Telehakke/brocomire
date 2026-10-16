@@ -1,6 +1,6 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { IsOpenSideMenu } from "../../../application/appState/valueObjects/isOpenSideMenu";
+import * as IsOpenSideMenu from "../../../application/appState/isOpenSideMenu";
 import { isOpenSideMenuAtom } from "../../atoms";
 import { Card } from "../utils/Card";
 import { SideMenuDialog } from "../utils/SideMenuDialog";
@@ -22,8 +22,10 @@ import { SelectPageSlider } from "./items/SelectPageSlider";
 import { SharpeningFilterStrengthSlider } from "./items/SharpeningFilterStrengthSlider";
 import { ShouldAdvanceSwitch } from "./items/ShouldAdvanceSwitch";
 import { ShouldPreloadSwitch } from "./items/ShouldPreloadSwitch";
+import { ShouldShowBookmarkButtonSwitch } from "./items/ShouldShowBookmarkButtonSwitch";
 import { ShouldShowFullscreenButtonSwitch } from "./items/ShouldShowFullscreenButtonSwitch";
 import { ShouldShowInvertButtonSwitch } from "./items/ShouldShowInvertButtonSwitch";
+import { ShouldShowProgressBarSwitch } from "./items/ShouldShowProgressBarSwitch";
 import { ShouldShowSharpeningFilterButtonSwitch } from "./items/ShouldShowSharpeningFilterButtonSwitch";
 import { TapAreaHeightSegmentGroup } from "./items/TapAreaHeightSegmentGroup";
 import { TapAreaWidthSegmentGroup } from "./items/TapAreaWidthSegmentGroup";
@@ -31,11 +33,10 @@ import { ViewerCloseButton } from "./items/ViewerCloseButton";
 import { ZoomStepSlider } from "./items/ZoomStepSlider";
 
 export const SideMenu = (): JSX.Element => {
-  const isOpenSideMenu = useAtomValue(isOpenSideMenuAtom);
-  const setIsOpenSideMenu = useSetAtom(isOpenSideMenuAtom);
+  const [isOpen, setIsOpen] = useAtom(isOpenSideMenuAtom);
 
   const handleOpenChange = (open: boolean): void => {
-    setIsOpenSideMenu(IsOpenSideMenu.create(open));
+    setIsOpen(IsOpenSideMenu.create(open));
   };
 
   return (
@@ -44,7 +45,7 @@ export const SideMenu = (): JSX.Element => {
       unmountOnExit
       lazyMount
       modal={false}
-      open={isOpenSideMenu}
+      open={isOpen}
       onOpenChange={handleOpenChange}
       style={{
         ...safeAreaPaddingLeft(),
@@ -92,7 +93,11 @@ export const SideMenu = (): JSX.Element => {
           <ShouldShowSharpeningFilterButtonSwitch />
           <SharpeningFilterStrengthSlider />
           <ShouldShowInvertButtonSwitch />
+          <ShouldShowBookmarkButtonSwitch />
           <ShouldShowFullscreenButtonSwitch />
+        </Card>
+        <Card>
+          <ShouldShowProgressBarSwitch />
         </Card>
         <Card footer="読み込みが遅い場合にパフォーマンスが改善します">
           <ShouldPreloadSwitch />

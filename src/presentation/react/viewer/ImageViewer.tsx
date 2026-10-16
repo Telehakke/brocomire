@@ -1,15 +1,15 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { InfoVisibility } from "../../../application/appState/valueObjects/infoVisibility";
-import { IsUserScrolled } from "../../../application/appState/valueObjects/isUserScrolled";
+import * as InfoVisibility from "../../../application/appState/infoVisibility";
+import * as IsImageWiderThanViewer from "../../../application/appState/isImageWiderThanViewer";
+import * as IsUserScrolled from "../../../application/appState/isUserScrolled";
 import { moveToLeftPage } from "../../../application/viewer/moveToLeftPage";
 import { moveToRightPage } from "../../../application/viewer/moveToRightPage";
 import { zoomIn } from "../../../application/viewer/zoomIn";
 import { zoomOut } from "../../../application/viewer/zoomOut";
-import { FileNavigator } from "../../../domain/models/file/fileNavigator";
-import { Notification } from "../../../domain/models/notification/notification";
-import { UserSettings } from "../../../domain/models/userSettings/userSettings";
-import { ZoomPercentage } from "../../../domain/models/zoom/zoomPercentage";
+import * as FileNavigator from "../../../domain/models/file/fileNavigator";
+import * as Notification from "../../../domain/models/notification/notification";
+import * as ZoomPercentage from "../../../domain/models/zoom/zoomPercentage";
 import {
   Atom,
   fileNavigatorAtom,
@@ -27,6 +27,7 @@ import { GamepadListener } from "./items/GamepadListener";
 import { KeydownListener } from "./items/KeydownListener";
 import { LandscapeListener } from "./items/LandscapeListener";
 import { Loader } from "./items/Loader";
+import { ProgressBar } from "./items/ProgressBar";
 import { SharpeningFilter } from "./items/SharpeningFilter";
 import { TapAreas } from "./items/TapAreas";
 import { ViewerBody } from "./items/ViewerBody";
@@ -34,114 +35,90 @@ import { ViewerCanvas } from "./items/ViewerCanvas";
 import { ViewerContent } from "./items/ViewerContent";
 
 const zoomInAtom = atom(null, (get, set) => {
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  const zoomPercentageStore = ZoomPercentage.getStore(
-    () => get(zoomPercentageAtom),
-    (v) => set(zoomPercentageAtom, v),
-  );
-  zoomIn(
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-    zoomPercentageStore,
-  );
+  zoomIn({
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+    zoomPercentageStore: ZoomPercentage.getStore(
+      () => get(zoomPercentageAtom),
+      (v) => set(zoomPercentageAtom, v),
+    ),
+  });
 });
 
 const zoomOutAtom = atom(null, (get, set) => {
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  const zoomPercentageStore = ZoomPercentage.getStore(
-    () => get(zoomPercentageAtom),
-    (v) => set(zoomPercentageAtom, v),
-  );
-  zoomOut(
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-    zoomPercentageStore,
-  );
+  zoomOut({
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+    zoomPercentageStore: ZoomPercentage.getStore(
+      () => get(zoomPercentageAtom),
+      (v) => set(zoomPercentageAtom, v),
+    ),
+  });
 });
 
 const moveToLeftPageAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  moveToLeftPage(
-    fileNavigatorStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-  );
+  moveToLeftPage({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+  });
 });
 
 const moveToRightPageAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  moveToRightPage(
-    fileNavigatorStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-  );
+  moveToRightPage({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+  });
 });
 
 export const ImageViewer = (): JSX.Element => {
-  const zoomIn = useSetAtom(zoomInAtom);
-  const zoomOut = useSetAtom(zoomOutAtom);
+  const imageSize = useAtomValue(imageSizeAtom);
+  const viewerManager = useAtomValue(viewerManagerAtom);
   const moveToLeftPage = useSetAtom(moveToLeftPageAtom);
   const moveToRightPage = useSetAtom(moveToRightPageAtom);
   const setInfoVisibility = useSetAtom(infoVisibilityAtom);
-  const viewerManager = useAtomValue(viewerManagerAtom);
-  const imageSize = useAtomValue(imageSizeAtom);
   const setIsImageWiderThanViewer = useSetAtom(isImageWiderThanViewerAtom);
+  const zoomIn = useSetAtom(zoomInAtom);
+  const zoomOut = useSetAtom(zoomOutAtom);
 
   const handleResize = (): void => {
     setIsImageWiderThanViewer(
-      viewerManager.isImageWiderThanViewer(imageSize.width, imageSize.height),
+      IsImageWiderThanViewer.create(
+        viewerManager.isImageWiderThanViewer(imageSize.width, imageSize.height),
+      ),
     );
   };
 
@@ -171,6 +148,7 @@ export const ImageViewer = (): JSX.Element => {
       <ChevronLeft />
       <ChevronRight />
       <Loader />
+      <ProgressBar />
     </>
   );
 };

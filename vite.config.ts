@@ -192,8 +192,10 @@ export default defineConfig({
     rolldownOptions: {
       output: {
         codeSplitting: {
-          minSize: 20000,
-          groups: [{ name: "vendor", test: /node_modules/ }],
+          groups: [
+            { name: "react-vendor", test: /node_modules\/react/ },
+            { name: "vendor", test: /node_modules/ },
+          ],
         },
       },
     },

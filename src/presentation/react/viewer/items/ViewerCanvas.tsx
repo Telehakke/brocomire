@@ -1,13 +1,16 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type CSSProperties, type JSX } from "react";
-import { ImageSize } from "../../../../application/appState/valueObjects/imageSize";
+import * as ImageSize from "../../../../application/appState/imageSize";
+import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
+import type { IsLandscape } from "../../../../application/appState/isLandscape";
+import * as IsLoading from "../../../../application/appState/isLoading";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
-import type { FileManager } from "../../../../domain/models/file/fileManager";
-import { FileNavigator } from "../../../../domain/models/file/fileNavigator";
+import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
-import type { ContentFit } from "../../../../domain/models/userSettings/valueObjects/contentFit";
+import type { ContentFitValue } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
-import { SafeAreaLength } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
+import type { IsSafeAreaEnabled } from "../../../../domain/models/userSettings/valueObjects/isSafeAreaEnabled";
+import * as SafeAreaLength from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import {
   Atom,
@@ -43,69 +46,72 @@ const getImagesAtom = atom(
     _,
     bookFormat: BookFormat,
     displayMode: DisplayMode,
-    fileManager: FileManager,
-    fileNavigator: FileNavigator,
+    fileNavigator: FileNavigator.FileNavigator,
   ) => {
     const { shouldPreload } = get(Atom.userSettings);
-    return getImages(
+    return getImages({
+      cache: shouldPreload ? get(cacheAtom) : undefined,
       bookFormat,
       displayMode,
-      fileManager,
+      fileManager: get(fileManagerAtom),
       fileNavigator,
-      shouldPreload ? get(cacheAtom) : undefined,
-    );
+    });
   },
 );
 
 const drawImagesAtom = atom(
   null,
   (get, set, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: [Image, Image]) => {
-    const imageSizeStore = ImageSize.getStore(
-      () => get(imageSizeAtom),
-      (v) => set(imageSizeAtom, v),
-    );
-    drawImages(
+    drawImages({
       canvas,
       ctx,
       images,
-      imageSizeStore,
-      get(scrollPercentage2DAtom),
-      get(viewerManagerAtom),
-    );
+      imageSizeStore: ImageSize.getStore(
+        () => get(imageSizeAtom),
+        (v) => set(imageSizeAtom, v),
+      ),
+      scrollPercentage2D: get(scrollPercentage2DAtom),
+      viewerManager: get(viewerManagerAtom),
+    });
   },
 );
 
 const preloadFilesAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const userSettings = get(Atom.userSettings);
-  preloadFiles(userSettings, get(cacheAtom), get(fileManagerAtom), fileNavigatorStore);
+  preloadFiles({
+    cache: get(cacheAtom),
+    fileManager: get(fileManagerAtom),
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    userSettingsGetter: () => get(Atom.userSettings),
+  });
 });
+
+/* -------------------------------------------------------------------------- */
 
 export const ViewerCanvas = (): JSX.Element => {
   const canvasRef = useRef<Canvas>(null);
   const timerId = useRef<number | undefined>(undefined);
-  const getImages = useSetAtom(getImagesAtom);
-  const drawImages = useSetAtom(drawImagesAtom);
-  const preloadFiles = useSetAtom(preloadFilesAtom);
-  const fileNavigator = useAtomValue(fileNavigatorAtom);
-  const isLandscape = useAtomValue(isLandscapeAtom);
-  const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
   const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
   const contentFit = useAtomValue(UserSettingsAtom.contentFit);
   const displayMode = useAtomValue(UserSettingsAtom.displayMode);
+  const fileNavigator = useAtomValue(fileNavigatorAtom);
+  const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
+  const isLandscape = useAtomValue(isLandscapeAtom);
   const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+  const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
   const viewerManager = useAtomValue(viewerManagerAtom);
-  const fileManager = useAtomValue(fileManagerAtom);
-  const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
+  const drawImages = useSetAtom(drawImagesAtom);
+  const getImages = useSetAtom(getImagesAtom);
+  const preloadFiles = useSetAtom(preloadFilesAtom);
   const setIsLoading = useSetAtom(isLoadingAtom);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas == null) return;
+
     viewerManager.setCanvas(() => canvas);
   }, [viewerManager]);
 
@@ -115,17 +121,18 @@ export const ViewerCanvas = (): JSX.Element => {
     const ctx = canvas?.getContext("2d");
     if (canvas == null || ctx == null) return;
 
-    void getImages(bookFormat, displayMode, fileManager, fileNavigator).then((images) => {
+    void getImages(bookFormat, displayMode, fileNavigator).then((images) => {
       if (!isMounded) return;
+
       drawImages(canvas, ctx, images);
       preloadFiles();
       window.clearInterval(timerId.current);
-      setIsLoading(false);
+      setIsLoading(IsLoading.create(false));
     });
     return (): void => {
       isMounded = false;
       timerId.current = window.setTimeout(() => {
-        setIsLoading(true);
+        setIsLoading(IsLoading.create(true));
       }, 100);
     };
   }, [
@@ -133,7 +140,6 @@ export const ViewerCanvas = (): JSX.Element => {
     preloadFiles,
     displayMode, // メニューから画像の表示数の変更で再レンダリング
     drawImages,
-    fileManager,
     fileNavigator, // インデックスの変更で再レンダリング
     getImages,
     setIsLoading,
@@ -143,7 +149,7 @@ export const ViewerCanvas = (): JSX.Element => {
     <canvas
       className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
       style={{
-        ...safeAriaStyle(isSafeAreaEnabled, isLandscape, safeAreaLength),
+        ...safeAriaStyle(isLandscape, isSafeAreaEnabled, safeAreaLength),
         ...canvasStyle(contentFit, isImageWiderThanViewer),
       }}
       ref={canvasRef}
@@ -151,33 +157,39 @@ export const ViewerCanvas = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const safeAriaStyle = (
-  isSafeAreaEnabled: boolean,
-  isLandscape: boolean,
-  safeAreaLength: SafeAreaLength,
+  isLandscape: IsLandscape,
+  isSafeAreaEnabled: IsSafeAreaEnabled,
+  safeAreaLength: SafeAreaLength.SafeAreaLength,
 ): CSSProperties => {
   if (!isSafeAreaEnabled) return {};
   if (isLandscape) return landscapeStyle(safeAreaLength);
   return portraitStyle(safeAreaLength);
 };
 
-const landscapeStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+const landscapeStyle = (safeAreaLength: SafeAreaLength.SafeAreaLength): CSSProperties => {
   if (SafeAreaLength.isMin(safeAreaLength))
     return { ...safeAreaPaddingLeft(), ...safeAreaPaddingRight() };
+
   const value = `${safeAreaLength}px`;
   return { paddingLeft: value, paddingRight: value };
 };
 
-const portraitStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+const portraitStyle = (safeAreaLength: SafeAreaLength.SafeAreaLength): CSSProperties => {
   if (SafeAreaLength.isMin(safeAreaLength))
     return { ...safeAreaPaddingTop(), ...safeAreaPaddingBottom() };
+
   const value = `${safeAreaLength}px`;
   return { paddingTop: value, paddingBottom: value };
 };
 
+/* -------------------------------------------------------------------------- */
+
 const canvasStyle = (
-  contentFit: ContentFit,
-  isImageWiderThanViewer: boolean | undefined,
+  contentFit: ContentFitValue,
+  isImageWiderThanViewer: IsImageWiderThanViewer,
 ): CSSProperties => {
   if (isImageWiderThanViewer == null)
     return { width: "100%", height: "100%", objectFit: "contain" };

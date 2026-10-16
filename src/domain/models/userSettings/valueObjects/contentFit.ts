@@ -1,32 +1,34 @@
-export const ContentFitEnum = { all: "all", fill: "fill" } as const;
+const ContentFitEnum = { all: "all", fill: "fill" } as const;
 
-export type ContentFitType = (typeof ContentFitEnum)[keyof typeof ContentFitEnum];
+export type ContentFitValue = (typeof ContentFitEnum)[keyof typeof ContentFitEnum];
 
 /* -------------------------------------------------------------------------- */
 
 declare const ContentFitBrand: unique symbol;
 
-export type ContentFit = ContentFitType & { [ContentFitBrand]: unknown };
+export type ContentFit = ContentFitValue & { [ContentFitBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const ContentFit = {
-  DEFAULT: ContentFitEnum.all,
+export const DEFAULT = ContentFitEnum.all;
 
-  createSafe(value?: unknown): ContentFit {
-    if (!isContentFitType(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): ContentFit => {
+  if (!isContentFitValue(value)) return create(DEFAULT);
+  return create(value);
+};
 
-  equals(v1: ContentFit, v2: ContentFit): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: ContentFit, v2: ContentFit): boolean => {
+  return v1 === v2;
+};
 
-const create = (value: ContentFitType): ContentFit => {
+export const getValues = (): readonly ContentFitValue[] => {
+  return Object.values(ContentFitEnum);
+};
+
+const create = (value: ContentFitValue): ContentFit => {
   return value as ContentFit;
 };
 
-const isContentFitType = (value: unknown): value is ContentFitType => {
+const isContentFitValue = (value: unknown): value is ContentFitValue => {
   return Object.keys(ContentFitEnum).some((v) => v === value);
 };

@@ -1,28 +1,36 @@
-import type { Cache } from "../../domain/models/file/cache";
-import { FileNavigator, type FileNavigatorStore } from "../../domain/models/file/fileNavigator";
-import {
-  Notification,
-  type NotificationStore,
-} from "../../domain/models/notification/notification";
+import * as FileNavigator from "../../domain/models/file/fileNavigator";
+import * as Notification from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
-import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
-import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
+import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
+
+type MoveToIndexPageOptions = Readonly<{
+  fileNavigatorStore: FileNavigator.FileNavigatorStore;
+  index: number;
+  notificationStore: Notification.NotificationStore;
+  scrollPercentage2D: ScrollPercentage2D;
+  userSettingsGetter: UserSettingsGetter;
+}>;
 
 /** 指定したindexのページへ移動 */
-export const moveToIndexPage = (
+export const moveToIndexPage = (o: MoveToIndexPageOptions): void => {
+  updateFileNavigator(o.fileNavigatorStore, o.index, o.notificationStore);
+  const { bookFormat } = o.userSettingsGetter();
+  o.scrollPercentage2D.setStartPosition(bookFormat);
+  // スクロール処理は画像が生成されてから行うため、ここではスクロール位置だけを設定する
+};
+
+/* -------------------------------------------------------------------------- */
+
+const updateFileNavigator = (
+  fileNavigatorStore: FileNavigator.FileNavigatorStore,
   index: number,
-  cache: Cache,
-  fileNavigatorStore: FileNavigatorStore,
-  notificationStore: NotificationStore,
-  scrollPercentage2D: ScrollPercentage2D,
-  userSettingsStore: UserSettingsStore,
-  viewerManager: ViewerManager,
+  notificationStore: Notification.NotificationStore,
 ): void => {
-  const { bookFormat, shouldPreload } = userSettingsStore.get();
-  if (shouldPreload) cache.clear();
-  const fn = FileNavigator.setCurrentIndex(fileNavigatorStore.get(), index);
-  fileNavigatorStore.set(fn);
-  notificationStore.set(Notification.showMessage(FileNavigator.progress(fn)));
-  scrollPercentage2D.setStartPosition(bookFormat);
-  viewerManager.scrollToPct(scrollPercentage2D.x, scrollPercentage2D.y);
+  const fileNavigator = FileNavigator.withCurrentIndex(fileNavigatorStore.get(), index);
+  fileNavigatorStore.set(fileNavigator);
+  showMessage(notificationStore, FileNavigator.getProgress(fileNavigator));
+};
+
+const showMessage = (notificationStore: Notification.NotificationStore, message: string): void => {
+  notificationStore.set(Notification.showMessage(message));
 };

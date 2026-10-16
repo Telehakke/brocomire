@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { JSX } from "react/jsx-runtime";
-import { Clock } from "../../../infrastructure/clock/clock";
+import * as Clock from "../../../infrastructure/clock/clock";
 
 export const ClockView = (): JSX.Element => {
   const [value, setValue] = useState("");

@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { Fullscreen as FullscreenIcon } from "lucide-react";
 import { useState } from "react";
 import type { JSX } from "react/jsx-runtime";
-import { Fullscreen } from "../../../infrastructure/viewer/fullscreen";
+import * as Fullscreen from "../../../infrastructure/viewer/fullscreen";
 import { UserSettingsAtom } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
@@ -12,19 +12,20 @@ export const FullscreenButton = (): JSX.Element | null => {
   const [onFullscreen, setOnFullscreen] = useState(false);
 
   if (!shouldShowButton) return null;
-  if (onFullscreen) {
-    return <FullscreenIconBlueButton setOnFullscreen={setOnFullscreen} />;
-  }
-  return <FullscreenIconButton setOnFullscreen={setOnFullscreen} />;
+  if (onFullscreen) return <FullscreenIconBlueButton {...{ setOnFullscreen }} />;
+  return <FullscreenIconButton {...{ setOnFullscreen }} />;
 };
 
-const FullscreenIconBlueButton = (props: {
-  setOnFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-}): JSX.Element => {
+/* -------------------------------------------------------------------------- */
+
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
+const FullscreenIconBlueButton = (props: { setOnFullscreen: SetState<boolean> }): JSX.Element => {
   const handleClick = (): void => {
     Fullscreen.exit();
     props.setOnFullscreen(false);
   };
+
   return (
     <IconBlueButton.Button onClick={handleClick}>
       <FullscreenIcon className={Object.values(IconBlueButton.className).join(" ")} />
@@ -32,10 +33,10 @@ const FullscreenIconBlueButton = (props: {
   );
 };
 
-const FullscreenIconButton = (props: {
-  setOnFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-}): JSX.Element => {
+const FullscreenIconButton = (props: { setOnFullscreen: SetState<boolean> }): JSX.Element => {
   const handleClick = (): void => {
+    if (!Fullscreen.canUse()) return;
+
     Fullscreen.execute();
     props.setOnFullscreen(true);
   };

@@ -1,25 +1,25 @@
-import type { IsOpenSideMenuStore } from "../../application/appState/valueObjects/isOpenSideMenu";
-import type { IsUserScrolledStore } from "../../application/appState/valueObjects/isUserScrolled";
-import { goToLeft } from "../../application/viewer/goToLeft";
-import { goToRight } from "../../application/viewer/goToRight";
+import type { IsOpenSideMenuStore } from "../../application/appState/isOpenSideMenu";
+import type { IsUserScrolledStore } from "../../application/appState/isUserScrolled";
+import { goToLeftPosition } from "../../application/viewer/goToLeftPosition";
+import { goToRightPosition } from "../../application/viewer/goToRightPosition";
 import { zoomIn } from "../../application/viewer/zoomIn";
 import { zoomOut } from "../../application/viewer/zoomOut";
 import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
 import type { NotificationStore } from "../../domain/models/notification/notification";
 import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
-import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
 import type { ZoomPercentageStore } from "../../domain/models/zoom/zoomPercentage";
 
 export class KeydownMonitor {
-  private readonly fileNavigationStore: FileNavigatorStore;
+  private readonly fileNavigatorStore: FileNavigatorStore;
   private readonly isOpenSideMenuStore: IsOpenSideMenuStore;
   private readonly isUserScrolledStore: IsUserScrolledStore;
   private readonly notificationStore: NotificationStore;
   private readonly scrollPercentage2D: ScrollPercentage2D;
-  private readonly userSettingsStore: UserSettingsStore;
-  private readonly zoomPercentageStore: ZoomPercentageStore;
+  private readonly userSettingsGetter: UserSettingsGetter;
   private readonly viewerManager: ViewerManager;
+  private readonly zoomPercentageStore: ZoomPercentageStore;
 
   constructor(
     fileNavigationStore: FileNavigatorStore,
@@ -27,16 +27,16 @@ export class KeydownMonitor {
     isUserScrolledStore: IsUserScrolledStore,
     notificationStore: NotificationStore,
     scrollPercentage2D: ScrollPercentage2D,
-    userSettingsStore: UserSettingsStore,
+    userSettingsGetter: UserSettingsGetter,
     viewerManager: ViewerManager,
     zoomPercentageStore: ZoomPercentageStore,
   ) {
-    this.fileNavigationStore = fileNavigationStore;
+    this.fileNavigatorStore = fileNavigationStore;
     this.isOpenSideMenuStore = isOpenSideMenuStore;
     this.isUserScrolledStore = isUserScrolledStore;
     this.notificationStore = notificationStore;
     this.scrollPercentage2D = scrollPercentage2D;
-    this.userSettingsStore = userSettingsStore;
+    this.userSettingsGetter = userSettingsGetter;
     this.viewerManager = viewerManager;
     this.zoomPercentageStore = zoomPercentageStore;
   }
@@ -56,41 +56,41 @@ export class KeydownMonitor {
     this._handleKeyDown(
       ev,
       () =>
-        goToLeft(
-          this.fileNavigationStore,
-          this.isUserScrolledStore,
-          this.notificationStore,
-          this.scrollPercentage2D,
-          this.userSettingsStore,
-          this.viewerManager,
-        ),
+        goToLeftPosition({
+          fileNavigatorStore: this.fileNavigatorStore,
+          isUserScrolledStore: this.isUserScrolledStore,
+          notificationStore: this.notificationStore,
+          scrollPercentage2D: this.scrollPercentage2D,
+          userSettingsGetter: this.userSettingsGetter,
+          viewerManager: this.viewerManager,
+        }),
       () =>
-        goToRight(
-          this.fileNavigationStore,
-          this.isUserScrolledStore,
-          this.notificationStore,
-          this.scrollPercentage2D,
-          this.userSettingsStore,
-          this.viewerManager,
-        ),
+        goToRightPosition({
+          fileNavigatorStore: this.fileNavigatorStore,
+          isUserScrolledStore: this.isUserScrolledStore,
+          notificationStore: this.notificationStore,
+          scrollPercentage2D: this.scrollPercentage2D,
+          userSettingsGetter: this.userSettingsGetter,
+          viewerManager: this.viewerManager,
+        }),
       () =>
-        zoomIn(
-          this.isUserScrolledStore,
-          this.notificationStore,
-          this.scrollPercentage2D,
-          this.userSettingsStore,
-          this.viewerManager,
-          this.zoomPercentageStore,
-        ),
+        zoomIn({
+          isUserScrolledStore: this.isUserScrolledStore,
+          notificationStore: this.notificationStore,
+          scrollPercentage2D: this.scrollPercentage2D,
+          userSettingsGetter: this.userSettingsGetter,
+          viewerManager: this.viewerManager,
+          zoomPercentageStore: this.zoomPercentageStore,
+        }),
       () =>
-        zoomOut(
-          this.isUserScrolledStore,
-          this.notificationStore,
-          this.scrollPercentage2D,
-          this.userSettingsStore,
-          this.viewerManager,
-          this.zoomPercentageStore,
-        ),
+        zoomOut({
+          isUserScrolledStore: this.isUserScrolledStore,
+          notificationStore: this.notificationStore,
+          scrollPercentage2D: this.scrollPercentage2D,
+          userSettingsGetter: this.userSettingsGetter,
+          viewerManager: this.viewerManager,
+          zoomPercentageStore: this.zoomPercentageStore,
+        }),
     );
   };
 

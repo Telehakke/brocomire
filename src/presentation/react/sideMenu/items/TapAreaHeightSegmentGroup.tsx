@@ -1,11 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import {
-  SizeEnum,
-  TapAreaSize,
-  type SizeType,
-} from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as TapAreaSize from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -16,10 +12,10 @@ export const TapAreaHeightSegmentGroup = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleValueChange = (value: string | null): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setTapAreaSize(
-        u,
-        TapAreaSize.copyWith(u.tapAreaSize, { height: value as SizeType }),
+        v,
+        TapAreaSize.copyWith(v.tapAreaSize, { height: value as TapAreaSize.SizeValue }),
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -35,11 +31,16 @@ export const TapAreaHeightSegmentGroup = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const getItems = (): SegmentGroupItem[] => {
-  return Object.values(SizeEnum).map((v) => ({ value: v, label: getSizeLabel(v) }));
+  return TapAreaSize.getValues().map((v) => ({
+    value: v,
+    label: getSizeLabel(v),
+  }));
 };
 
-const getSizeLabel = (value: SizeType): string => {
+const getSizeLabel = (value: TapAreaSize.SizeValue): string => {
   switch (value) {
     case "none":
       return "-";

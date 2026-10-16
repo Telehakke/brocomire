@@ -6,39 +6,44 @@ export type ZoomPercentage = number & { [ZoomPercentageBrand]: unknown };
 
 export type ZoomPercentageStore = Readonly<{
   get(): ZoomPercentage;
-
   set(value: ZoomPercentage): void;
 }>;
 
 /* -------------------------------------------------------------------------- */
 
-export const ZoomPercentage = {
-  MIN: 100,
-  MAX: 1000,
+export const MIN = 100;
+export const MAX = 1000;
 
-  createSafe(value: number): ZoomPercentage {
-    return create(Math.max(Math.min(value, this.MAX), this.MIN));
-  },
+export const createSafe = (value: number): ZoomPercentage => {
+  return create(Math.max(Math.min(value, MAX), MIN));
+};
 
-  createMin(): ZoomPercentage {
-    return create(this.MIN);
-  },
+export const createMin = (): ZoomPercentage => {
+  return create(MIN);
+};
 
-  zoomOut(input: ZoomPercentage, amount: number): ZoomPercentage {
-    return this.createSafe(input - amount);
-  },
+export const zoomOut = (input: ZoomPercentage, amount: number): ZoomPercentage => {
+  return create(Math.max(input - amount, MIN));
+};
 
-  zoomIn(input: ZoomPercentage, amount: number): ZoomPercentage {
-    return this.createSafe(input + amount);
-  },
+export const zoomIn = (input: ZoomPercentage, amount: number): ZoomPercentage => {
+  return create(Math.min(input + amount, MAX));
+};
 
-  getStore: (
-    getter: () => ZoomPercentage,
-    setter: (value: ZoomPercentage) => void,
-  ): ZoomPercentageStore => {
-    return { get: () => getter(), set: (v) => setter(v) };
-  },
-} as const;
+export const isMin = (input: ZoomPercentage): boolean => {
+  return input === MIN;
+};
+
+export const isMax = (input: ZoomPercentage): boolean => {
+  return input === MAX;
+};
+
+export const getStore = (
+  getter: () => ZoomPercentage,
+  setter: (value: ZoomPercentage) => void,
+): ZoomPercentageStore => {
+  return { get: () => getter(), set: (v) => setter(v) };
+};
 
 const create = (value: number): ZoomPercentage => {
   return value as ZoomPercentage;

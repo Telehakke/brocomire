@@ -1,11 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import {
-  ScrollStepCount,
-  ScrollStepCountEnum,
-  type ScrollStepCountType,
-} from "../../../../domain/models/userSettings/valueObjects/scrollStepCount";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as ScrollStepCount from "../../../../domain/models/userSettings/valueObjects/scrollStepCount";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -16,10 +12,10 @@ export const ScrollStepCountSegmentGroup = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleValueChange = (value: string | null): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setScrollStepCount(
-        u,
-        value as ScrollStepCount,
+        v,
+        value as ScrollStepCount.ScrollStepCount,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -35,14 +31,16 @@ export const ScrollStepCountSegmentGroup = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const getItems = (): SegmentGroupItem[] => {
-  return Object.values(ScrollStepCountEnum).map((v) => ({
+  return ScrollStepCount.getValues().map((v) => ({
     value: v,
     label: getScrollStepCountLabel(v),
   }));
 };
 
-const getScrollStepCountLabel = (value: ScrollStepCountType): string => {
+const getScrollStepCountLabel = (value: ScrollStepCount.ScrollStepCountValue): string => {
   switch (value) {
     case "four":
       return "4";

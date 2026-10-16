@@ -6,20 +6,18 @@ export type ZoomStep = number & { [ZoomStepBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const ZoomStep = {
-  MIN: 10,
-  MAX: 200,
-  DEFAULT: 50,
+export const MIN = 10;
+export const MAX = 200;
+export const DEFAULT = 50;
 
-  createSafe(value?: unknown): ZoomStep {
-    if (!isNumber(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): ZoomStep => {
+  if (!isNumber(value)) return create(DEFAULT);
+  return create(Math.max(Math.min(value, MAX), MIN));
+};
 
-  equals(v1: ZoomStep, v2: ZoomStep): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: ZoomStep, v2: ZoomStep): boolean => {
+  return v1 === v2;
+};
 
 const create = (value: number): ZoomStep => {
   return value as ZoomStep;

@@ -1,11 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import {
-  DisplayMode,
-  DisplayModeEnum,
-  type DisplayModeType,
-} from "../../../../domain/models/userSettings/valueObjects/displayMode";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as DisplayMode from "../../../../domain/models/userSettings/valueObjects/displayMode";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -16,10 +12,10 @@ export const DisplayModeSegmentGroup = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleValueChange = (value: string | null): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setDisplayMode(
-        u,
-        value as DisplayMode,
+        v,
+        value as DisplayMode.DisplayMode,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -35,14 +31,16 @@ export const DisplayModeSegmentGroup = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const getItems = (): SegmentGroupItem[] => {
-  return Object.values(DisplayModeEnum).map((v) => ({
+  return DisplayMode.getValues().map((v) => ({
     value: v,
     label: getDisplayModeLabel(v),
   }));
 };
 
-const getDisplayModeLabel = (value: DisplayModeType): string => {
+const getDisplayModeLabel = (value: DisplayMode.DisplayModeValue): string => {
   switch (value) {
     case "single":
       return "1";

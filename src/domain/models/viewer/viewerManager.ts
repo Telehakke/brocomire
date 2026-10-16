@@ -47,5 +47,5 @@ export interface ViewerManager {
   scrollByPx(x: number, y: number): void;
 
   /** パーセンテージで指定した位置にスクロール */
-  scrollToPct(x: number, y: number): void;
+  scrollToPercentage(x: number, y: number): void;
 }

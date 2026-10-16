@@ -1,10 +1,10 @@
 import { BlobReader, BlobWriter, ZipReader, type Entry, type FileEntry } from "@zip.js/zip.js";
+import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import type { BlobCache } from "./blobCache";
 
 export class ZipFileManager implements FileManager {
-  private readonly entries: readonly Entry[];
-  private readonly hashedFileName: string | undefined;
+  private entries: readonly Entry[];
+  private hashedFileName: string | undefined;
 
   private constructor(entries: readonly Entry[], hashedFileName?: string) {
     this.entries = entries;
@@ -48,18 +48,18 @@ export class ZipFileManager implements FileManager {
       return Array.from(new Uint8Array(hashBuffer))
         .map((v) => v.toString(16).padStart(2, "0"))
         .join("");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_) {
+    } catch {
       // 開発サーバーではcryptoがエラーを投げる。その場合、入力値をそのまま返す
       return value;
     }
   }
 
-  clear(): FileManager {
-    return new ZipFileManager([], undefined);
+  clear(): void {
+    this.entries = [];
+    this.hashedFileName = "";
   }
 
-  length(): number {
+  getLength(): number {
     return this.entries.length;
   }
 
@@ -67,23 +67,23 @@ export class ZipFileManager implements FileManager {
     return this.entries.length > 0;
   }
 
-  async getBlob(index: number, blobCache?: BlobCache): Promise<Blob | undefined> {
-    if (index < 0 || index >= this.length()) return undefined;
-    const blob = await this._getBlob(index, blobCache);
-    this.cache(index, blob, blobCache);
+  async getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
+    if (index < 0 || index >= this.getLength()) return undefined;
+    const blob = await this._getBlob(index, cache);
+    this.addCache(index, blob, cache);
     return blob;
   }
 
-  private async _getBlob(index: number, blobCache?: BlobCache): Promise<Blob | undefined> {
-    const blob = blobCache?.get(index);
-    if (blob != null) return blob;
+  private async _getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
+    const blob = cache?.get(index);
+    if (blob != null) return undefined;
 
     return await (this.entries.at(index) as FileEntry | undefined)?.getData(new BlobWriter());
   }
 
-  private cache(index: number, blob?: Blob, blobCache?: BlobCache): void {
-    if (blob == null || blobCache == null) return;
-    blobCache.add(index, blob);
+  private addCache(index: number, blob?: Blob, cache?: Cache): void {
+    if (blob == null || cache == null) return;
+    cache.add(index, blob);
   }
 
   getHashedFileName(): string | undefined {

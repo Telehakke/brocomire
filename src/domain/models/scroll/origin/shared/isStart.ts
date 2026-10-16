@@ -1,10 +1,10 @@
-import type { BookFormatType } from "../../../userSettings/valueObjects/bookFormat";
+import type { BookFormatValue } from "../../../userSettings/valueObjects/bookFormat";
 import type { OriginNameType } from "../origin";
 
 // 縦書きの開始原点: Top, Rightmost
 // 横書きの開始原点: Top, Leftmost
 
-const obj: Record<OriginNameType, Record<BookFormatType, boolean>> = {
+const obj: Record<OriginNameType, Record<BookFormatValue, boolean>> = {
   // 垂直方向
   Top: { vertical: true, horizontal: true },
   Up: { vertical: false, horizontal: false },
@@ -19,6 +19,6 @@ const obj: Record<OriginNameType, Record<BookFormatType, boolean>> = {
   Rightmost: { vertical: true, horizontal: false },
 } as const;
 
-export const isOriginStart = (originName: OriginNameType, bookFormat: BookFormatType): boolean => {
+export const isStart = (originName: OriginNameType, bookFormat: BookFormatValue): boolean => {
   return obj[originName][bookFormat];
 };

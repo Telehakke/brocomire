@@ -1,4 +1,4 @@
-import { ScrollPercentage } from "../../scrollPercentage";
+import * as ScrollPercentage from "../../scrollPercentage";
 import type { OriginValue } from "../origin";
 
 // |           |            |

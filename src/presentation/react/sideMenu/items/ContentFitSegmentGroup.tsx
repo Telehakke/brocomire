@@ -1,11 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import {
-  ContentFit,
-  ContentFitEnum,
-  type ContentFitType,
-} from "../../../../domain/models/userSettings/valueObjects/contentFit";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as ContentFit from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -16,8 +12,12 @@ export const ContentFitSegmentGroup = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleValueChange = (value: string | null): void => {
-    setUserSettings((u) =>
-      UserSettings.setContentFit(u, value as ContentFit, new LocalStorageUserSettingsRepository()),
+    setUserSettings((v) =>
+      UserSettings.setContentFit(
+        v,
+        value as ContentFit.ContentFit,
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
   };
 
@@ -31,14 +31,16 @@ export const ContentFitSegmentGroup = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const getItems = (): SegmentGroupItem[] => {
-  return Object.values(ContentFitEnum).map((v) => ({
+  return ContentFit.getValues().map((v) => ({
     value: v,
     label: getContentFitLabel(v),
   }));
 };
 
-const getContentFitLabel = (value: ContentFitType): string => {
+const getContentFitLabel = (value: ContentFit.ContentFitValue): string => {
   switch (value) {
     case "all":
       return "全体";

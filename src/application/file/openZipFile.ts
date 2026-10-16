@@ -1,48 +1,64 @@
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import { FileNavigator, type FileNavigatorStore } from "../../domain/models/file/fileNavigator";
+import * as FileNavigator from "../../domain/models/file/fileNavigator";
 import type { NotificationStore } from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
-import { BookId } from "../../domain/models/userSettings/history/bookId";
-import { HistoryList } from "../../domain/models/userSettings/history/historyList";
-import {
-  UserSettings,
-  type UserSettingsStore,
-} from "../../domain/models/userSettings/userSettings";
+import * as BookId from "../../domain/models/userSettings/history/bookId";
+import * as HistoryList from "../../domain/models/userSettings/history/historyList";
+import * as UserSettings from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import { OnViewer, type OnViewerStore } from "../appState/valueObjects/onViewer";
+import * as OnViewer from "../appState/onViewer";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
-export const openZipFile = async (
-  cache: Cache,
-  fileManager: FileManager,
-  fileNavigatorStore: FileNavigatorStore,
-  notificationStore: NotificationStore,
-  onViewerStore: OnViewerStore,
-  scrollPercentage2D: ScrollPercentage2D,
-  userSettingsStore: UserSettingsStore,
-  userSettingsRepository: UserSettingsRepository,
-  viewerManager: ViewerManager,
-): Promise<void> => {
-  if (!fileManager.hasFiles()) return;
+type OpenZipFileOptions = Readonly<{
+  cache: Cache;
+  fileManager: FileManager;
+  fileNavigatorStore: FileNavigator.FileNavigatorStore;
+  notificationStore: NotificationStore;
+  onViewerStore: OnViewer.OnViewerStore;
+  scrollPercentage2D: ScrollPercentage2D;
+  userSettingsStore: UserSettings.UserSettingsStore;
+  userSettingsRepository: UserSettingsRepository;
+  viewerManager: ViewerManager;
+}>;
 
-  fileNavigatorStore.set(FileNavigator.createSafe(0, fileManager.length()));
-  onViewerStore.set(OnViewer.create(true));
+/** Zipファイルを開く */
+export const openZipFile = async (o: OpenZipFileOptions): Promise<void> => {
+  if (!o.fileManager.hasFiles()) return;
 
-  const { historyList } = userSettingsStore.get();
-  const bookId = BookId.createSafe(fileManager.getHashedFileName());
+  initFileNavigator(o.fileNavigatorStore, o.fileManager.getLength());
+  openViewer(o.onViewerStore);
+  const { historyList } = o.userSettingsStore.get();
+  const bookId = BookId.createSafe(o.fileManager.getHashedFileName());
   const newHistoryList = HistoryList.tryPrepend(historyList, bookId);
-  moveToIndexPage(
-    HistoryList.getClosedPageIndex(historyList, bookId) ?? 0,
-    cache,
-    fileNavigatorStore,
-    notificationStore,
-    scrollPercentage2D,
-    userSettingsStore,
-    viewerManager,
-  );
+  updateHistoryList(o.userSettingsStore, newHistoryList, o.userSettingsRepository);
+  moveToIndexPage({
+    index: HistoryList.getClosedPageIndex(historyList, bookId) ?? 0,
+    userSettingsGetter: () => o.userSettingsStore.get(),
+    ...o,
+  });
+};
+
+/* -------------------------------------------------------------------------- */
+
+const initFileNavigator = (
+  fileNavigatorStore: FileNavigator.FileNavigatorStore,
+  fileLength: number,
+): void => {
+  fileNavigatorStore.set(FileNavigator.create({ currentIndex: 0, fileLength }));
+};
+
+const openViewer = (onViewerStore: OnViewer.OnViewerStore): void => {
+  onViewerStore.set(OnViewer.create(true));
+};
+
+const updateHistoryList = (
+  userSettingsStore: UserSettings.UserSettingsStore,
+  historyList: HistoryList.HistoryList,
+  repository: UserSettingsRepository,
+): void => {
   userSettingsStore.set(
-    UserSettings.setHistoryList(userSettingsStore.get(), newHistoryList, userSettingsRepository),
+    UserSettings.setHistoryList(userSettingsStore.get(), historyList, repository),
   );
 };

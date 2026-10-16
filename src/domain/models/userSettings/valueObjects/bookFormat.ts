@@ -1,32 +1,38 @@
 export const BookFormatEnum = { vertical: "vertical", horizontal: "horizontal" } as const;
 
-export type BookFormatType = (typeof BookFormatEnum)[keyof typeof BookFormatEnum];
+export type BookFormatValue = (typeof BookFormatEnum)[keyof typeof BookFormatEnum];
 
 /* -------------------------------------------------------------------------- */
 
 declare const BookFormatBrand: unique symbol;
 
-export type BookFormat = BookFormatType & { [BookFormatBrand]: unknown };
+export type BookFormat = BookFormatValue & { [BookFormatBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const BookFormat = {
-  DEFAULT: BookFormatEnum.vertical,
+export const DEFAULT = BookFormatEnum.vertical;
 
-  createSafe(value?: unknown): BookFormat {
-    if (!isBookFormatType(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): BookFormat => {
+  if (!isBookFormatValue(value)) return create(DEFAULT);
+  return create(value);
+};
 
-  equals(v1: BookFormat, v2: BookFormat): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: BookFormat, v2: BookFormat): boolean => {
+  return v1 === v2;
+};
 
-const create = (value: BookFormatType): BookFormat => {
+export const isVertical = (input: BookFormat): boolean => {
+  return input === BookFormatEnum.vertical;
+};
+
+export const getValues = (): readonly BookFormatValue[] => {
+  return Object.values(BookFormatEnum);
+};
+
+const create = (value: BookFormatValue): BookFormat => {
   return value as BookFormat;
 };
 
-const isBookFormatType = (value: unknown): value is BookFormatType => {
-  return Object.keys(BookFormatEnum).some((v) => v === value);
+const isBookFormatValue = (value: unknown): value is BookFormatValue => {
+  return Object.values(BookFormatEnum).some((v) => v === value);
 };

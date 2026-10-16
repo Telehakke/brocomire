@@ -1,7 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type JSX, type ReactNode } from "react";
-import { ChevronMark } from "../../../../application/appState/valueObjects/chevronMark";
-import { IsUserScrolled } from "../../../../application/appState/valueObjects/isUserScrolled";
+import * as ChevronMark from "../../../../application/appState/chevronMark";
+import * as IsUserScrolled from "../../../../application/appState/isUserScrolled";
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { PullManager } from "../../../../infrastructure/viewer/pullManager";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
@@ -14,15 +14,7 @@ import {
 
 export type Body = HTMLDivElement | null;
 
-export const ViewerBody = ({
-  onResize,
-  onClick,
-  onDoubleClick,
-  onSubClick,
-  onLeftSidePull,
-  onRightSidePull,
-  children,
-}: {
+export const ViewerBody = (props: {
   onResize: () => void;
   onClick: () => void;
   onDoubleClick: () => void;
@@ -33,16 +25,17 @@ export const ViewerBody = ({
 }): JSX.Element => {
   const bodyRef = useRef<Body>(null);
   const clickGestureManager = useRef(new ClickGestureManager());
-  const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const pullManager = useRef(new PullManager());
+  const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
+  const viewerManager = useAtomValue(viewerManagerAtom);
   const setChevronMark = useSetAtom(chevronMarkAtom);
   const setIsUserScrolled = useSetAtom(isUserScrolledAtom);
-  const viewerManager = useAtomValue(viewerManagerAtom);
 
   useEffect(() => {
     const body = bodyRef.current;
     if (body == null) return;
+
     viewerManager.setBody(() => body);
   }, [viewerManager]);
 
@@ -50,35 +43,36 @@ export const ViewerBody = ({
     const body = bodyRef.current;
     if (body == null) return;
 
-    const observer = new ResizeObserver(onResize);
+    // リサイズされるとonResize()を呼び出す
+    const observer = new ResizeObserver(props.onResize);
     observer.observe(body);
     return (): void => observer.disconnect();
-  }, [bodyRef, onResize]);
+  }, [bodyRef, props.onResize]);
 
   const handleClick = (): void => {
-    clickGestureManager.current.onClick(onClick, onDoubleClick);
+    clickGestureManager.current.onClick(props.onClick, props.onDoubleClick);
   };
 
   const handleContextMenu = (ev: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
     ev.preventDefault(); // ブラウザデフォルトのメニューを開かない
-    clickGestureManager.current.onSubClick(onSubClick);
+    clickGestureManager.current.onSubClick(props.onSubClick);
   };
 
   const handleTouchStart = (ev: React.TouchEvent<HTMLDivElement>): void => {
     const { clientX, clientY } = ev.targetTouches[0];
     touchMoveManager.current = new TouchMoveManager(clientX, clientY);
     clickGestureManager.current.reset();
-    clickGestureManager.current.onLongPress(onSubClick, longPressRecognitionTime);
+    clickGestureManager.current.onLongPress(props.onSubClick, longPressRecognitionTime);
     pullManager.current.reset();
   };
 
   const handleTouchMove = (ev: React.TouchEvent<HTMLDivElement>): void => {
     const { clientX, clientY } = ev.targetTouches[0];
-    if (touchMoveManager.current.isScrolled(clientX, clientY)) {
-      clickGestureManager.current.cancelLongPress();
-    }
+    if (!touchMoveManager.current.isScrolled(clientX, clientY)) return;
+
+    clickGestureManager.current.cancelLongPress();
     if (viewerManager.isReachedLimitX()) {
-      pullManager.current.add(touchMoveManager.current.deltaX(clientX));
+      pullManager.current.add(touchMoveManager.current.getDeltaX(clientX));
     } else {
       pullManager.current.reset();
     }
@@ -88,8 +82,8 @@ export const ViewerBody = ({
 
   const handleTouchEnd = (): void => {
     clickGestureManager.current.cancelLongPress();
-    pullManager.current.onLeftSidePull(onLeftSidePull);
-    pullManager.current.onRightSidePull(onRightSidePull);
+    pullManager.current.onLeftSidePull(props.onLeftSidePull);
+    pullManager.current.onRightSidePull(props.onRightSidePull);
     setChevronMark(ChevronMark.create("none"));
   };
 
@@ -108,7 +102,7 @@ export const ViewerBody = ({
       onTouchEnd={handleTouchEnd}
       onWheel={handleWheel}
     >
-      {children}
+      {props.children}
     </div>
   );
 };

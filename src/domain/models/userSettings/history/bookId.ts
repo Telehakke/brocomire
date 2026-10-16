@@ -6,16 +6,14 @@ export type BookId = string & { [BookIdBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const BookId = {
-  createSafe(value?: unknown): BookId {
-    if (!isString(value)) return create("");
-    return create(value);
-  },
+export const createSafe = (value?: unknown): BookId => {
+  if (!isString(value)) return create("");
+  return create(value);
+};
 
-  equals(v1: BookId, v2: BookId): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: BookId, v2: BookId): boolean => {
+  return v1 === v2;
+};
 
 const create = (value: string): BookId => {
   return value as BookId;

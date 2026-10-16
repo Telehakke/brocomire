@@ -1,19 +1,16 @@
-import { UserSettings } from "../../domain/models/userSettings/userSettings";
+import * as UserSettings from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 
 export class LocalStorageUserSettingsRepository implements UserSettingsRepository {
-  static readonly KEY = "appState";
+  private readonly KEY = "appState";
 
-  load(): UserSettings {
-    const data = window.localStorage.getItem(LocalStorageUserSettingsRepository.KEY);
+  load(): UserSettings.UserSettings {
+    const data = window.localStorage.getItem(this.KEY);
     if (data == null) return UserSettings.createSafe();
     return UserSettings.createSafe(JSON.parse(data));
   }
 
-  save(userSetting: UserSettings): void {
-    window.localStorage.setItem(
-      LocalStorageUserSettingsRepository.KEY,
-      JSON.stringify(userSetting),
-    );
+  save(userSetting: UserSettings.UserSettings): void {
+    window.localStorage.setItem(this.KEY, JSON.stringify(userSetting));
   }
 }

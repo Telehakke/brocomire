@@ -15,7 +15,7 @@ export class ClickGestureManager {
     this.clickCount = 0;
   }
 
-  /** 状態を初期化 */
+  /** 内部フラグを初期化 */
   reset(): void {
     this.canClick = true;
     this.canSubClick = true;
@@ -33,19 +33,21 @@ export class ClickGestureManager {
     if (doubleClicked != null) {
       if (this.clickCount === 2) {
         window.clearInterval(this.clickTimerId);
-        doubleClicked();
-        this.clickCount = 0;
+        this.click(doubleClicked);
         return;
       }
       this.clickTimerId = window.setTimeout(() => {
-        singleClicked();
-        this.clickCount = 0;
+        this.click(singleClicked);
       }, 400);
       return;
     }
-    singleClicked();
-    this.clickCount = 0;
+    this.click(singleClicked);
   }
+
+  private click = (action: () => void): void => {
+    action();
+    this.clickCount = 0;
+  };
 
   /** サブクリックでactionを実行 */
   onSubClick(action: () => void): void {

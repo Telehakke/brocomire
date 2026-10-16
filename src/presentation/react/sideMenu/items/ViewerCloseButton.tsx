@@ -1,15 +1,18 @@
 import { atom, useSetAtom } from "jotai";
 import { BookX } from "lucide-react";
 import type { JSX } from "react";
-import { IsOpenSideMenu } from "../../../../application/appState/valueObjects/isOpenSideMenu";
-import { OnViewer } from "../../../../application/appState/valueObjects/onViewer";
+import * as BookmarkIndex from "../../../../application/appState/bookmarkIndex";
+import * as IsOpenSideMenu from "../../../../application/appState/isOpenSideMenu";
+import * as OnViewer from "../../../../application/appState/onViewer";
 import { closeViewer } from "../../../../application/viewer/closeViewer";
-import { FileNavigator } from "../../../../domain/models/file/fileNavigator";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
+import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import {
   Atom,
+  bookmarkIndexAtom,
+  cacheAtom,
   fileManagerAtom,
   fileNavigatorAtom,
   isOpenSideMenuAtom,
@@ -19,35 +22,35 @@ import {
 import { LargeIconButton } from "../../utils/LargeIconButton";
 
 const closeViewerAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isOpenSideMenuStore = IsOpenSideMenu.getStore(
-    () => get(isOpenSideMenuAtom),
-    (v) => set(isOpenSideMenuAtom, v),
-  );
-  const onViewerStore = OnViewer.getStore(
-    () => get(onViewerAtom),
-    (v) => set(onViewerAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  const zoomPercentageStore = ZoomPercentage.getStore(
-    () => get(zoomPercentageAtom),
-    (v) => set(zoomPercentageAtom, v),
-  );
-  closeViewer(
-    get(fileManagerAtom),
-    fileNavigatorStore,
-    isOpenSideMenuStore,
-    onViewerStore,
-    userSettingsStore,
-    new LocalStorageUserSettingsRepository(),
-    zoomPercentageStore,
-  );
+  closeViewer({
+    bookmarkIndexStore: BookmarkIndex.getStore(
+      () => get(bookmarkIndexAtom),
+      (v) => set(bookmarkIndexAtom, v),
+    ),
+    cache: get(cacheAtom),
+    fileManager: get(fileManagerAtom),
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isOpenSideMenuStore: IsOpenSideMenu.getStore(
+      () => get(isOpenSideMenuAtom),
+      (v) => set(isOpenSideMenuAtom, v),
+    ),
+    OnViewerStore: OnViewer.getStore(
+      () => get(onViewerAtom),
+      (v) => set(onViewerAtom, v),
+    ),
+    userSettingsStore: UserSettings.getStore(
+      () => get(Atom.userSettings),
+      (v) => set(Atom.userSettings, v),
+    ),
+    userSettingsRepository: new LocalStorageUserSettingsRepository(),
+    zoomPercentageStore: ZoomPercentage.getStore(
+      () => get(zoomPercentageAtom),
+      (v) => set(zoomPercentageAtom, v),
+    ),
+  });
 });
 
 export const ViewerCloseButton = (): JSX.Element => {

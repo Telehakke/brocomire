@@ -6,24 +6,22 @@ export type SafeAreaLength = number & { [SafeAreaLengthBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const SafeAreaLength = {
-  MIN: 0,
-  MAZ: 100,
-  DEFAULT: 0,
+export const MIN = 0;
+export const MAX = 100;
+export const DEFAULT = 0;
 
-  createSafe(value?: unknown): SafeAreaLength {
-    if (!isNumber(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): SafeAreaLength => {
+  if (!isNumber(value)) return create(DEFAULT);
+  return create(Math.max(Math.min(value, MAX), MIN));
+};
 
-  equals(v1: SafeAreaLength, v2: SafeAreaLength): boolean {
-    return v1 === v2;
-  },
+export const equals = (v1: SafeAreaLength, v2: SafeAreaLength): boolean => {
+  return v1 === v2;
+};
 
-  isMin(input: SafeAreaLength): boolean {
-    return input === this.MIN;
-  },
-} as const;
+export const isMin = (input: number): boolean => {
+  return input === MIN;
+};
 
 const create = (value: number): SafeAreaLength => {
   return value as SafeAreaLength;

@@ -1,6 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { type JSX } from "react";
-import { IsUserScrolled } from "../../../../application/appState/valueObjects/isUserScrolled";
+import * as IsUserScrolled from "../../../../application/appState/isUserScrolled";
 import { handleBottomEdgeClick } from "../../../../application/viewer/handleBottomEdgeClick";
 import { handleBottomEdgeSubClick } from "../../../../application/viewer/handleBottomEdgeSubClick";
 import { handleLeftEdgeClick } from "../../../../application/viewer/handleLeftEdgeClick";
@@ -9,10 +9,10 @@ import { handleRightEdgeClick } from "../../../../application/viewer/handleRight
 import { handleRightEdgeSubClick } from "../../../../application/viewer/handleRightEdgeSubClick";
 import { scrollByXPx } from "../../../../application/viewer/scrollByXPx";
 import { scrollByYPx } from "../../../../application/viewer/scrollByYPx";
-import { FileNavigator } from "../../../../domain/models/file/fileNavigator";
-import { Notification } from "../../../../domain/models/notification/notification";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { type SizeType } from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
+import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
+import * as Notification from "../../../../domain/models/notification/notification";
+import * as TapAreaSize from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
+import { type SizeValue } from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import {
   Atom,
@@ -26,190 +26,150 @@ import {
 import { TapArea } from "./TapArea";
 
 const handleLeftEdgeClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleLeftEdgeClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleLeftEdgeClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleLeftEdgeSubClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleLeftEdgeSubClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleLeftEdgeSubClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleRightEdgeClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleRightEdgeClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleRightEdgeClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleRightEdgeSubClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleRightEdgeSubClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleRightEdgeSubClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleBottomEdgeClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleBottomEdgeClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleBottomEdgeClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleBottomEdgeSubClickAtom = atom(null, (get, set) => {
-  const fileNavigatorStore = FileNavigator.getStore(
-    () => get(fileNavigatorAtom),
-    (v) => set(fileNavigatorAtom, v),
-  );
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const notificationStore = Notification.getStore(
-    () => get(notificationAtom),
-    (v) => set(notificationAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  handleBottomEdgeSubClick(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    get(scrollPercentage2DAtom),
-    userSettingsStore,
-    get(viewerManagerAtom),
-  );
+  handleBottomEdgeSubClick({
+    fileNavigatorStore: FileNavigator.getStore(
+      () => get(fileNavigatorAtom),
+      (v) => set(fileNavigatorAtom, v),
+    ),
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    notificationStore: Notification.getStore(
+      () => get(notificationAtom),
+      (v) => set(notificationAtom, v),
+    ),
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleVerticalScrollAtom = atom(null, (get, set, amount: number) => {
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  scrollByYPx(amount, isUserScrolledStore, userSettingsStore, get(viewerManagerAtom));
+  scrollByYPx({
+    amount,
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 const handleHorizontalScrollAtom = atom(null, (get, set, amount: number) => {
-  const isUserScrolledStore = IsUserScrolled.getStore(
-    () => get(isUserScrolledAtom),
-    (v) => set(isUserScrolledAtom, v),
-  );
-  const userSettingsStore = UserSettings.getStore(
-    () => get(Atom.userSettings),
-    (v) => set(Atom.userSettings, v),
-  );
-  scrollByXPx(amount, isUserScrolledStore, userSettingsStore, get(viewerManagerAtom));
+  scrollByXPx({
+    amount,
+    isUserScrolledStore: IsUserScrolled.getStore(
+      () => get(isUserScrolledAtom),
+      (v) => set(isUserScrolledAtom, v),
+    ),
+    userSettingsGetter: () => get(Atom.userSettings),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
+
+/* -------------------------------------------------------------------------- */
 
 export const TapAreas = (): JSX.Element => {
   const tapAreaSize = useAtomValue(UserSettingsAtom.tapAreaSize);
@@ -224,38 +184,44 @@ export const TapAreas = (): JSX.Element => {
 
   return (
     <>
-      <TapArea
-        className="inset-x-0 bottom-0"
-        style={{
-          height: getSizeLength(tapAreaSize.height),
-        }}
-        onClick={handleBottomEdgeClick}
-        onSubClick={handleBottomEdgeSubClick}
-        onScroll={(deltaX) => handleHorizontalScroll(deltaX)}
-      />
-      <TapArea
-        className="inset-y-0 left-0"
-        style={{
-          width: getSizeLength(tapAreaSize.height),
-        }}
-        onClick={handleLeftEdgeClick}
-        onSubClick={handleLeftEdgeSubClick}
-        onScroll={(_, deltaY) => handleVerticalScroll(deltaY)}
-      />
-      <TapArea
-        className="inset-y-0 right-0"
-        style={{
-          width: getSizeLength(tapAreaSize.height),
-        }}
-        onClick={handleRightEdgeClick}
-        onSubClick={handleRightEdgeSubClick}
-        onScroll={(_, deltaY) => handleVerticalScroll(deltaY)}
-      />
+      {!TapAreaSize.isNone(tapAreaSize.height) && (
+        <TapArea
+          className="inset-x-0 bottom-0"
+          style={{
+            height: getSizeLength(tapAreaSize.height),
+          }}
+          onClick={handleBottomEdgeClick}
+          onSubClick={handleBottomEdgeSubClick}
+          onScroll={(deltaX) => handleHorizontalScroll(deltaX)}
+        />
+      )}
+      {!TapAreaSize.isNone(tapAreaSize.width) && (
+        <TapArea
+          className="inset-y-0 left-0"
+          style={{
+            width: getSizeLength(tapAreaSize.width),
+          }}
+          onClick={handleLeftEdgeClick}
+          onSubClick={handleLeftEdgeSubClick}
+          onScroll={(_, deltaY) => handleVerticalScroll(deltaY)}
+        />
+      )}
+      {!TapAreaSize.isNone(tapAreaSize.width) && (
+        <TapArea
+          className="inset-y-0 right-0"
+          style={{
+            width: getSizeLength(tapAreaSize.width),
+          }}
+          onClick={handleRightEdgeClick}
+          onSubClick={handleRightEdgeSubClick}
+          onScroll={(_, deltaY) => handleVerticalScroll(deltaY)}
+        />
+      )}
     </>
   );
 };
 
-const getSizeLength = (value: SizeType): string => {
+const getSizeLength = (value: SizeValue): string => {
   switch (value) {
     case "none":
       return "0px";

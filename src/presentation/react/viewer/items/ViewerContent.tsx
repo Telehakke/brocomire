@@ -1,6 +1,7 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { JSX } from "react/jsx-runtime";
+import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import type { ContentFit } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import type { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
@@ -15,24 +16,25 @@ import {
 
 const scrollAtom = atom(null, (get) => {
   const scrollPct2D = get(scrollPercentage2DAtom);
-  get(viewerManagerAtom).scrollToPct(scrollPct2D.x, scrollPct2D.y);
+  get(viewerManagerAtom).scrollToPercentage(scrollPct2D.x, scrollPct2D.y);
 });
+
+/* -------------------------------------------------------------------------- */
 
 export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   const divRef = useRef<HTMLDivElement | null>(null);
+  const contentFit = useAtomValue(UserSettingsAtom.contentFit);
+  const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
   const onInvertFilter = useAtomValue(onInvertFilterAtom);
   const zoomPercentage = useAtomValue(zoomPercentageAtom);
-  const contentFit = useAtomValue(UserSettingsAtom.contentFit);
   const scroll = useSetAtom(scrollAtom);
-  const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
 
   useEffect(() => {
     const div = divRef.current;
     if (div == null) return;
 
-    const observer = new MutationObserver(() => {
-      scroll(); // 拡大・縮小されるとスクロールする
-    });
+    // 拡大・縮小されるとスクロールする
+    const observer = new MutationObserver(scroll);
     observer.observe(div, { attributeFilter: ["style"] });
     return (): void => observer.disconnect();
   }, [scroll]);
@@ -48,11 +50,13 @@ export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const contentStyle = (
   contentFit: ContentFit,
-  isImageWiderThanViewer: boolean | undefined,
+  isImageWiderThanViewer: IsImageWiderThanViewer,
   zoomPercentage: ZoomPercentage,
-): CSSProperties | undefined => {
+): CSSProperties => {
   if (isImageWiderThanViewer == null) return { width: "100%", height: "100%" };
 
   const scale = `${zoomPercentage}%`;
@@ -69,5 +73,6 @@ const contentStyle = (
       };
     default:
       exhaustiveCheck(contentFit);
+      throw new Error();
   }
 };

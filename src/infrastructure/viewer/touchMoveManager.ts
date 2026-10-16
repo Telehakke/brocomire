@@ -13,7 +13,7 @@ export class TouchMoveManager {
     this._isScrolled = false;
   }
 
-  /** 一定量スクロールしたかどうか */
+  /** 一定量スクロール操作されたかどうか */
   isScrolled(clientX: number, clientY: number): boolean {
     if (this._isScrolled) return true;
 
@@ -32,17 +32,21 @@ export class TouchMoveManager {
     return false;
   }
 
+  /** 前回呼び出しからの変化量 */
+  getDelta(clientX: number, clientY: number): { x: number; y: number } {
+    return { x: this.getDeltaX(clientX), y: this.getDeltaY(clientY) };
+  }
+
   /** 前回呼び出しからの水平方向変化量 */
-  deltaX(clientX: number): number {
+  getDeltaX(clientX: number): number {
     const x = this.prevX - clientX;
     this.prevX = clientX;
     return x;
   }
 
-  /** 前回呼び出しからの垂直方向変化量 */
-  deltaY(clientY: number): number {
-    const x = this.prevY - clientY;
+  private getDeltaY(clientY: number): number {
+    const y = this.prevY - clientY;
     this.prevY = clientY;
-    return x;
+    return y;
   }
 }

@@ -1,7 +1,7 @@
 import type { Origin } from "../origin";
-import { isOriginEnd } from "../shared/isOriginEnd";
-import { isOriginStart } from "../shared/isOriginStart";
-import { NextOrigin } from "../shared/nextOrigin";
+import { isEnd } from "../shared/isEnd";
+import { isStart } from "../shared/isStart";
+import { nextOrigin } from "../shared/nextOrigin";
 import { previousOrigin } from "../shared/previousOrigin";
 import { VCenterValue } from "./values";
 
@@ -12,19 +12,19 @@ export const VCenter: Origin = {
     return value === this.value;
   },
 
-  isStart(bookFormat) {
-    return isOriginStart(this.name, bookFormat);
+  isStartPosition(bookFormat) {
+    return isStart(this.name, bookFormat);
   },
 
-  isEnd(bookFormat) {
-    return isOriginEnd(this.name, bookFormat);
+  isEndPosition(bookFormat) {
+    return isEnd(this.name, bookFormat);
   },
 
-  next(bookFormat, scrollStepCount) {
-    return NextOrigin(this.name, bookFormat, scrollStepCount);
+  getNextOrigin(bookFormat, scrollStepCount) {
+    return nextOrigin(this.name, bookFormat, scrollStepCount);
   },
 
-  previous(bookFormat, scrollStepCount) {
+  getPreviousOrigin(bookFormat, scrollStepCount) {
     return previousOrigin(this.name, bookFormat, scrollStepCount);
   },
 };

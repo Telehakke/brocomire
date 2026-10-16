@@ -1,7 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { ShouldShowFullscreenButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowFullscreenButton";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import type { ShouldShowFullscreenButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowFullscreenButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
@@ -11,9 +11,9 @@ export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleCheckedChange = (checked: boolean): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setShouldShowFullscreenButton(
-        u,
+        v,
         checked as ShouldShowFullscreenButton,
         new LocalStorageUserSettingsRepository(),
       ),

@@ -1,11 +1,9 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
 
 export class NullFileManager implements FileManager {
-  clear(): FileManager {
-    return this;
-  }
+  clear(): void {}
 
-  length(): number {
+  getLength(): number {
     return 0;
   }
 

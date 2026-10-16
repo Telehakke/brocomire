@@ -1,5 +1,5 @@
-import type { BookFormatType } from "../../../userSettings/valueObjects/bookFormat";
-import type { ScrollStepCountType } from "../../../userSettings/valueObjects/scrollStepCount";
+import type { BookFormatValue } from "../../../userSettings/valueObjects/bookFormat";
+import type { ScrollStepCountValue } from "../../../userSettings/valueObjects/scrollStepCount";
 import { exhaustiveCheck } from "../../../utils/exhaustiveCheck";
 import { HCenter } from "../horizontal/hCenter";
 import { Left } from "../horizontal/left";
@@ -19,7 +19,7 @@ import { VCenter } from "../vertical/vCenter";
 
 const map: Record<
   OriginNameType,
-  Record<BookFormatType, Record<ScrollStepCountType, OriginNameType>>
+  Record<BookFormatValue, Record<ScrollStepCountValue, OriginNameType>>
 > = {
   // 垂直方向
   Top: {
@@ -67,8 +67,8 @@ const map: Record<
 
 export const previousOrigin = (
   originName: OriginNameType,
-  bookFormat: BookFormatType,
-  scrollStepCount: ScrollStepCountType,
+  bookFormat: BookFormatValue,
+  scrollStepCount: ScrollStepCountValue,
 ): Origin => {
   const name = map[originName][bookFormat][scrollStepCount];
   switch (name) {

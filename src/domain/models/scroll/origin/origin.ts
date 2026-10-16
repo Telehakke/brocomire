@@ -27,14 +27,14 @@ export type Origin = OriginValue &
     isInRange(value: number): boolean;
 
     /** 開始原点であるかどうか */
-    isStart(bookFormat: BookFormat): boolean;
+    isStartPosition(bookFormat: BookFormat): boolean;
 
     /** 終了原点であるかどうか */
-    isEnd(bookFormat: BookFormat): boolean;
+    isEndPosition(bookFormat: BookFormat): boolean;
 
     /** 次にスクロールする原点を返す */
-    next(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Origin;
+    getNextOrigin(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Origin;
 
     /** 前にスクロールする原点を返す */
-    previous(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Origin;
+    getPreviousOrigin(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Origin;
   }>;

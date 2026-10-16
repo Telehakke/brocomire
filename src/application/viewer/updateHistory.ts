@@ -1,26 +1,28 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
-import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
-import { History } from "../../domain/models/userSettings/history/history";
-import { HistoryList } from "../../domain/models/userSettings/history/historyList";
-import {
-  UserSettings,
-  type UserSettingsStore,
-} from "../../domain/models/userSettings/userSettings";
+import type { FileNavigatorGetter } from "../../domain/models/file/fileNavigator";
+import * as History from "../../domain/models/userSettings/history/history";
+import * as HistoryList from "../../domain/models/userSettings/history/historyList";
+import * as UserSettings from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 
+type UpdateHistoryOptions = Readonly<{
+  fileManager: FileManager;
+  fileNavigatorGetter: FileNavigatorGetter;
+  userSettingsStore: UserSettings.UserSettingsStore;
+  userSettingsRepository: UserSettingsRepository;
+}>;
+
 /** 履歴の更新 */
-export const updateHistory = (
-  fileManager: FileManager,
-  fileNavigatorStore: FileNavigatorStore,
-  userSettingsStore: UserSettingsStore,
-  userSettingsRepository: UserSettingsRepository,
-): void => {
-  const userSettings = userSettingsStore.get();
-  const historyList = HistoryList.update(
-    userSettings.historyList,
-    History.createSafe(fileManager.getHashedFileName(), fileNavigatorStore.get().currentIndex),
-  );
-  userSettingsStore.set(
-    UserSettings.setHistoryList(userSettings, historyList, userSettingsRepository),
+export const updateHistory = (o: UpdateHistoryOptions): void => {
+  const userSettings = o.userSettingsStore.get();
+  o.userSettingsStore.set(
+    UserSettings.setHistoryList(
+      userSettings,
+      HistoryList.update(
+        userSettings.historyList,
+        History.createSafe(o.fileManager.getHashedFileName(), o.fileNavigatorGetter().currentIndex),
+      ),
+      o.userSettingsRepository,
+    ),
   );
 };

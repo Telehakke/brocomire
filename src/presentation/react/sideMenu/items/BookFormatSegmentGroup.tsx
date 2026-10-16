@@ -1,11 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import {
-  BookFormat,
-  BookFormatEnum,
-  type BookFormatType,
-} from "../../../../domain/models/userSettings/valueObjects/bookFormat";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as BookFormat from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -16,8 +12,12 @@ export const BookFormatSegmentGroup = (): JSX.Element => {
   const setUserSettings = useSetAtom(Atom.userSettings);
 
   const handleValueChange = (value: string | null): void => {
-    setUserSettings((u) =>
-      UserSettings.setBookFormat(u, value as BookFormat, new LocalStorageUserSettingsRepository()),
+    setUserSettings((v) =>
+      UserSettings.setBookFormat(
+        v,
+        value as BookFormat.BookFormat,
+        new LocalStorageUserSettingsRepository(),
+      ),
     );
   };
 
@@ -31,14 +31,16 @@ export const BookFormatSegmentGroup = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const getItems = (): SegmentGroupItem[] => {
-  return Object.values(BookFormatEnum).map((v) => ({
+  return BookFormat.getValues().map((v) => ({
     value: v,
     label: getBookFormatLabel(v),
   }));
 };
 
-const getBookFormatLabel = (key: BookFormatType): string => {
+const getBookFormatLabel = (key: BookFormat.BookFormatValue): string => {
   switch (key) {
     case "vertical":
       return "縦書き";

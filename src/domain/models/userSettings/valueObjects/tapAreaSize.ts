@@ -1,60 +1,61 @@
 import { isNotNull } from "../../utils/isNotNull";
 
-export const SizeEnum: Readonly<{
-  none: SizeType;
-  s: SizeType;
-  m: SizeType;
-  l: SizeType;
-}> = { none: "none", s: "s", m: "m", l: "l" };
+const SizeEnum = { none: "none", s: "s", m: "m", l: "l" } as const;
 
-export type SizeType = keyof typeof SizeEnum;
+export type SizeValue = (typeof SizeEnum)[keyof typeof SizeEnum];
 
 /* -------------------------------------------------------------------------- */
 
-type TapAreaSizeType = Readonly<{
-  width: SizeType;
-  height: SizeType;
+type TapAreaSizeValue = Readonly<{
+  width: SizeValue;
+  height: SizeValue;
 }>;
 
 declare const TapAreaSizeBrand: unique symbol;
 
-export type TapAreaSize = TapAreaSizeType & { [TapAreaSizeBrand]: unknown };
+export type TapAreaSize = TapAreaSizeValue & { [TapAreaSizeBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const TapAreaSize = {
-  DEFAULT: SizeEnum.s,
+export const DEFAULT = SizeEnum.s;
 
-  createSafe(value?: unknown): TapAreaSize {
-    if (!isNotNull(value)) return create({ width: this.DEFAULT, height: this.DEFAULT });
-    return create(getTapAreaSizeValueOrDefault(value));
-  },
+export const createSafe = (value?: unknown): TapAreaSize => {
+  if (!isNotNull(value)) return create({ width: DEFAULT, height: DEFAULT });
+  return create(getTapAreaSizeValueOrDefault(value));
+};
 
-  equals(v1: TapAreaSize, v2: TapAreaSize): boolean {
-    return v1.width === v2.width && v1.height === v2.height;
-  },
+export const equals = (v1: TapAreaSize, v2: TapAreaSize): boolean => {
+  return v1.width === v2.width && v1.height === v2.height;
+};
 
-  copyWith(input: TapAreaSize, value: Partial<TapAreaSizeType>): TapAreaSize {
-    return create({
-      width: value.width ?? input.width,
-      height: value.height ?? input.height,
-    });
-  },
-} as const;
+export const copyWith = (input: TapAreaSize, value: Partial<TapAreaSizeValue>): TapAreaSize => {
+  return create({
+    width: value.width ?? input.width,
+    height: value.height ?? input.height,
+  });
+};
 
-const create = (value: TapAreaSizeType): TapAreaSize => {
+export const getValues = (): readonly SizeValue[] => {
+  return Object.values(SizeEnum);
+};
+
+export const isNone = (value: SizeValue): boolean => {
+  return value === "none";
+};
+
+const create = (value: TapAreaSizeValue): TapAreaSize => {
   return value as TapAreaSize;
 };
 
-const getTapAreaSizeValueOrDefault = (value: Record<string, unknown>): TapAreaSizeType => {
+const getTapAreaSizeValueOrDefault = (value: Record<string, unknown>): TapAreaSizeValue => {
   const width = value.width;
   const height = value.height;
   return {
-    width: isSizeType(width) ? width : TapAreaSize.DEFAULT,
-    height: isSizeType(height) ? height : TapAreaSize.DEFAULT,
+    width: isSizeValue(width) ? width : DEFAULT,
+    height: isSizeValue(height) ? height : DEFAULT,
   };
 };
 
-const isSizeType = (value: unknown): value is SizeType => {
+const isSizeValue = (value: unknown): value is SizeValue => {
   return Object.keys(SizeEnum).some((v) => v === value);
 };

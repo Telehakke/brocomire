@@ -19,12 +19,12 @@ export const SharpeningFilter = {
   },
 } as const;
 
+/* -------------------------------------------------------------------------- */
+
 const createMatrix = (strength: number): string => {
   const base = 0.05;
   const matrix = [...Array(9)].map((_, i) => {
-    if (i === 4) {
-      return (base * strength * 8 + 1).toFixed(2);
-    }
+    if (i === 4) return (base * strength * 8 + 1).toFixed(2);
     return (-base * strength).toFixed(2);
   });
   return matrix.join(" ");

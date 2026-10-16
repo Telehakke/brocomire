@@ -6,18 +6,16 @@ export type IsSafeAreaEnabled = boolean & { [IsSafeAreaEnabledBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const IsSafeAreaEnabled = {
-  DEFAULT: true,
+export const DEFAULT = true;
 
-  createSafe(value?: unknown): IsSafeAreaEnabled {
-    if (!isBoolean(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): IsSafeAreaEnabled => {
+  if (!isBoolean(value)) return create(DEFAULT);
+  return create(value);
+};
 
-  equals(v1: IsSafeAreaEnabled, v2: IsSafeAreaEnabled): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: IsSafeAreaEnabled, v2: IsSafeAreaEnabled): boolean => {
+  return v1 === v2;
+};
 
 const create = (value: boolean): IsSafeAreaEnabled => {
   return value as IsSafeAreaEnabled;

@@ -1,35 +1,38 @@
 export const DisplayModeEnum = { single: "single", book: "book", double: "double" } as const;
 
-export type DisplayModeType = (typeof DisplayModeEnum)[keyof typeof DisplayModeEnum];
+export type DisplayModeValue = (typeof DisplayModeEnum)[keyof typeof DisplayModeEnum];
 
 /* -------------------------------------------------------------------------- */
 
 declare const DisplayModeBrand: unique symbol;
 
-export type DisplayMode = DisplayModeType & { [DisplayModeBrand]: unknown };
+export type DisplayMode = DisplayModeValue & { [DisplayModeBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DisplayMode = {
-  DEFAULT: DisplayModeEnum.single,
+export const DEFAULT = DisplayModeEnum.single;
 
-  createSafe(value?: unknown): DisplayMode {
-    if (!isDisplayModeType(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): DisplayMode => {
+  if (!isDisplayModeValue(value)) return create(DEFAULT);
+  return create(value);
+};
 
-  equals(v1: DisplayMode, v2: DisplayMode): boolean {
-    return v1 === v2;
-  },
-  isSingle(input: DisplayMode): boolean {
-    return input === DisplayModeEnum.single;
-  },
-} as const;
+export const equals = (v1: DisplayMode, v2: DisplayMode): boolean => {
+  return v1 === v2;
+};
 
-const create = (value: DisplayModeType): DisplayMode => {
+export const getValues = (): readonly DisplayModeValue[] => {
+  return Object.values(DisplayModeEnum);
+};
+
+export const isSingle = (input: DisplayMode): boolean => {
+  return input === DisplayModeEnum.single;
+};
+
+const create = (value: DisplayModeValue): DisplayMode => {
   return value as DisplayMode;
 };
 
-const isDisplayModeType = (value: unknown): value is DisplayModeType => {
+const isDisplayModeValue = (value: unknown): value is DisplayModeValue => {
   return Object.keys(DisplayModeEnum).some((v) => v === value);
 };

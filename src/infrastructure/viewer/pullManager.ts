@@ -1,25 +1,25 @@
-import { ChevronMark } from "../../application/appState/valueObjects/chevronMark";
+import * as ChevronMark from "../../application/appState/chevronMark";
 
 export class PullManager {
-  private readonly distance = 100;
-  private count: number;
+  private readonly DISTANCE = 100;
+  private amount: number;
 
   constructor() {
-    this.count = 0;
+    this.amount = 0;
   }
 
   /** 水平方向の変化量を加算 */
   add(deltaX: number): void {
-    this.count += deltaX;
+    this.amount += deltaX;
   }
 
   /** 状態を初期化 */
   reset(): void {
-    this.count = 0;
+    this.amount = 0;
   }
 
   /** 表示するアイコンの種類 */
-  getChevronMark(): ChevronMark {
+  getChevronMark(): ChevronMark.ChevronMark {
     if (this.canLeftPull()) return ChevronMark.create("left");
     if (this.canRightPull()) return ChevronMark.create("right");
     return ChevronMark.create("none");
@@ -38,10 +38,10 @@ export class PullManager {
   }
 
   private canLeftPull(): boolean {
-    return this.count < -this.distance;
+    return this.amount < -this.DISTANCE;
   }
 
   private canRightPull(): boolean {
-    return this.count > this.distance;
+    return this.amount > this.DISTANCE;
   }
 }

@@ -1,38 +1,26 @@
 import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
 import type { NotificationStore } from "../../domain/models/notification/notification";
 import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
-import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import type { IsUserScrolledStore } from "../appState/valueObjects/isUserScrolled";
-import { goToNext } from "./goToNext";
-import { goToRight } from "./goToRight";
+import type { IsUserScrolledStore } from "../appState/isUserScrolled";
+import { goToNextPosition } from "./goToNextPosition";
+import { goToRightPosition } from "./goToRightPosition";
+
+type HandleRightEdgeClickOptions = Readonly<{
+  fileNavigatorStore: FileNavigatorStore;
+  isUserScrolledStore: IsUserScrolledStore;
+  notificationStore: NotificationStore;
+  scrollPercentage2D: ScrollPercentage2D;
+  userSettingsGetter: UserSettingsGetter;
+  viewerManager: ViewerManager;
+}>;
 
 /** ビューアの右端をクリック */
-export const handleRightEdgeClick = (
-  fileNavigatorStore: FileNavigatorStore,
-  isUserScrolledStore: IsUserScrolledStore,
-  notificationStore: NotificationStore,
-  scrollPercentage2D: ScrollPercentage2D,
-  userSettingsStore: UserSettingsStore,
-  viewerManager: ViewerManager,
-): void => {
-  if (userSettingsStore.get().shouldAdvance) {
-    goToNext(
-      fileNavigatorStore,
-      isUserScrolledStore,
-      notificationStore,
-      scrollPercentage2D,
-      userSettingsStore,
-      viewerManager,
-    );
+export const handleRightEdgeClick = (o: HandleRightEdgeClickOptions): void => {
+  if (o.userSettingsGetter().shouldAdvance) {
+    goToNextPosition({ ...o });
     return;
   }
-  goToRight(
-    fileNavigatorStore,
-    isUserScrolledStore,
-    notificationStore,
-    scrollPercentage2D,
-    userSettingsStore,
-    viewerManager,
-  );
+  goToRightPosition({ ...o });
 };

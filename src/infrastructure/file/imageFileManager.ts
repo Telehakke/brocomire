@@ -1,23 +1,22 @@
+import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import type { BlobCache } from "./blobCache";
 
 export class ImageFileManger implements FileManager {
-  private readonly files: readonly File[];
+  private files: readonly File[];
 
   private constructor(files: readonly File[]) {
     this.files = files;
   }
 
   static create(files: readonly File[]): ImageFileManger {
-    const sorted = [...files].sort((a, b) => a.name.localeCompare(b.name));
-    return new this(sorted);
+    return new this([...files].sort((a, b) => a.name.localeCompare(b.name)));
   }
 
-  clear(): FileManager {
-    return new ImageFileManger([]);
+  clear(): void {
+    this.files = [];
   }
 
-  length(): number {
+  getLength(): number {
     return this.files.length;
   }
 
@@ -25,23 +24,16 @@ export class ImageFileManger implements FileManager {
     return this.files.length > 0;
   }
 
-  async getBlob(index: number, blobCache?: BlobCache): Promise<Blob | undefined> {
-    if (index < 0 || index >= this.length()) return undefined;
-    const blob = this._getBlob(index, blobCache);
-    this.cache(index, blob, blobCache);
+  async getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
+    if (index < 0 || index >= this.getLength()) return undefined;
+    const blob = cache?.get(index) ?? this.files.at(index);
+    this.addCache(index, blob, cache);
     return blob;
   }
 
-  private _getBlob(index: number, blobCache?: BlobCache): Blob | undefined {
-    const blob = blobCache?.get(index);
-    if (blob != null) return blob;
-
-    return this.files.at(index);
-  }
-
-  private cache(index: number, blob?: Blob, blobCache?: BlobCache): void {
-    if (blob == null || blobCache == null) return;
-    blobCache.add(index, blob);
+  private addCache(index: number, blob?: Blob, cache?: Cache): void {
+    if (blob == null || cache == null) return;
+    cache.add(index, blob);
   }
 
   getHashedFileName(): string | undefined {

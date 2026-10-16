@@ -1,30 +1,24 @@
-import { BookId } from "./bookId";
-import { ClosedPageIndex } from "./closedPageIndex";
+import * as BookId from "./bookId";
+import * as ClosedPageIndex from "./closedPageIndex";
 
-export type HistoryType = Readonly<{
-  bookId: BookId;
-  closedPageIndex: ClosedPageIndex;
+export type HistoryValue = Readonly<{
+  bookId: BookId.BookId;
+  closedPageIndex: ClosedPageIndex.ClosedPageIndex;
 }>;
 
 declare const HistoryBrand: unique symbol;
 
-export type History = HistoryType & { [HistoryBrand]: unknown };
+export type History = HistoryValue & { [HistoryBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const History = {
-  createSafe(bookId?: unknown, closedPageIndex?: unknown): History {
-    return create({
-      bookId: BookId.createSafe(bookId),
-      closedPageIndex: ClosedPageIndex.createSafe(closedPageIndex),
-    });
-  },
+export const createSafe = (bookId?: unknown, closedPageIndex?: unknown): History => {
+  return {
+    bookId: BookId.createSafe(bookId),
+    closedPageIndex: ClosedPageIndex.createSafe(closedPageIndex),
+  } as History;
+};
 
-  equals(v1: History, v2: History): boolean {
-    return v1.bookId === v2.bookId;
-  },
-} as const;
-
-const create = (value: HistoryType): History => {
-  return value as History;
+export const equals = (v1: History, v2: History): boolean => {
+  return BookId.equals(v1.bookId, v2.bookId);
 };

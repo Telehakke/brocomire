@@ -1,8 +1,8 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import type { JSX } from "react/jsx-runtime";
-import { UserSettings } from "../../../../domain/models/userSettings/userSettings";
-import { SafeAreaLength } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
+import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import * as SafeAreaLength from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
@@ -10,13 +10,13 @@ import { Slider } from "../../utils/Slider";
 export const SafeAreaLengthSlider = (): JSX.Element => {
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
   const setUserSettings = useSetAtom(Atom.userSettings);
-  const [value, setValue] = useState(safeAreaLength);
+  const [value, setValue] = useState<number>(safeAreaLength);
 
   const handleValueChangedEnd = (value: number): void => {
-    setUserSettings((u) =>
+    setUserSettings((v) =>
       UserSettings.setSafeAreaLength(
-        u,
-        value as SafeAreaLength,
+        v,
+        value as SafeAreaLength.SafeAreaLength,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -26,15 +26,15 @@ export const SafeAreaLengthSlider = (): JSX.Element => {
     <Slider
       label={getLabel}
       min={SafeAreaLength.MIN}
-      max={SafeAreaLength.MAZ}
+      max={SafeAreaLength.MAX}
       value={value}
-      onValueChange={(v) => setValue(v as SafeAreaLength)}
+      onValueChange={setValue}
       onValueChangeEnd={handleValueChangedEnd}
     />
   );
 };
 
 const getLabel = (value: number): string => {
-  if (value === SafeAreaLength.MIN) return "セーフエリアの長さ：自動";
+  if (SafeAreaLength.isMin(value)) return "セーフエリアの長さ：自動";
   return `セーフエリアの長さ：${value}px`;
 };

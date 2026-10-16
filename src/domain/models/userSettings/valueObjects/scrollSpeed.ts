@@ -5,20 +5,18 @@ declare const ScrollSpeedBrand: unique symbol;
 export type ScrollSpeed = number & { [ScrollSpeedBrand]: unknown };
 /* -------------------------------------------------------------------------- */
 
-export const ScrollSpeed = {
-  MIN: 1,
-  MAX: 10,
-  DEFAULT: 4,
+export const MIN = 1;
+export const MAX = 10;
+export const DEFAULT = 4;
 
-  createSafe(value?: unknown): ScrollSpeed {
-    if (!isNumber(value)) return create(this.DEFAULT);
-    return create(value);
-  },
+export const createSafe = (value?: unknown): ScrollSpeed => {
+  if (!isNumber(value)) return create(DEFAULT);
+  return create(Math.max(Math.min(value, MAX), MIN));
+};
 
-  equals(v1: ScrollSpeed, v2: ScrollSpeed): boolean {
-    return v1 === v2;
-  },
-} as const;
+export const equals = (v1: ScrollSpeed, v2: ScrollSpeed): boolean => {
+  return v1 === v2;
+};
 
 const create = (value: number): ScrollSpeed => {
   return value as ScrollSpeed;

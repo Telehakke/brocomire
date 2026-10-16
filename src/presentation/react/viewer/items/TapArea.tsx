@@ -15,10 +15,10 @@ export const TapArea = (props: {
   const divRef = useRef<HTMLDivElement | null>(null);
   const timerId = useRef<number | undefined>(undefined);
   const clickGestureManager = useRef(new ClickGestureManager());
-  const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const smoothScroll = useRef(new SmoothScroll());
-  const isSmoothScrollEnabled = useAtomValue(UserSettingsAtom.isSmoothScrollEnabled);
+  const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
+  const isSmoothScrollEnabled = useAtomValue(UserSettingsAtom.isSmoothScrollEnabled);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -32,29 +32,23 @@ export const TapArea = (props: {
       if (!touchMoveManager.current.isScrolled(clientX, clientY)) return;
 
       clickGestureManager.current.cancelLongPress();
-      let deltaX = touchMoveManager.current.deltaX(clientX);
-      let deltaY = touchMoveManager.current.deltaY(clientY);
+      let delta = touchMoveManager.current.getDelta(clientX, clientY);
       if (isSmoothScrollEnabled) {
-        smoothScroll.current.push(deltaX, deltaY);
-        const { x, y } = smoothScroll.current.getPosition();
-        deltaX = x;
-        deltaY = y;
+        smoothScroll.current.push(delta.x, delta.y);
+        delta = smoothScroll.current.getAverageDelta();
       }
-      props.onScroll(deltaX, deltaY);
+      props.onScroll(delta.x, delta.y);
     };
 
     const handleWheel = (ev: WheelEvent): void => {
       ev.preventDefault(); // 背景要素にホイールイベントを伝播させない
 
-      let deltaX = ev.deltaX;
-      let deltaY = ev.deltaY;
+      let delta = { x: ev.deltaX, y: ev.deltaY };
       if (isSmoothScrollEnabled) {
-        smoothScroll.current.push(deltaX, deltaY);
-        const { x, y } = smoothScroll.current.getPosition();
-        deltaX = x;
-        deltaY = y;
+        smoothScroll.current.push(delta.x, delta.y);
+        delta = smoothScroll.current.getAverageDelta();
       }
-      props.onScroll(deltaX, deltaY);
+      props.onScroll(delta.x, delta.y);
       setIsActive(true);
       window.clearTimeout(timerId.current);
       timerId.current = window.setTimeout(() => {
@@ -71,13 +65,6 @@ export const TapArea = (props: {
       div.removeEventListener("wheel", handleWheel, option);
     };
   }, [isSmoothScrollEnabled, props]);
-
-  const className = {
-    _: "fixed transition select-none",
-    activeBg: "active:bg-blue-500/15",
-    activeBg2: isActive ? "bg-blue-500/15" : "",
-    props: props.className,
-  };
 
   const handleClick = (): void => {
     clickGestureManager.current.onClick(props.onClick);
@@ -98,6 +85,13 @@ export const TapArea = (props: {
 
   const handleTouchEnd = (): void => {
     clickGestureManager.current.cancelLongPress();
+  };
+
+  const className = {
+    _: "fixed transition select-none",
+    activeBg: "active:bg-blue-500/15",
+    activeBg2: isActive ? "bg-blue-500/15" : "",
+    props: props.className,
   };
 
   return (

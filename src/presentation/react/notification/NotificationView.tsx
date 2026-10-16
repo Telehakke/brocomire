@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef, type JSX } from "react";
-import { Notification } from "../../../domain/models/notification/notification";
+import * as Notification from "../../../domain/models/notification/notification";
 import { notificationAtom } from "../../atoms";
 import { safeAreaPaddingBottom } from "../utils/safeAreaPadding";
 
@@ -28,6 +28,8 @@ export const NotificationView = (): JSX.Element | null => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const Text = (): JSX.Element => {
   const [notification, setNotification] = useAtom(notificationAtom);
 
@@ -41,6 +43,7 @@ const Text = (): JSX.Element => {
 
   const handleAnimationEnd = (): void => {
     if (!Notification.isFadeOut(notification)) return;
+
     setNotification((v) => Notification.none(v));
   };
 
