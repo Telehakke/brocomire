@@ -76,7 +76,7 @@ export class ZipFileManager implements FileManager {
 
   private async _getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
     const blob = cache?.get(index);
-    if (blob != null) return undefined;
+    if (blob != null) return blob;
 
     return await (this.entries.at(index) as FileEntry | undefined)?.getData(new BlobWriter());
   }
