@@ -49,7 +49,7 @@ const Root = (
 
 const Track = (): JSX.Element => {
   const className = {
-    _: "h-2 overflow-hidden rounded-full opacity-75",
+    _: "h-2 overflow-hidden rounded-full",
     bg: "bg-neutral-300",
   };
 

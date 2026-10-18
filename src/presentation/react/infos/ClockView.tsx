@@ -19,7 +19,7 @@ export const ClockView = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="rounded-sm bg-neutral-300/75 px-1 select-none">
+    <div className="rounded-sm bg-neutral-300 px-1 select-none">
       <p className="font-bold text-black tabular-nums">{value}</p>
     </div>
   );

@@ -27,7 +27,6 @@ import { GamepadListener } from "./items/GamepadListener";
 import { KeydownListener } from "./items/KeydownListener";
 import { LandscapeListener } from "./items/LandscapeListener";
 import { Loader } from "./items/Loader";
-import { ProgressBar } from "./items/ProgressBar";
 import { SharpeningFilter } from "./items/SharpeningFilter";
 import { TapAreas } from "./items/TapAreas";
 import { ViewerBody } from "./items/ViewerBody";
@@ -148,7 +147,6 @@ export const ImageViewer = (): JSX.Element => {
       <ChevronLeft />
       <ChevronRight />
       <Loader />
-      <ProgressBar />
     </>
   );
 };

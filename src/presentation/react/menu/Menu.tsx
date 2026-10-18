@@ -1,14 +1,14 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import type { JSX } from "react/jsx-runtime";
 import * as InfoVisibility from "../../../application/appState/infoVisibility";
-import { infoVisibilityAtom } from "../../atoms";
-import { ClockView } from "../clock/ClockView";
+import { infoVisibilityAtom, UserSettingsAtom } from "../../atoms";
 import { BookmarkButton } from "../commandButtons/BookmarkButton";
 import { FullscreenButton } from "../commandButtons/FullscreenButton";
 import { InvertFilterButton } from "../commandButtons/InvertFilterButton";
 import { SharpeningFilterButton } from "../commandButtons/SharpeningFilterButton";
 import { SideMenuOpenButton } from "../commandButtons/SideMenuOpenButton";
-import { PageNumber } from "../info/PageNumber";
+import { ClockView } from "../infos/ClockView";
+import { ProgressBar } from "../infos/ProgressBar";
 import {
   safeAreaPaddingLeft,
   safeAreaPaddingRight,
@@ -17,6 +17,7 @@ import {
 
 export const Menu = (): JSX.Element | null => {
   const [infoVisibility, setInfoVisibility] = useAtom(infoVisibilityAtom);
+  const menuOpacity = useAtomValue(UserSettingsAtom.menuOpacity);
 
   const handleAnimationEnd = (): void => {
     if (!InfoVisibility.isFadeOut(infoVisibility)) return;
@@ -31,8 +32,11 @@ export const Menu = (): JSX.Element | null => {
       data-state={infoVisibility}
       onAnimationEnd={handleAnimationEnd}
     >
-      <LeftTopGroup />
-      <RightTopGroup />
+      <div style={{ opacity: `${menuOpacity}%` }}>
+        <LeftTopGroup />
+        <RightTopGroup />
+        <BottomGroup />
+      </div>
     </div>
   );
 };
@@ -66,8 +70,15 @@ const RightTopGroup = (): JSX.Element => {
         ...safeAreaPaddingRight(),
       }}
     >
-      <PageNumber />
       <ClockView />
+    </div>
+  );
+};
+
+const BottomGroup = (): JSX.Element => {
+  return (
+    <div className="fixed bottom-2 left-1/2 grid w-full -translate-x-1/2 place-items-center">
+      <ProgressBar />
     </div>
   );
 };

@@ -22,7 +22,7 @@ export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
 
   return (
     <Switch
-      label="先鋭化ボタンをビューアに表示"
+      label="先鋭化フィルターボタンを表示"
       checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />

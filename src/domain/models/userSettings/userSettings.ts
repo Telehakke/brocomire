@@ -7,6 +7,7 @@ import * as DisplayMode from "./valueObjects/displayMode";
 import * as IsSafeAreaEnabled from "./valueObjects/isSafeAreaEnabled";
 import * as IsSmoothScrollEnabled from "./valueObjects/isSmoothScrollEnabled";
 import * as LongPressRecognitionTime from "./valueObjects/longPressRecognitionTime";
+import * as MenuOpacity from "./valueObjects/menuOpacity";
 import * as SafeAreaLength from "./valueObjects/safeAreaLength";
 import * as ScrollSpeed from "./valueObjects/scrollSpeed";
 import * as ScrollStepCount from "./valueObjects/scrollStepCount";
@@ -29,6 +30,7 @@ type UserSettingsType = Readonly<{
   isSafeAreaEnabled: IsSafeAreaEnabled.IsSafeAreaEnabled;
   isSmoothScrollEnabled: IsSmoothScrollEnabled.IsSmoothScrollEnabled;
   longPressRecognitionTime: LongPressRecognitionTime.LongPressRecognitionTime;
+  menuOpacity: MenuOpacity.MenuOpacity;
   safeAreaLength: SafeAreaLength.SafeAreaLength;
   scrollSpeed: ScrollSpeed.ScrollSpeed;
   scrollStepCount: ScrollStepCount.ScrollStepCount;
@@ -69,6 +71,7 @@ export const createSafe = (value?: unknown): UserSettings => {
       isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(),
       isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(),
       longPressRecognitionTime: LongPressRecognitionTime.createSafe(),
+      menuOpacity: MenuOpacity.createSafe(),
       safeAreaLength: SafeAreaLength.createSafe(),
       scrollSpeed: ScrollSpeed.createSafe(),
       scrollStepCount: ScrollStepCount.createSafe(),
@@ -93,6 +96,7 @@ export const createSafe = (value?: unknown): UserSettings => {
     isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(v.isSafeAreaEnabled),
     isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(v.isSmoothScrollEnabled),
     longPressRecognitionTime: LongPressRecognitionTime.createSafe(v.longPressRecognitionTime),
+    menuOpacity: MenuOpacity.createSafe(v.menuOpacity),
     safeAreaLength: SafeAreaLength.createSafe(v.safeAreaLength),
     scrollSpeed: ScrollSpeed.createSafe(v.scrollSpeed),
     scrollStepCount: ScrollStepCount.createSafe(v.scrollStepCount),
@@ -214,6 +218,16 @@ export const setLongPressRecognitionTime = (
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { longPressRecognitionTime });
+  repository.save(result);
+  return result;
+};
+
+export const setMenuOpacity = (
+  input: UserSettings,
+  menuOpacity: MenuOpacity.MenuOpacity,
+  repository: UserSettingsRepository,
+): UserSettings => {
+  const result = copyWith(input, { menuOpacity });
   repository.save(result);
   return result;
 };
@@ -361,6 +375,7 @@ const copyWith = (input: UserSettings, value: Partial<UserSettingsType>): UserSe
     isSafeAreaEnabled: value.isSafeAreaEnabled ?? input.isSafeAreaEnabled,
     isSmoothScrollEnabled: value.isSmoothScrollEnabled ?? input.isSmoothScrollEnabled,
     longPressRecognitionTime: value.longPressRecognitionTime ?? input.longPressRecognitionTime,
+    menuOpacity: value.menuOpacity ?? input.menuOpacity,
     safeAreaLength: value.safeAreaLength ?? input.safeAreaLength,
     scrollSpeed: value.scrollSpeed ?? input.scrollSpeed,
     scrollStepCount: value.scrollStepCount ?? input.scrollStepCount,

@@ -22,7 +22,7 @@ export const ShouldShowBookmarkButtonSwitch = (): JSX.Element => {
 
   return (
     <Switch
-      label="ブックマークボタンをビューアに表示"
+      label="ブックマークボタンを表示"
       checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />

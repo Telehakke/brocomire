@@ -22,7 +22,7 @@ export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
 
   return (
     <Switch
-      label="色反転ボタンをビューアに表示"
+      label="色反転ボタンを表示"
       checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />

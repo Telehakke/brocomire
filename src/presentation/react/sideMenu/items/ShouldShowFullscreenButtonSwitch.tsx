@@ -22,7 +22,7 @@ export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
 
   return (
     <Switch
-      label="全画面ボタンをビューアに表示"
+      label="全画面ボタンを表示"
       checked={shouldShowButton}
       onCheckedChange={handleCheckedChange}
     />

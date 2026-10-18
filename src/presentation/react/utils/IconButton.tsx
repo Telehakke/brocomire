@@ -2,9 +2,9 @@ import type { JSX, ReactNode } from "react";
 
 const className = {
   _: "size-10 p-2 transition",
-  bg: "bg-neutral-300/75",
-  hoverBg: "group-hover:bg-neutral-400/75",
-  activeBg: " group-active:bg-neutral-500/75",
+  bg: "bg-neutral-300",
+  hoverBg: "group-hover:bg-neutral-400",
+  activeBg: " group-active:bg-neutral-500",
   stroke: "stroke-black",
 };
 

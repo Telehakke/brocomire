@@ -3,6 +3,7 @@ import { isNumber } from "../../utils/isNumber";
 declare const ScrollSpeedBrand: unique symbol;
 
 export type ScrollSpeed = number & { [ScrollSpeedBrand]: unknown };
+
 /* -------------------------------------------------------------------------- */
 
 export const MIN = 1;

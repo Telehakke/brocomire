@@ -15,6 +15,7 @@ import { DisplayModeSegmentGroup } from "./items/DisplayModeSegmentGroup";
 import { IsSafeAreaEnabledSwitch } from "./items/IsSafeAreaEnabledSwitch";
 import { IsSmoothScrollEnabledSwitch } from "./items/IsSmoothScrollEnabledSwitch";
 import { LongPressRecognitionTimeSlider } from "./items/LongPressRecognitionTimeSlider";
+import { MenuOpacitySlider } from "./items/MenuOpacitySlider";
 import { SafeAreaLengthSlider } from "./items/SafeAreaLengthSlider";
 import { ScrollSpeedSlider } from "./items/ScrollSpeedSlider";
 import { ScrollStepCountSegmentGroup } from "./items/ScrollStepCountSegmentGroup";
@@ -90,14 +91,13 @@ export const SideMenu = (): JSX.Element => {
           <IsSmoothScrollEnabledSwitch />
         </Card>
         <Card footer="全画面への切り替えはiPhone以外で使用できます">
+          <MenuOpacitySlider />
+          <ShouldShowProgressBarSwitch />
           <ShouldShowSharpeningFilterButtonSwitch />
           <SharpeningFilterStrengthSlider />
           <ShouldShowInvertButtonSwitch />
           <ShouldShowBookmarkButtonSwitch />
           <ShouldShowFullscreenButtonSwitch />
-        </Card>
-        <Card>
-          <ShouldShowProgressBarSwitch />
         </Card>
         <Card footer="読み込みが遅い場合にパフォーマンスが改善します">
           <ShouldPreloadSwitch />
