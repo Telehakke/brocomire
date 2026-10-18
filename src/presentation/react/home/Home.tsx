@@ -15,7 +15,7 @@ export const Home = (): JSX.Element => {
         <ImageFilesOpenButton />
         <ZipFileOpenButton />
       </div>
-      <p className="fixed bottom-8 left-8">v0.261018c</p>
+      <p className="fixed bottom-8 left-8">v0.261018d</p>
     </>
   );
 };

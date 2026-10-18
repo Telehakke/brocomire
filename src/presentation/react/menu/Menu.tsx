@@ -1,4 +1,5 @@
 import { useAtom, useAtomValue } from "jotai";
+import type { CSSProperties } from "react";
 import type { JSX } from "react/jsx-runtime";
 import * as InfoVisibility from "../../../application/appState/infoVisibility";
 import { infoVisibilityAtom, UserSettingsAtom } from "../../atoms";
@@ -18,6 +19,7 @@ import {
 export const Menu = (): JSX.Element | null => {
   const [infoVisibility, setInfoVisibility] = useAtom(infoVisibilityAtom);
   const menuOpacity = useAtomValue(UserSettingsAtom.menuOpacity);
+  const shouldShowProgressBar = useAtomValue(UserSettingsAtom.shouldShowProgressBar);
 
   const handleAnimationEnd = (): void => {
     if (!InfoVisibility.isFadeOut(infoVisibility)) return;
@@ -25,19 +27,23 @@ export const Menu = (): JSX.Element | null => {
     setInfoVisibility(() => InfoVisibility.create("none"));
   };
 
-  if (InfoVisibility.isNone(infoVisibility)) return null;
   return (
-    <div
-      className="data-[state=visible]:animate-fade-in data-[state=fade-out]:animate-fade-out data-[state=fade-out]:opacity-0"
-      data-state={infoVisibility}
-      onAnimationEnd={handleAnimationEnd}
-    >
-      <div style={{ opacity: `${menuOpacity}%` }}>
-        <LeftTopGroup />
-        <RightTopGroup />
-        <BottomGroup />
-      </div>
-    </div>
+    <>
+      {InfoVisibility.isNone(infoVisibility) || (
+        <div
+          className="data-[state=visible]:animate-fade-in data-[state=fade-out]:animate-fade-out data-[state=fade-out]:opacity-0"
+          data-state={infoVisibility}
+          onAnimationEnd={handleAnimationEnd}
+        >
+          <div style={{ opacity: `${menuOpacity}%` }}>
+            <LeftTopGroup />
+            <RightTopGroup />
+            {shouldShowProgressBar || <BottomGroup />}
+          </div>
+        </div>
+      )}
+      {shouldShowProgressBar && <BottomGroup style={{ opacity: `${menuOpacity}%` }} />}
+    </>
   );
 };
 
@@ -75,9 +81,12 @@ const RightTopGroup = (): JSX.Element => {
   );
 };
 
-const BottomGroup = (): JSX.Element => {
+const BottomGroup = (props: { style?: CSSProperties }): JSX.Element => {
   return (
-    <div className="fixed bottom-2 left-1/2 grid w-full -translate-x-1/2 place-items-center">
+    <div
+      className="fixed bottom-2 left-1/2 grid w-full -translate-x-1/2 place-items-center"
+      style={props.style}
+    >
       <ProgressBar />
     </div>
   );
