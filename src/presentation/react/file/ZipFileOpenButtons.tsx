@@ -3,10 +3,11 @@ import { FileArchive } from "lucide-react";
 import type { ChangeEvent } from "react";
 import type { JSX } from "react/jsx-runtime";
 import * as OnViewer from "../../../application/appState/onViewer";
-import { openZipFile } from "../../../application/file/openZipFile";
+import { openFile } from "../../../application/file/openFile";
 import * as FileNavigator from "../../../domain/models/file/fileNavigator";
 import * as Notification from "../../../domain/models/notification/notification";
 import * as UserSettings from "../../../domain/models/userSettings/userSettings";
+import { HashCalculator } from "../../../infrastructure/file/hashCalculator";
 import { ZipFileManager } from "../../../infrastructure/file/zipFileManager";
 import { LocalStorageUserSettingsRepository } from "../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import {
@@ -22,8 +23,8 @@ import {
 import { FileOpenButton } from "./FileOpenButtons";
 
 const openZipFileAtom = atom(null, async (get, set, file: File) => {
-  set(fileManagerAtom, await ZipFileManager.create(file));
-  void openZipFile({
+  set(fileManagerAtom, await ZipFileManager.create(file, new HashCalculator()));
+  void openFile({
     cache: get(cacheAtom),
     fileManager: get(fileManagerAtom),
     fileNavigatorStore: FileNavigator.getStore(

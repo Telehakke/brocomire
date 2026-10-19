@@ -193,13 +193,15 @@ export default defineConfig({
       output: {
         codeSplitting: {
           groups: [
-            { name: "react-vendor", test: /node_modules\/react/ },
+            { name: "pdfjs-vendor", test: /node_modules\/pdfjs-dist/ },
+            { name: "zipjs-vendor", test: /node_modules\/@zip.js/ },
             { name: "vendor", test: /node_modules/ },
           ],
         },
       },
     },
+    license: { fileName: "licenses.md" },
   },
   server: { host: true },
-  base: "/brocomire",
+  base: "/brocomire/",
 });

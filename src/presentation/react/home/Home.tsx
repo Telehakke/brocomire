@@ -1,21 +1,39 @@
 import type { JSX } from "react/jsx-runtime";
 import { ImageFilesOpenButton } from "../file/ImageFileOpenButtons";
+import { PDFFileOpenButton } from "../file/PDFFileOpenButtons";
 import { ZipFileOpenButton } from "../file/ZipFileOpenButtons";
 
 export const Home = (): JSX.Element => {
   const className = {
     _: "m-auto w-max",
     position: "fixed inset-x-0 top-1/2 -translate-y-1/2",
-    grid: "grid grid-cols-2 place-items-center gap-4",
+    grid: "grid gap-4 sm:grid-cols-3 grid-dols-1",
   };
 
   return (
-    <>
+    <div className="p-4">
+      <div className="space-y-2">
+        <div className="flex gap-2">
+          <img className="size-16 rounded-md" src={`${import.meta.env.BASE_URL}favicon.svg`} />
+          <div className="space-y-0">
+            <h1 className="text-4xl font-bold">ブラコミリ</h1>
+            <p>ブラウザで動くコミックリーダー</p>
+          </div>
+        </div>
+        <p>v0.261020a</p>
+      </div>
       <div className={Object.values(className).join(" ")}>
         <ImageFilesOpenButton />
+        <PDFFileOpenButton />
         <ZipFileOpenButton />
       </div>
-      <p className="fixed bottom-8 left-8">v0.261018d</p>
-    </>
+      <a
+        className="fixed right-4 bottom-4 underline"
+        href={`${import.meta.env.BASE_URL}licenses.md`}
+        target="_blank"
+      >
+        OSSライセンス
+      </a>
+    </div>
   );
 };

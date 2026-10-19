@@ -1,6 +1,7 @@
 import { BlobReader, BlobWriter, ZipReader, type Entry, type FileEntry } from "@zip.js/zip.js";
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
+import { HashCalculator } from "./hashCalculator";
 
 export class ZipFileManager implements FileManager {
   private entries: readonly Entry[];
@@ -11,13 +12,13 @@ export class ZipFileManager implements FileManager {
     this.hashedFileName = hashedFileName;
   }
 
-  static async create(file: File): Promise<ZipFileManager> {
+  static async create(file: File, hashCalculator: HashCalculator): Promise<ZipFileManager> {
     const reader = new BlobReader(file);
     const zipReader = new ZipReader(reader);
     const entries = await zipReader.getEntries();
     const imageFiles = this.filterImages(entries);
     await zipReader.close();
-    return new this(imageFiles, await this.calculateHash(file.name));
+    return new this(imageFiles, await hashCalculator.execute(file.name));
   }
 
   private static filterImages(entries: Entry[]): Entry[] {
@@ -40,23 +41,9 @@ export class ZipFileManager implements FileManager {
       .sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
-  /** ハッシュ値を生成する */
-  private static async calculateHash(value: string): Promise<string> {
-    const data = new TextEncoder().encode(value);
-    try {
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      return Array.from(new Uint8Array(hashBuffer))
-        .map((v) => v.toString(16).padStart(2, "0"))
-        .join("");
-    } catch {
-      // 開発サーバーではcryptoがエラーを投げる。その場合、入力値をそのまま返す
-      return value;
-    }
-  }
-
   clear(): void {
     this.entries = [];
-    this.hashedFileName = "";
+    this.hashedFileName = undefined;
   }
 
   getLength(): number {
