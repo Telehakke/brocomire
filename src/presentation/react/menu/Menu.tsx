@@ -84,7 +84,7 @@ const RightTopGroup = (): JSX.Element => {
 const BottomGroup = (props: { style?: CSSProperties }): JSX.Element => {
   return (
     <div
-      className="fixed bottom-2 left-1/2 grid w-full -translate-x-1/2 place-items-center"
+      className="fixed bottom-1 left-1/2 grid w-full -translate-x-1/2 place-items-center"
       style={props.style}
     >
       <ProgressBar />

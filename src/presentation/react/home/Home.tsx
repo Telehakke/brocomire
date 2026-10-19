@@ -20,7 +20,7 @@ export const Home = (): JSX.Element => {
             <p>ブラウザで動くコミックリーダー</p>
           </div>
         </div>
-        <p>v0.261020a</p>
+        <p>v0.261019b</p>
       </div>
       <div className={Object.values(className).join(" ")}>
         <ImageFilesOpenButton />
@@ -29,7 +29,7 @@ export const Home = (): JSX.Element => {
       </div>
       <a
         className="fixed right-4 bottom-4 underline"
-        href={`${import.meta.env.BASE_URL}licenses.md`}
+        href="https://github.com/Telehakke/brocomire/blob/main/docs/licenses.md"
         target="_blank"
       >
         OSSライセンス
