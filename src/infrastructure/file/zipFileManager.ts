@@ -56,6 +56,7 @@ export class ZipFileManager implements FileManager {
 
   async getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
     if (index < 0 || index >= this.getLength()) return undefined;
+
     const blob = await this._getBlob(index, cache);
     this.addCache(index, blob, cache);
     return blob;

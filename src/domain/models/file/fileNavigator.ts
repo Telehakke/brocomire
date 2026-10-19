@@ -58,7 +58,7 @@ export const decrementIndex = (
   displayMode: DisplayMode.DisplayMode,
 ): FileNavigator => {
   const amount = DisplayMode.isSingle(displayMode) ? 1 : 2;
-  return create({ ...input, currentIndex: input.currentIndex - amount });
+  return create({ ...input, currentIndex: Math.max(input.currentIndex - amount, 0) });
 };
 
 /** currentIndexを1または2増やした新しいオブジェクトを返す */
@@ -67,7 +67,10 @@ export const incrementIndex = (
   displayMode: DisplayMode.DisplayMode,
 ): FileNavigator => {
   const amount = DisplayMode.isSingle(displayMode) ? 1 : 2;
-  return create({ ...input, currentIndex: input.currentIndex + amount });
+  return create({
+    ...input,
+    currentIndex: Math.min(input.currentIndex + amount, input.fileLength - 1),
+  });
 };
 
 /** ビューアで左側に表示される現在のインデックスを返す */
