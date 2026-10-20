@@ -22,19 +22,19 @@ export class ImageViewerManager implements ViewerManager {
   }
 
   getScrollXPercentage(): number | undefined {
-    const maxScrollX = this.getMaxScrollX();
+    // 限界までスクロールされていても戻り値が100にならない場合があるので、
+    // getMaxScrollX()から2減らす
+    const maxScrollX = this.getMaxScrollX() - 2;
     if (this.body == null || maxScrollX === 0) return undefined;
-    // 限界までスクロールしても`scrollLeft / maxScrollX = 1`にならない場合があるので、
-    // Math.ceil()で小数点以下切り上げ
-    return (Math.ceil(this.body().scrollLeft) / maxScrollX) * 100;
+    return (this.body().scrollLeft / maxScrollX) * 100;
   }
 
   getScrollYPercentage(): number | undefined {
-    const maxScrollY = this.getMaxScrollY();
-    if (this.body == null || maxScrollY === 0) return undefined;
-    // 限界までスクロールしても`scrollTop / maxScrollY = 1`にならない場合があるので、
-    // Math.ceil()で小数点以下切り上げ
-    return (Math.ceil(this.body().scrollTop) / maxScrollY) * 100;
+    // 限界までスクロールされていても戻り値が100にならない場合があるので、
+    // getMaxScrollY()から2減らす
+    const maxScrollY = this.getMaxScrollY() - 2;
+    if (this.body == null || maxScrollY <= 0) return undefined;
+    return (this.body().scrollTop / maxScrollY) * 100;
   }
 
   canScrollX(): boolean {
