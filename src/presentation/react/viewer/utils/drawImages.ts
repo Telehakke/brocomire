@@ -1,6 +1,10 @@
 import * as ImageSize from "../../../../application/appState/imageSize";
+import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
+import type { FileNavigator } from "../../../../domain/models/file/fileNavigator";
 import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
+import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
+import { sharpenCanvas } from "./sharpenCanvas";
 
 type Image = HTMLImageElement | undefined;
 type Size = Readonly<{ width: number; height: number }>;
@@ -10,9 +14,12 @@ type Size = Readonly<{ width: number; height: number }>;
 type DrawImagesOptions = Readonly<{
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  fileNavigatorGetter: () => FileNavigator;
   images: [Image, Image];
   imageSizeStore: ImageSize.ImageSizeStore;
+  onSharpeningFilter: OnSharpeningFilter;
   scrollPercentage2D: ScrollPercentage2D;
+  sharpeningFilterStrength: SharpeningFilterStrength;
   viewerManager: ViewerManager;
 }>;
 
@@ -24,6 +31,8 @@ export const drawImages = (o: DrawImagesOptions): void => {
   window.setTimeout(() => {
     const imageSize = getImageSize(o.images);
     _drawImages(o.canvas, o.ctx, o.images, imageSize);
+    if (o.onSharpeningFilter)
+      sharpenCanvas(o.ctx, o.fileNavigatorGetter, imageSize, o.sharpeningFilterStrength);
     o.imageSizeStore.set(ImageSize.create(imageSize));
     o.viewerManager.scrollToPercentage(o.scrollPercentage2D.x, o.scrollPercentage2D.y);
   }, 10);

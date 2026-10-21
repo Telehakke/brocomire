@@ -1,9 +1,10 @@
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState, type CSSProperties, type JSX } from "react";
+import * as IsUserScrolling from "../../../../application/appState/isUserScrolling";
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { SmoothScroll } from "../../../../infrastructure/viewer/smoothScroll";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
-import { UserSettingsAtom } from "../../../atoms";
+import { isUserScrollingAtom, UserSettingsAtom } from "../../../atoms";
 
 export const TapArea = (props: {
   className: string;
@@ -19,6 +20,7 @@ export const TapArea = (props: {
   const touchMoveManager = useRef(new TouchMoveManager(0, 0));
   const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
   const isSmoothScrollEnabled = useAtomValue(UserSettingsAtom.isSmoothScrollEnabled);
+  const setIsUserScrolling = useSetAtom(isUserScrollingAtom);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export const TapArea = (props: {
         delta = smoothScroll.current.getAverageDelta();
       }
       props.onScroll(delta.x, delta.y);
+      setIsUserScrolling(IsUserScrolling.create(true));
     };
 
     const handleWheel = (ev: WheelEvent): void => {
@@ -50,10 +53,12 @@ export const TapArea = (props: {
       }
       props.onScroll(delta.x, delta.y);
       setIsActive(true);
+      setIsUserScrolling(IsUserScrolling.create(true));
       window.clearTimeout(timerId.current);
       timerId.current = window.setTimeout(() => {
         smoothScroll.current = new SmoothScroll();
         setIsActive(false);
+        setIsUserScrolling(IsUserScrolling.create(false));
       }, 100);
     };
 
@@ -64,7 +69,7 @@ export const TapArea = (props: {
       div.removeEventListener("touchmove", handleTouchMove, option);
       div.removeEventListener("wheel", handleWheel, option);
     };
-  }, [isSmoothScrollEnabled, props]);
+  }, [isSmoothScrollEnabled, props, setIsUserScrolling]);
 
   const handleClick = (): void => {
     clickGestureManager.current.onClick(props.onClick);
@@ -87,6 +92,10 @@ export const TapArea = (props: {
     clickGestureManager.current.cancelLongPress();
   };
 
+  const handleScrollEnd = (): void => {
+    setIsUserScrolling(IsUserScrolling.create(false));
+  };
+
   const className = {
     _: "fixed transition select-none",
     activeBg: "active:bg-blue-500/15",
@@ -103,6 +112,7 @@ export const TapArea = (props: {
       onContextMenu={handleContextMenu}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onScrollEnd={handleScrollEnd}
     />
   );
 };

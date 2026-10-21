@@ -4,6 +4,7 @@ import * as ImageSize from "../../../../application/appState/imageSize";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import type { IsLandscape } from "../../../../application/appState/isLandscape";
 import * as IsLoading from "../../../../application/appState/isLoading";
+import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
 import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
@@ -11,6 +12,7 @@ import type { ContentFitValue } from "../../../../domain/models/userSettings/val
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
 import type { IsSafeAreaEnabled } from "../../../../domain/models/userSettings/valueObjects/isSafeAreaEnabled";
 import * as SafeAreaLength from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
+import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import {
   Atom,
@@ -34,7 +36,6 @@ import {
 } from "../../utils/safeAreaPadding";
 import { drawImages } from "../utils/drawImages";
 import { getImages } from "../utils/getImages";
-import { SharpeningFilter } from "./SharpeningFilter";
 
 type Canvas = HTMLCanvasElement | null;
 type Image = HTMLImageElement | undefined;
@@ -61,16 +62,27 @@ const getImagesAtom = atom(
 
 const drawImagesAtom = atom(
   null,
-  (get, set, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, images: [Image, Image]) => {
+  (
+    get,
+    set,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    images: [Image, Image],
+    onSharpeningFilter: OnSharpeningFilter,
+    sharpeningFilterStrength: SharpeningFilterStrength,
+  ) => {
     drawImages({
       canvas,
       ctx,
+      fileNavigatorGetter: () => get(fileNavigatorAtom),
       images,
       imageSizeStore: ImageSize.getStore(
         () => get(imageSizeAtom),
         (v) => set(imageSizeAtom, v),
       ),
+      onSharpeningFilter,
       scrollPercentage2D: get(scrollPercentage2DAtom),
+      sharpeningFilterStrength,
       viewerManager: get(viewerManagerAtom),
     });
   },
@@ -102,6 +114,7 @@ export const ViewerCanvas = (): JSX.Element => {
   const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
   const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
+  const sharpeningFilterStrength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
   const viewerManager = useAtomValue(viewerManagerAtom);
   const drawImages = useSetAtom(drawImagesAtom);
   const getImages = useSetAtom(getImagesAtom);
@@ -123,8 +136,7 @@ export const ViewerCanvas = (): JSX.Element => {
 
     void getImages(bookFormat, displayMode, fileNavigator).then((images) => {
       if (!isMounded) return;
-
-      drawImages(canvas, ctx, images);
+      drawImages(canvas, ctx, images, onSharpeningFilter, sharpeningFilterStrength);
       preloadFiles();
       window.clearInterval(timerId.current);
       setIsLoading(IsLoading.create(false));
@@ -137,17 +149,20 @@ export const ViewerCanvas = (): JSX.Element => {
     };
   }, [
     bookFormat, // メニューから書式の変更で再レンダリング
-    preloadFiles,
     displayMode, // メニューから画像の表示数の変更で再レンダリング
     drawImages,
     fileNavigator, // インデックスの変更で再レンダリング
     getImages,
+    onSharpeningFilter, // 先鋭化フィルターの有効化・無効化で再レンダリング
+    preloadFiles,
     setIsLoading,
+    sharpeningFilterStrength, // 先鋭化フィルターの強度を変更で再レンダリング
   ]);
 
   return (
     <canvas
-      className={`m-auto ${onSharpeningFilter ? SharpeningFilter.className : ""}`}
+      //className={`m-auto ${sharpeningFilterClassName(onSharpeningFilter, isUserScrolling)}`}
+      className="m-auto"
       style={{
         ...safeAriaStyle(isLandscape, isSafeAreaEnabled, safeAreaLength),
         ...canvasStyle(contentFit, isImageWiderThanViewer),

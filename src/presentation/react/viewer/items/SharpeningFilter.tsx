@@ -1,14 +1,15 @@
 import { useAtomValue } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import { onSharpeningFilterAtom, UserSettingsAtom } from "../../../atoms";
+import { isUserScrollingAtom, onSharpeningFilterAtom, UserSettingsAtom } from "../../../atoms";
 
 export const SharpeningFilter = {
   className: "filter-[url(#sharpen)] ",
   Component: (): JSX.Element | null => {
+    const isUserScrolling = useAtomValue(isUserScrollingAtom);
     const onFilter = useAtomValue(onSharpeningFilterAtom);
     const strength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
 
-    if (!onFilter) return null;
+    if (isUserScrolling || !onFilter) return null;
     return (
       <svg>
         <filter id="sharpen">
