@@ -24,7 +24,7 @@ export const Home = (): JSX.Element => {
 const Header = (): JSX.Element => {
   return (
     <div
-      className="fixed top-4 left-4"
+      className="fixed top-8 left-8"
       style={{ ...safeAreaPaddingTop(), ...safeAreaPaddingLeft() }}
     >
       <div className="flex gap-2">
@@ -34,7 +34,7 @@ const Header = (): JSX.Element => {
           <p>ブラウザで動くコミックリーダー</p>
         </div>
       </div>
-      <p>v0.261022a</p>
+      <p>v0.261023a</p>
     </div>
   );
 };
@@ -58,7 +58,7 @@ const Buttons = (): JSX.Element => {
 const Footer = (): JSX.Element => {
   return (
     <a
-      className="fixed right-4 bottom-4 underline"
+      className="fixed right-8 bottom-8 underline"
       style={{ ...safeAreaPaddingBottom(), ...safeAreaPaddingRight() }}
       href="https://github.com/Telehakke/brocomire/blob/main/docs/licenses.md"
       target="_blank"

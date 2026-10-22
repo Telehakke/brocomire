@@ -52,7 +52,7 @@ export const Menu = (): JSX.Element | null => {
 const LeftTopGroup = (): JSX.Element => {
   return (
     <div
-      className="fixed top-4 left-4 flex gap-4"
+      className="fixed top-8 left-4 flex gap-4"
       style={{
         ...safeAreaPaddingTop(),
         ...safeAreaPaddingLeft(),
@@ -70,7 +70,7 @@ const LeftTopGroup = (): JSX.Element => {
 const RightTopGroup = (): JSX.Element => {
   return (
     <div
-      className="fixed top-4 right-4 flex gap-2 text-xs"
+      className="fixed top-8 right-4 flex gap-2 text-xs"
       style={{
         ...safeAreaPaddingTop(),
         ...safeAreaPaddingRight(),

@@ -25,7 +25,7 @@ export class ImageViewerManager implements ViewerManager {
     // 限界までスクロールされていても戻り値が100にならない場合があるので、
     // getMaxScrollX()から2減らす
     const maxScrollX = this.getMaxScrollX() - 2;
-    if (this.body == null || maxScrollX === 0) return undefined;
+    if (this.body == null || maxScrollX <= 0) return undefined;
     return (this.body().scrollLeft / maxScrollX) * 100;
   }
 
