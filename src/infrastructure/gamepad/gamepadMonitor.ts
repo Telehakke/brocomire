@@ -92,13 +92,13 @@ export class GamepadMonitor {
         }),
     );
     this.handleLeftStickTilt(gamepad, (x, y) =>
-      scrollByPercentage(
+      scrollByPercentage({
         x,
         y,
-        this.isUserScrolledStore,
-        this.scrollPercentage2D,
-        this.viewerManager,
-      ),
+        isUserScrolledStore: this.isUserScrolledStore,
+        scrollPercentage2D: this.scrollPercentage2D,
+        viewerManager: this.viewerManager,
+      }),
     );
     requestAnimationFrame(() => this.handleGamepadEvent(ev));
   };

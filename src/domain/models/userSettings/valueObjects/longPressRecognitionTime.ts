@@ -6,18 +6,18 @@ export type LongPressRecognitionTime = number & { [LongPressRecognitionTimeBrand
 
 /* -------------------------------------------------------------------------- */
 
-export const MIN = 200;
-export const MAX = 500;
-export const DEFAULT = 500;
+export const LONG_PRESS_RECOGNITION_TIME_MIN = 200;
+export const LONG_PRESS_RECOGNITION_TIME_MAX = 500;
+export const LONG_PRESS_RECOGNITION_TIME_DEFAULT = 500;
 
-export const createSafe = (value?: unknown): LongPressRecognitionTime => {
-  if (!isNumber(value)) return create(DEFAULT);
-  return create(Math.max(Math.min(value, MAX), MIN));
+export const createLongPressRecognitionTime = (value?: unknown): LongPressRecognitionTime => {
+  if (!isNumber(value)) return create(LONG_PRESS_RECOGNITION_TIME_DEFAULT);
+  return create(
+    Math.max(Math.min(value, LONG_PRESS_RECOGNITION_TIME_MAX), LONG_PRESS_RECOGNITION_TIME_MIN),
+  );
 };
 
-export const equals = (v1: LongPressRecognitionTime, v2: LongPressRecognitionTime): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: number): LongPressRecognitionTime => {
   return value as LongPressRecognitionTime;

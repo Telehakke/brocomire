@@ -1,58 +1,76 @@
 import { isNotNull } from "../utils/isNotNull";
-import * as HistoryList from "./history/historyList";
+import { createHistoryList, type HistoryList } from "./history/historyList";
 import type { UserSettingsRepository } from "./userSettingsRepository";
-import * as BookFormat from "./valueObjects/bookFormat";
-import * as ContentFit from "./valueObjects/contentFit";
-import * as DisplayMode from "./valueObjects/displayMode";
-import * as IsSafeAreaEnabled from "./valueObjects/isSafeAreaEnabled";
-import * as IsSmoothScrollEnabled from "./valueObjects/isSmoothScrollEnabled";
-import * as LongPressRecognitionTime from "./valueObjects/longPressRecognitionTime";
-import * as MenuOpacity from "./valueObjects/menuOpacity";
-import * as SafeAreaLength from "./valueObjects/safeAreaLength";
-import * as ScrollSpeed from "./valueObjects/scrollSpeed";
-import * as ScrollStepCount from "./valueObjects/scrollStepCount";
-import * as SharpeningFilterStrength from "./valueObjects/sharpeningFilterStrength";
-import * as ShouldAdvance from "./valueObjects/shouldAdvance";
-import * as ShouldPreload from "./valueObjects/shouldPreload";
-import * as ShouldShowBookmarkButton from "./valueObjects/shouldShowBookmarkButton";
-import * as ShouldShowFullscreenButton from "./valueObjects/shouldShowFullscreenButton";
-import * as ShouldShowInvertButton from "./valueObjects/shouldShowInvertButton";
-import * as ShouldShowProgressBar from "./valueObjects/shouldShowProgressBar";
-import * as ShouldShowSharpeningFilterButton from "./valueObjects/shouldShowSharpeningFilterButton";
-import * as TapAreaSize from "./valueObjects/tapAreaSize";
-import * as ZoomStep from "./valueObjects/zoomStep";
+import { createBookFormat, type BookFormat } from "./valueObjects/bookFormat";
+import { createContentFit, type ContentFit } from "./valueObjects/contentFit";
+import { createDisplayMode, type DisplayMode } from "./valueObjects/displayMode";
+import { createIsSafeAreaEnabled, type IsSafeAreaEnabled } from "./valueObjects/isSafeAreaEnabled";
+import {
+  createIsSmoothScrollEnabled,
+  type IsSmoothScrollEnabled,
+} from "./valueObjects/isSmoothScrollEnabled";
+import {
+  createLongPressRecognitionTime,
+  type LongPressRecognitionTime,
+} from "./valueObjects/longPressRecognitionTime";
+import { createMenuOpacity, type MenuOpacity } from "./valueObjects/menuOpacity";
+import { createSafeAreaLength, type SafeAreaLength } from "./valueObjects/safeAreaLength";
+import { createScrollSpeed, type ScrollSpeed } from "./valueObjects/scrollSpeed";
+import { createScrollStepCount, type ScrollStepCount } from "./valueObjects/scrollStepCount";
+import {
+  createSharpeningFilterStrength,
+  type SharpeningFilterStrength,
+} from "./valueObjects/sharpeningFilterStrength";
+import { createShouldAdvance, type ShouldAdvance } from "./valueObjects/shouldAdvance";
+import { createShouldPreload, type ShouldPreload } from "./valueObjects/shouldPreload";
+import {
+  createShouldShowBookmarkButton,
+  type ShouldShowBookmarkButton,
+} from "./valueObjects/shouldShowBookmarkButton";
+import {
+  createShouldShowFullscreenButton,
+  type ShouldShowFullscreenButton,
+} from "./valueObjects/shouldShowFullscreenButton";
+import {
+  createShouldShowInvertButton,
+  type ShouldShowInvertButton,
+} from "./valueObjects/shouldShowInvertButton";
+import {
+  createShouldShowProgressBar,
+  type ShouldShowProgressBar,
+} from "./valueObjects/shouldShowProgressBar";
+import {
+  createShouldShowSharpeningFilterButton,
+  type ShouldShowSharpeningFilterButton,
+} from "./valueObjects/shouldShowSharpeningFilterButton";
+import { createTapAreaSize, type TapAreaSize } from "./valueObjects/tapAreaSize";
+import { createZoomStep, type ZoomStep } from "./valueObjects/zoomStep";
 
-type UserSettingsType = Readonly<{
-  bookFormat: BookFormat.BookFormat;
-  contentFit: ContentFit.ContentFit;
-  displayMode: DisplayMode.DisplayMode;
-  historyList: HistoryList.HistoryList;
-  isSafeAreaEnabled: IsSafeAreaEnabled.IsSafeAreaEnabled;
-  isSmoothScrollEnabled: IsSmoothScrollEnabled.IsSmoothScrollEnabled;
-  longPressRecognitionTime: LongPressRecognitionTime.LongPressRecognitionTime;
-  menuOpacity: MenuOpacity.MenuOpacity;
-  safeAreaLength: SafeAreaLength.SafeAreaLength;
-  scrollSpeed: ScrollSpeed.ScrollSpeed;
-  scrollStepCount: ScrollStepCount.ScrollStepCount;
-  sharpeningFilterStrength: SharpeningFilterStrength.SharpeningFilterStrength;
-  shouldAdvance: ShouldAdvance.ShouldAdvance;
-  shouldPreload: ShouldPreload.ShouldPreload;
-  shouldShowBookmarkButton: ShouldShowBookmarkButton.ShouldShowBookmarkButton;
-  shouldShowFullscreenButton: ShouldShowFullscreenButton.ShouldShowFullscreenButton;
-  shouldShowInvertButton: ShouldShowInvertButton.ShouldShowInvertButton;
-  shouldShowProgressBar: ShouldShowProgressBar.ShouldShowProgressBar;
-  shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton.ShouldShowSharpeningFilterButton;
-  tapAreaSize: TapAreaSize.TapAreaSize;
-  zoomStep: ZoomStep.ZoomStep;
+export type UserSettings = Readonly<{
+  bookFormat: BookFormat;
+  contentFit: ContentFit;
+  displayMode: DisplayMode;
+  historyList: HistoryList;
+  isSafeAreaEnabled: IsSafeAreaEnabled;
+  isSmoothScrollEnabled: IsSmoothScrollEnabled;
+  longPressRecognitionTime: LongPressRecognitionTime;
+  menuOpacity: MenuOpacity;
+  safeAreaLength: SafeAreaLength;
+  scrollSpeed: ScrollSpeed;
+  scrollStepCount: ScrollStepCount;
+  sharpeningFilterStrength: SharpeningFilterStrength;
+  shouldAdvance: ShouldAdvance;
+  shouldPreload: ShouldPreload;
+  shouldShowBookmarkButton: ShouldShowBookmarkButton;
+  shouldShowFullscreenButton: ShouldShowFullscreenButton;
+  shouldShowInvertButton: ShouldShowInvertButton;
+  shouldShowProgressBar: ShouldShowProgressBar;
+  shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton;
+  tapAreaSize: TapAreaSize;
+  zoomStep: ZoomStep;
 }>;
 
-declare const UserSettingsBrand: unique symbol;
-
-export type UserSettings = UserSettingsType & { [UserSettingsBrand]: unknown };
-
 export type UserSettingsGetter = () => UserSettings;
-
-/* -------------------------------------------------------------------------- */
 
 export type UserSettingsStore = {
   get(): UserSettings;
@@ -61,91 +79,61 @@ export type UserSettingsStore = {
 
 /* -------------------------------------------------------------------------- */
 
-export const createSafe = (value?: unknown): UserSettings => {
+export const createUserSettings = (value?: unknown): UserSettings => {
   if (!isNotNull(value))
-    return create({
-      bookFormat: BookFormat.createSafe(),
-      contentFit: ContentFit.createSafe(),
-      displayMode: DisplayMode.createSafe(),
-      historyList: HistoryList.createSafe(),
-      isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(),
-      isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(),
-      longPressRecognitionTime: LongPressRecognitionTime.createSafe(),
-      menuOpacity: MenuOpacity.createSafe(),
-      safeAreaLength: SafeAreaLength.createSafe(),
-      scrollSpeed: ScrollSpeed.createSafe(),
-      scrollStepCount: ScrollStepCount.createSafe(),
-      sharpeningFilterStrength: SharpeningFilterStrength.createSafe(),
-      shouldAdvance: ShouldAdvance.createSafe(),
-      shouldPreload: ShouldPreload.createSafe(),
-      shouldShowBookmarkButton: ShouldShowBookmarkButton.createSafe(),
-      shouldShowFullscreenButton: ShouldShowFullscreenButton.createSafe(),
-      shouldShowInvertButton: ShouldShowInvertButton.createSafe(),
-      shouldShowProgressBar: ShouldShowProgressBar.createSafe(),
-      shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton.createSafe(),
-      tapAreaSize: TapAreaSize.createSafe(),
-      zoomStep: ZoomStep.createSafe(),
-    });
+    return {
+      bookFormat: createBookFormat(),
+      contentFit: createContentFit(),
+      displayMode: createDisplayMode(),
+      historyList: createHistoryList(),
+      isSafeAreaEnabled: createIsSafeAreaEnabled(),
+      isSmoothScrollEnabled: createIsSmoothScrollEnabled(),
+      longPressRecognitionTime: createLongPressRecognitionTime(),
+      menuOpacity: createMenuOpacity(),
+      safeAreaLength: createSafeAreaLength(),
+      scrollSpeed: createScrollSpeed(),
+      scrollStepCount: createScrollStepCount(),
+      sharpeningFilterStrength: createSharpeningFilterStrength(),
+      shouldAdvance: createShouldAdvance(),
+      shouldPreload: createShouldPreload(),
+      shouldShowBookmarkButton: createShouldShowBookmarkButton(),
+      shouldShowFullscreenButton: createShouldShowFullscreenButton(),
+      shouldShowInvertButton: createShouldShowInvertButton(),
+      shouldShowProgressBar: createShouldShowProgressBar(),
+      shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(),
+      tapAreaSize: createTapAreaSize(),
+      zoomStep: createZoomStep(),
+    };
 
-  const v = value as UserSettingsType;
-  return create({
-    bookFormat: BookFormat.createSafe(v.bookFormat),
-    contentFit: ContentFit.createSafe(v.contentFit),
-    displayMode: DisplayMode.createSafe(v.displayMode),
-    historyList: HistoryList.createSafe(v.historyList),
-    isSafeAreaEnabled: IsSafeAreaEnabled.createSafe(v.isSafeAreaEnabled),
-    isSmoothScrollEnabled: IsSmoothScrollEnabled.createSafe(v.isSmoothScrollEnabled),
-    longPressRecognitionTime: LongPressRecognitionTime.createSafe(v.longPressRecognitionTime),
-    menuOpacity: MenuOpacity.createSafe(v.menuOpacity),
-    safeAreaLength: SafeAreaLength.createSafe(v.safeAreaLength),
-    scrollSpeed: ScrollSpeed.createSafe(v.scrollSpeed),
-    scrollStepCount: ScrollStepCount.createSafe(v.scrollStepCount),
-    sharpeningFilterStrength: SharpeningFilterStrength.createSafe(v.sharpeningFilterStrength),
-    shouldAdvance: ShouldAdvance.createSafe(v.shouldAdvance),
-    shouldPreload: ShouldPreload.createSafe(v.shouldPreload),
-    shouldShowBookmarkButton: ShouldShowBookmarkButton.createSafe(v.shouldShowBookmarkButton),
-    shouldShowFullscreenButton: ShouldShowFullscreenButton.createSafe(v.shouldShowFullscreenButton),
-    shouldShowInvertButton: ShouldShowInvertButton.createSafe(v.shouldShowInvertButton),
-    shouldShowProgressBar: ShouldShowProgressBar.createSafe(v.shouldShowProgressBar),
-    shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton.createSafe(
+  const v = value as UserSettings;
+  return {
+    bookFormat: createBookFormat(v.bookFormat),
+    contentFit: createContentFit(v.contentFit),
+    displayMode: createDisplayMode(v.displayMode),
+    historyList: createHistoryList(v.historyList),
+    isSafeAreaEnabled: createIsSafeAreaEnabled(v.isSafeAreaEnabled),
+    isSmoothScrollEnabled: createIsSmoothScrollEnabled(v.isSmoothScrollEnabled),
+    longPressRecognitionTime: createLongPressRecognitionTime(v.longPressRecognitionTime),
+    menuOpacity: createMenuOpacity(v.menuOpacity),
+    safeAreaLength: createSafeAreaLength(v.safeAreaLength),
+    scrollSpeed: createScrollSpeed(v.scrollSpeed),
+    scrollStepCount: createScrollStepCount(v.scrollStepCount),
+    sharpeningFilterStrength: createSharpeningFilterStrength(v.sharpeningFilterStrength),
+    shouldAdvance: createShouldAdvance(v.shouldAdvance),
+    shouldPreload: createShouldPreload(v.shouldPreload),
+    shouldShowBookmarkButton: createShouldShowBookmarkButton(v.shouldShowBookmarkButton),
+    shouldShowFullscreenButton: createShouldShowFullscreenButton(v.shouldShowFullscreenButton),
+    shouldShowInvertButton: createShouldShowInvertButton(v.shouldShowInvertButton),
+    shouldShowProgressBar: createShouldShowProgressBar(v.shouldShowProgressBar),
+    shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(
       v.shouldShowSharpeningFilterButton,
     ),
-    tapAreaSize: TapAreaSize.createSafe(v.tapAreaSize),
-    zoomStep: ZoomStep.createSafe(v.zoomStep),
-  });
+    tapAreaSize: createTapAreaSize(v.tapAreaSize.width, v.tapAreaSize.height),
+    zoomStep: createZoomStep(v.zoomStep),
+  };
 };
 
-export const equals = (v1: UserSettings, v2: UserSettings): boolean => {
-  return (
-    BookFormat.equals(v1.bookFormat, v2.bookFormat) &&
-    ContentFit.equals(v1.contentFit, v2.contentFit) &&
-    DisplayMode.equals(v1.displayMode, v2.displayMode) &&
-    HistoryList.equals(v1.historyList, v2.historyList) &&
-    IsSafeAreaEnabled.equals(v1.isSafeAreaEnabled, v2.isSafeAreaEnabled) &&
-    IsSmoothScrollEnabled.equals(v1.isSmoothScrollEnabled, v2.isSmoothScrollEnabled) &&
-    LongPressRecognitionTime.equals(v1.longPressRecognitionTime, v2.longPressRecognitionTime) &&
-    SafeAreaLength.equals(v1.safeAreaLength, v2.safeAreaLength) &&
-    ScrollSpeed.equals(v1.scrollSpeed, v2.scrollSpeed) &&
-    ScrollStepCount.equals(v1.scrollStepCount, v2.scrollStepCount) &&
-    SharpeningFilterStrength.equals(v1.sharpeningFilterStrength, v2.sharpeningFilterStrength) &&
-    ShouldAdvance.equals(v1.shouldAdvance, v2.shouldAdvance) &&
-    ShouldPreload.equals(v1.shouldPreload, v2.shouldPreload) &&
-    ShouldShowBookmarkButton.equals(v1.shouldShowBookmarkButton, v2.shouldShowBookmarkButton) &&
-    ShouldShowFullscreenButton.equals(
-      v1.shouldShowFullscreenButton,
-      v2.shouldShowFullscreenButton,
-    ) &&
-    ShouldShowInvertButton.equals(v1.shouldShowInvertButton, v2.shouldShowInvertButton) &&
-    ShouldShowSharpeningFilterButton.equals(
-      v1.shouldShowSharpeningFilterButton,
-      v2.shouldShowSharpeningFilterButton,
-    ) &&
-    TapAreaSize.equals(v1.tapAreaSize, v2.tapAreaSize) &&
-    ZoomStep.equals(v1.zoomStep, v2.zoomStep)
-  );
-};
-
-export const getStore = (
+export const getUserSettingsStore = (
   getter: () => UserSettings,
   setter: (value: UserSettings) => void,
 ): UserSettingsStore => {
@@ -154,7 +142,7 @@ export const getStore = (
 
 export const setBookFormat = (
   input: UserSettings,
-  bookFormat: BookFormat.BookFormat,
+  bookFormat: BookFormat,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { bookFormat });
@@ -164,7 +152,7 @@ export const setBookFormat = (
 
 export const setContentFit = (
   input: UserSettings,
-  contentFit: ContentFit.ContentFit,
+  contentFit: ContentFit,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { contentFit });
@@ -174,7 +162,7 @@ export const setContentFit = (
 
 export const setDisplayMode = (
   input: UserSettings,
-  displayMode: DisplayMode.DisplayMode,
+  displayMode: DisplayMode,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { displayMode });
@@ -184,7 +172,7 @@ export const setDisplayMode = (
 
 export const setHistoryList = (
   input: UserSettings,
-  historyList: HistoryList.HistoryList,
+  historyList: HistoryList,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { historyList });
@@ -194,7 +182,7 @@ export const setHistoryList = (
 
 export const setIsSafeAreaEnabled = (
   input: UserSettings,
-  isSafeAreaEnabled: IsSafeAreaEnabled.IsSafeAreaEnabled,
+  isSafeAreaEnabled: IsSafeAreaEnabled,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { isSafeAreaEnabled });
@@ -204,7 +192,7 @@ export const setIsSafeAreaEnabled = (
 
 export const setIsSmoothScrollEnabled = (
   input: UserSettings,
-  isSmoothScrollEnabled: IsSmoothScrollEnabled.IsSmoothScrollEnabled,
+  isSmoothScrollEnabled: IsSmoothScrollEnabled,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { isSmoothScrollEnabled });
@@ -214,7 +202,7 @@ export const setIsSmoothScrollEnabled = (
 
 export const setLongPressRecognitionTime = (
   input: UserSettings,
-  longPressRecognitionTime: LongPressRecognitionTime.LongPressRecognitionTime,
+  longPressRecognitionTime: LongPressRecognitionTime,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { longPressRecognitionTime });
@@ -224,7 +212,7 @@ export const setLongPressRecognitionTime = (
 
 export const setMenuOpacity = (
   input: UserSettings,
-  menuOpacity: MenuOpacity.MenuOpacity,
+  menuOpacity: MenuOpacity,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { menuOpacity });
@@ -234,7 +222,7 @@ export const setMenuOpacity = (
 
 export const setSafeAreaLength = (
   input: UserSettings,
-  safeAreaLength: SafeAreaLength.SafeAreaLength,
+  safeAreaLength: SafeAreaLength,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { safeAreaLength });
@@ -244,7 +232,7 @@ export const setSafeAreaLength = (
 
 export const setScrollSpeed = (
   input: UserSettings,
-  scrollSpeed: ScrollSpeed.ScrollSpeed,
+  scrollSpeed: ScrollSpeed,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { scrollSpeed });
@@ -254,7 +242,7 @@ export const setScrollSpeed = (
 
 export const setScrollStepCount = (
   input: UserSettings,
-  scrollStepCount: ScrollStepCount.ScrollStepCount,
+  scrollStepCount: ScrollStepCount,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { scrollStepCount });
@@ -264,7 +252,7 @@ export const setScrollStepCount = (
 
 export const setSharpeningFilterStrength = (
   input: UserSettings,
-  sharpeningFilterStrength: SharpeningFilterStrength.SharpeningFilterStrength,
+  sharpeningFilterStrength: SharpeningFilterStrength,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { sharpeningFilterStrength });
@@ -274,7 +262,7 @@ export const setSharpeningFilterStrength = (
 
 export const setShouldAdvance = (
   input: UserSettings,
-  shouldAdvance: ShouldAdvance.ShouldAdvance,
+  shouldAdvance: ShouldAdvance,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldAdvance });
@@ -284,7 +272,7 @@ export const setShouldAdvance = (
 
 export const setShouldPreload = (
   input: UserSettings,
-  shouldPreload: ShouldPreload.ShouldPreload,
+  shouldPreload: ShouldPreload,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldPreload });
@@ -294,7 +282,7 @@ export const setShouldPreload = (
 
 export const setShouldShowBookmarkButton = (
   input: UserSettings,
-  shouldShowBookmarkButton: ShouldShowBookmarkButton.ShouldShowBookmarkButton,
+  shouldShowBookmarkButton: ShouldShowBookmarkButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldShowBookmarkButton });
@@ -304,7 +292,7 @@ export const setShouldShowBookmarkButton = (
 
 export const setShouldShowFullscreenButton = (
   input: UserSettings,
-  shouldShowFullscreenButton: ShouldShowFullscreenButton.ShouldShowFullscreenButton,
+  shouldShowFullscreenButton: ShouldShowFullscreenButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldShowFullscreenButton });
@@ -314,7 +302,7 @@ export const setShouldShowFullscreenButton = (
 
 export const setShouldShowInvertButton = (
   input: UserSettings,
-  shouldShowInvertButton: ShouldShowInvertButton.ShouldShowInvertButton,
+  shouldShowInvertButton: ShouldShowInvertButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldShowInvertButton });
@@ -324,7 +312,7 @@ export const setShouldShowInvertButton = (
 
 export const setShouldShowProgressBar = (
   input: UserSettings,
-  shouldShowProgressBar: ShouldShowProgressBar.ShouldShowProgressBar,
+  shouldShowProgressBar: ShouldShowProgressBar,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldShowProgressBar });
@@ -334,7 +322,7 @@ export const setShouldShowProgressBar = (
 
 export const setShouldShowSharpeningFilterButton = (
   input: UserSettings,
-  shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton.ShouldShowSharpeningFilterButton,
+  shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { shouldShowSharpeningFilterButton });
@@ -344,7 +332,7 @@ export const setShouldShowSharpeningFilterButton = (
 
 export const setTapAreaSize = (
   input: UserSettings,
-  tapAreaSize: TapAreaSize.TapAreaSize,
+  tapAreaSize: TapAreaSize,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { tapAreaSize });
@@ -354,7 +342,7 @@ export const setTapAreaSize = (
 
 export const setZoomStep = (
   input: UserSettings,
-  zoomStep: ZoomStep.ZoomStep,
+  zoomStep: ZoomStep,
   repository: UserSettingsRepository,
 ): UserSettings => {
   const result = copyWith(input, { zoomStep });
@@ -362,12 +350,10 @@ export const setZoomStep = (
   return result;
 };
 
-const create = (value: UserSettingsType): UserSettings => {
-  return value as UserSettings;
-};
+/* -------------------------------------------------------------------------- */
 
-const copyWith = (input: UserSettings, value: Partial<UserSettingsType>): UserSettings => {
-  return create({
+const copyWith = (input: UserSettings, value: Partial<UserSettings>): UserSettings => {
+  return {
     bookFormat: value.bookFormat ?? input.bookFormat,
     contentFit: value.contentFit ?? input.contentFit,
     displayMode: value.displayMode ?? input.displayMode,
@@ -391,5 +377,5 @@ const copyWith = (input: UserSettings, value: Partial<UserSettingsType>): UserSe
       value.shouldShowSharpeningFilterButton ?? input.shouldShowSharpeningFilterButton,
     tapAreaSize: value.tapAreaSize ?? input.tapAreaSize,
     zoomStep: value.zoomStep ?? input.zoomStep,
-  });
+  };
 };

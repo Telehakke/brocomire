@@ -6,12 +6,14 @@ export type ClosedPageIndex = number & { [ClosedPageIndexBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const MIN = 0;
-
-export const createSafe = (value?: unknown): ClosedPageIndex => {
+export const createClosedPageIndex = (value?: unknown): ClosedPageIndex => {
   if (!isNumber(value) || !validate(value)) return create(MIN);
   return create(value);
 };
+
+/* -------------------------------------------------------------------------- */
+
+const MIN = 0;
 
 const create = (value: number): ClosedPageIndex => {
   return value as ClosedPageIndex;

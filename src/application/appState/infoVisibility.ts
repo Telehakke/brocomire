@@ -1,4 +1,4 @@
-const InfoVisibilityEnum = {
+export const InfoVisibilityEnum = {
   visible: "visible",
   fadeOut: "fade-out",
   none: "none",
@@ -14,18 +14,6 @@ export type InfoVisibility = InfoVisibilityValue & { [InfoVisibilityBrand]: unkn
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: InfoVisibilityValue): InfoVisibility => {
+export const createInfoVisibility = (value: InfoVisibilityValue): InfoVisibility => {
   return value as InfoVisibility;
-};
-
-export const toggle = (input: InfoVisibility): InfoVisibility => {
-  return input === InfoVisibilityEnum.visible ? create("fade-out") : create("visible");
-};
-
-export const isFadeOut = (input: InfoVisibility): boolean => {
-  return input === InfoVisibilityEnum.fadeOut;
-};
-
-export const isNone = (input: InfoVisibility): boolean => {
-  return input === InfoVisibilityEnum.none;
 };

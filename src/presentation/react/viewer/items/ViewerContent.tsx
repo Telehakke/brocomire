@@ -2,6 +2,7 @@ import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { JSX } from "react/jsx-runtime";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
+import { scroll } from "../../../../application/viewer/scroll";
 import type { ContentFit } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import type { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
@@ -15,8 +16,10 @@ import {
 } from "../../../atoms";
 
 const scrollAtom = atom(null, (get) => {
-  const scrollPct2D = get(scrollPercentage2DAtom);
-  get(viewerManagerAtom).scrollToPercentage(scrollPct2D.x, scrollPct2D.y);
+  scroll({
+    scrollPercentage2D: get(scrollPercentage2DAtom),
+    viewerManager: get(viewerManagerAtom),
+  });
 });
 
 /* -------------------------------------------------------------------------- */

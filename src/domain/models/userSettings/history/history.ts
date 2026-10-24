@@ -1,9 +1,9 @@
-import * as BookId from "./bookId";
-import * as ClosedPageIndex from "./closedPageIndex";
+import { createBookId, type BookId } from "./bookId";
+import { createClosedPageIndex, type ClosedPageIndex } from "./closedPageIndex";
 
 export type HistoryValue = Readonly<{
-  bookId: BookId.BookId;
-  closedPageIndex: ClosedPageIndex.ClosedPageIndex;
+  bookId: BookId;
+  closedPageIndex: ClosedPageIndex;
 }>;
 
 declare const HistoryBrand: unique symbol;
@@ -12,13 +12,14 @@ export type History = HistoryValue & { [HistoryBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const createSafe = (bookId?: unknown, closedPageIndex?: unknown): History => {
+export const createHistory = (bookId?: unknown, closedPageIndex?: unknown): History => {
   return {
-    bookId: BookId.createSafe(bookId),
-    closedPageIndex: ClosedPageIndex.createSafe(closedPageIndex),
+    bookId: createBookId(bookId),
+    closedPageIndex: createClosedPageIndex(closedPageIndex),
   } as History;
 };
 
-export const equals = (v1: History, v2: History): boolean => {
-  return BookId.equals(v1.bookId, v2.bookId);
+/** bookIdが一致するかどうかを返す */
+export const equalsHistory = (v1: History, v2: History): boolean => {
+  return v1.bookId === v2.bookId;
 };

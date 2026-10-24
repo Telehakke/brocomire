@@ -1,10 +1,10 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { Bookmark } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import * as BookmarkIndex from "../../../application/appState/bookmarkIndex";
+import { createBookmarkIndex } from "../../../application/appState/bookmarkIndex";
 import { moveToIndexPage } from "../../../application/viewer/moveToIndexPage";
-import * as FileNavigator from "../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../domain/models/notification/notification";
+import { getFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../domain/models/notification/notification";
 import {
   Atom,
   bookmarkIndexAtom,
@@ -34,7 +34,7 @@ const AddBookmarkButton = (): JSX.Element => {
   const fileNavigator = useAtomValue(fileNavigatorAtom);
 
   const handleClick = (): void => {
-    setBookmarkIndex(BookmarkIndex.create(fileNavigator.currentIndex));
+    setBookmarkIndex(createBookmarkIndex(fileNavigator.currentIndex));
   };
 
   return (
@@ -48,12 +48,12 @@ const AddBookmarkButton = (): JSX.Element => {
 
 const moveToIndexPageAtom = atom(null, (get, set, index: number) => {
   moveToIndexPage({
-    fileNavigatorStore: FileNavigator.getStore(
+    fileNavigatorStore: getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
     index,
-    notificationStore: Notification.getStore(
+    notificationStore: getNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),

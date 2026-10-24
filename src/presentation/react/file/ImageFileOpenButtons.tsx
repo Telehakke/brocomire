@@ -2,10 +2,10 @@ import { atom, useSetAtom } from "jotai";
 import { FileImage } from "lucide-react";
 import type { ChangeEvent } from "react";
 import type { JSX } from "react/jsx-runtime";
-import * as OnViewer from "../../../application/appState/onViewer";
+import { getOnViewerStore } from "../../../application/appState/onViewer";
 import { openImageFiles } from "../../../application/file/openImageFiles";
-import * as FileNavigator from "../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../domain/models/notification/notification";
+import { getFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../domain/models/notification/notification";
 import { ImageFileManger } from "../../../infrastructure/file/imageFileManager";
 import {
   Atom,
@@ -24,15 +24,15 @@ const openImageFilesAtom = atom(null, (get, set, files: File[]) => {
   openImageFiles({
     cache: get(cacheAtom),
     fileManager: get(fileManagerAtom),
-    fileNavigatorStore: FileNavigator.getStore(
+    fileNavigatorStore: getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    notificationStore: Notification.getStore(
+    notificationStore: getNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
-    onViewerStore: OnViewer.getStore(
+    onViewerStore: getOnViewerStore(
       () => get(onViewerAtom),
       (v) => set(onViewerAtom, v),
     ),

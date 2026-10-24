@@ -1,6 +1,13 @@
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import * as FileNavigator from "../../domain/models/file/fileNavigator";
+import {
+  decrementCurrentIndex,
+  getLeftImageIndex,
+  getRightImageIndex,
+  incrementCurrentIndex,
+  type FileNavigator,
+  type FileNavigatorStore,
+} from "../../domain/models/file/fileNavigator";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
 import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
@@ -8,7 +15,7 @@ import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/
 type PreloadFilesOptions = Readonly<{
   cache: Cache;
   fileManager: FileManager;
-  fileNavigatorStore: FileNavigator.FileNavigatorStore;
+  fileNavigatorStore: FileNavigatorStore;
   userSettingsGetter: UserSettingsGetter;
 }>;
 
@@ -29,12 +36,12 @@ const preloadAfterFiles = (
   cache: Cache,
   displayMode: DisplayMode,
   fileManager: FileManager,
-  fileNavigator: FileNavigator.FileNavigator,
+  fileNavigator: FileNavigator,
 ): void => {
-  const newFileNavigator = FileNavigator.incrementIndex(fileNavigator, displayMode);
+  const newFileNavigator = incrementCurrentIndex(fileNavigator, displayMode);
   [
-    FileNavigator.getLeftIndex(newFileNavigator, bookFormat, displayMode),
-    FileNavigator.getRightIndex(newFileNavigator, bookFormat, displayMode),
+    getLeftImageIndex(newFileNavigator, bookFormat, displayMode),
+    getRightImageIndex(newFileNavigator, bookFormat, displayMode),
   ].forEach((v) => saveCache(cache, fileManager, v));
 };
 
@@ -43,12 +50,12 @@ const preloadBeforeFiles = (
   cache: Cache,
   displayMode: DisplayMode,
   fileManager: FileManager,
-  fileNavigator: FileNavigator.FileNavigator,
+  fileNavigator: FileNavigator,
 ): void => {
-  const newFileNavigator = FileNavigator.decrementIndex(fileNavigator, displayMode);
+  const newFileNavigator = decrementCurrentIndex(fileNavigator, displayMode);
   [
-    FileNavigator.getLeftIndex(newFileNavigator, bookFormat, displayMode),
-    FileNavigator.getRightIndex(newFileNavigator, bookFormat, displayMode),
+    getLeftImageIndex(newFileNavigator, bookFormat, displayMode),
+    getRightImageIndex(newFileNavigator, bookFormat, displayMode),
   ].forEach((v) => saveCache(cache, fileManager, v));
 };
 
@@ -64,18 +71,18 @@ const trimCache = (
   bookFormat: BookFormat,
   cache: Cache,
   displayMode: DisplayMode,
-  fileNavigator: FileNavigator.FileNavigator,
+  fileNavigator: FileNavigator,
 ): void => {
-  const increasedFN = FileNavigator.incrementIndex(fileNavigator, displayMode);
+  const increasedFN = incrementCurrentIndex(fileNavigator, displayMode);
   const maxIndex = calculateMaxIndex(
-    FileNavigator.getLeftIndex(increasedFN, bookFormat, displayMode),
-    FileNavigator.getRightIndex(increasedFN, bookFormat, displayMode),
+    getLeftImageIndex(increasedFN, bookFormat, displayMode),
+    getRightImageIndex(increasedFN, bookFormat, displayMode),
   );
 
-  const decreasedFN = FileNavigator.decrementIndex(fileNavigator, displayMode);
+  const decreasedFN = decrementCurrentIndex(fileNavigator, displayMode);
   const minIndex = calculateMinIndex(
-    FileNavigator.getLeftIndex(decreasedFN, bookFormat, displayMode),
-    FileNavigator.getRightIndex(decreasedFN, bookFormat, displayMode),
+    getLeftImageIndex(decreasedFN, bookFormat, displayMode),
+    getRightImageIndex(decreasedFN, bookFormat, displayMode),
   );
   if (minIndex != null && maxIndex != null) cache.trim(minIndex, maxIndex);
 };

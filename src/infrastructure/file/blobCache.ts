@@ -5,16 +5,20 @@ type BlobCacheValue = Readonly<{ fileIndex: number; blob: Blob }>;
 export class BlobCache implements Cache {
   private array: BlobCacheValue[];
 
-  constructor() {
-    this.array = [];
+  constructor(array?: BlobCacheValue[]) {
+    this.array = array ?? [];
   }
 
-  get(fileIndex: number): Blob | undefined {
+  getLength(): number {
+    return this.array.length;
+  }
+
+  getBlob(fileIndex: number): Blob | undefined {
     return this.array.find((v) => v.fileIndex === fileIndex)?.blob;
   }
 
-  add(fileIndex: number, blob: Blob): void {
-    if (this.array.find((v) => v.fileIndex === fileIndex)) return;
+  addBlob(fileIndex: number, blob: Blob): void {
+    if (this.array.find((v) => v.fileIndex === fileIndex) != null) return;
 
     this.array.push({ fileIndex, blob });
   }

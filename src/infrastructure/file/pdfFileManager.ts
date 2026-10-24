@@ -1,28 +1,29 @@
-import * as pdf from "pdfjs-dist";
+// import * as pdf from "pdfjs-dist";
+import type { PDFDocumentProxy } from "pdfjs-dist";
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
-import type { HashCalculator } from "./hashCalculator";
-
-pdf.GlobalWorkerOptions.workerSrc = workerSrc;
+import { calculateHash } from "./calculateHash";
 
 export class PDFFileManager implements FileManager {
-  private pdfDocument: pdf.PDFDocumentProxy | undefined;
+  private pdfDocument: PDFDocumentProxy | undefined;
   private hashedFileName: string | undefined;
 
-  private constructor(pdfDocument: pdf.PDFDocumentProxy, hashedFileName?: string) {
+  private constructor(pdfDocument: PDFDocumentProxy, hashedFileName?: string) {
     this.pdfDocument = pdfDocument;
     this.hashedFileName = hashedFileName;
   }
 
-  static async create(file: File, hashCalculator: HashCalculator): Promise<PDFFileManager> {
+  static async create(file: File): Promise<PDFFileManager> {
+    const pdf = await import("pdfjs-dist");
+    pdf.GlobalWorkerOptions.workerSrc = workerSrc;
     const data = new Uint8Array(await file.arrayBuffer());
     const pdfDocument = await pdf.getDocument({
       data,
       cMapUrl: `${import.meta.env.BASE_URL}cmaps/`,
       cMapPacked: true,
     }).promise;
-    return new PDFFileManager(pdfDocument, await hashCalculator.execute(file.name));
+    return new PDFFileManager(pdfDocument, await calculateHash(file.name));
   }
 
   clear(): void {
@@ -47,7 +48,7 @@ export class PDFFileManager implements FileManager {
   }
 
   private async _getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
-    const blob = cache?.get(index);
+    const blob = cache?.getBlob(index);
     if (blob != null) return blob;
 
     const page = await this.pdfDocument?.getPage(index + 1);
@@ -81,7 +82,7 @@ export class PDFFileManager implements FileManager {
 
   private addCache(index: number, blob?: Blob, cache?: Cache): void {
     if (blob == null || cache == null) return;
-    cache.add(index, blob);
+    cache.addBlob(index, blob);
   }
 
   getHashedFileName(): string | undefined {

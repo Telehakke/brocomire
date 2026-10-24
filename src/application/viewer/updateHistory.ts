@@ -1,14 +1,17 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
 import type { FileNavigatorGetter } from "../../domain/models/file/fileNavigator";
-import * as History from "../../domain/models/userSettings/history/history";
-import * as HistoryList from "../../domain/models/userSettings/history/historyList";
-import * as UserSettings from "../../domain/models/userSettings/userSettings";
+import { createHistory } from "../../domain/models/userSettings/history/history";
+import { updateHistoryList } from "../../domain/models/userSettings/history/historyList";
+import {
+  setHistoryList,
+  type UserSettingsStore,
+} from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 
 type UpdateHistoryOptions = Readonly<{
   fileManager: FileManager;
   fileNavigatorGetter: FileNavigatorGetter;
-  userSettingsStore: UserSettings.UserSettingsStore;
+  userSettingsStore: UserSettingsStore;
   userSettingsRepository: UserSettingsRepository;
 }>;
 
@@ -16,11 +19,11 @@ type UpdateHistoryOptions = Readonly<{
 export const updateHistory = (o: UpdateHistoryOptions): void => {
   const userSettings = o.userSettingsStore.get();
   o.userSettingsStore.set(
-    UserSettings.setHistoryList(
+    setHistoryList(
       userSettings,
-      HistoryList.update(
+      updateHistoryList(
         userSettings.historyList,
-        History.createSafe(o.fileManager.getHashedFileName(), o.fileNavigatorGetter().currentIndex),
+        createHistory(o.fileManager.getHashedFileName(), o.fileNavigatorGetter().currentIndex),
       ),
       o.userSettingsRepository,
     ),

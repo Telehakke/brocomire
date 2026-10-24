@@ -8,16 +8,14 @@ export type ShouldShowProgressBar = boolean & {
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_SHOW_PROGRESS_BAR_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldShowProgressBar => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldShowProgressBar = (value?: unknown): ShouldShowProgressBar => {
+  if (!isBoolean(value)) return create(SHOULD_SHOW_PROGRESS_BAR_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldShowProgressBar, v2: ShouldShowProgressBar): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldShowProgressBar => {
   return value as ShouldShowProgressBar;

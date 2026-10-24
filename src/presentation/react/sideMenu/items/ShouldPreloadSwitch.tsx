@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldPreload } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldPreload } from "../../../../domain/models/userSettings/valueObjects/shouldPreload";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,11 +12,7 @@ export const ShouldPreloadSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldPreload(
-        v,
-        checked as ShouldPreload,
-        new LocalStorageUserSettingsRepository(),
-      ),
+      setShouldPreload(v, checked as ShouldPreload, new LocalStorageUserSettingsRepository()),
     );
   };
 

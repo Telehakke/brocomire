@@ -1,13 +1,13 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState, type Dispatch, type JSX, type SetStateAction } from "react";
-import * as IsOpenSideMenu from "../../../../application/appState/isOpenSideMenu";
+import { getIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
 import { handleThumbnailClick } from "../../../../application/sideMenu/handleThumbnailClick";
 import type { FileManager } from "../../../../domain/models/file/fileManager";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../../domain/models/notification/notification";
+import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../../domain/models/notification/notification";
 import { type BookFormatValue } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
-import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
+import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import {
   Atom,
   cacheAtom,
@@ -79,19 +79,19 @@ const PageSlider = (props: {
 /* -------------------------------------------------------------------------- */
 
 const handleThumbnailClickAtom = atom(null, (get, set, index: number) => {
-  const fileNavigatorStore = FileNavigator.getStore(
+  const fileNavigatorStore = getFileNavigatorStore(
     () => get(fileNavigatorAtom),
     (v) => set(fileNavigatorAtom, v),
   );
-  const isOpenSideMenuStore = IsOpenSideMenu.getStore(
+  const isOpenSideMenuStore = getIsOpenSideMenuStore(
     () => get(isOpenSideMenuAtom),
     (v) => set(isOpenSideMenuAtom, v),
   );
-  const notificationStore = Notification.getStore(
+  const notificationStore = getNotificationStore(
     () => get(notificationAtom),
     (v) => set(notificationAtom, v),
   );
-  const zoomPercentageStore = ZoomPercentage.getStore(
+  const zoomPercentageStore = getZoomPercentageStore(
     () => get(zoomPercentageAtom),
     (v) => set(zoomPercentageAtom, v),
   );

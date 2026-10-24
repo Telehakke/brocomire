@@ -1,7 +1,10 @@
 import { useAtom, useAtomValue } from "jotai";
 import type { CSSProperties } from "react";
 import type { JSX } from "react/jsx-runtime";
-import * as InfoVisibility from "../../../application/appState/infoVisibility";
+import {
+  createInfoVisibility,
+  InfoVisibilityEnum,
+} from "../../../application/appState/infoVisibility";
 import { infoVisibilityAtom, UserSettingsAtom } from "../../atoms";
 import { BookmarkButton } from "../commandButtons/BookmarkButton";
 import { FullscreenButton } from "../commandButtons/FullscreenButton";
@@ -22,14 +25,14 @@ export const Menu = (): JSX.Element | null => {
   const shouldShowProgressBar = useAtomValue(UserSettingsAtom.shouldShowProgressBar);
 
   const handleAnimationEnd = (): void => {
-    if (!InfoVisibility.isFadeOut(infoVisibility)) return;
+    if (infoVisibility !== InfoVisibilityEnum.fadeOut) return;
 
-    setInfoVisibility(() => InfoVisibility.create("none"));
+    setInfoVisibility(() => createInfoVisibility("none"));
   };
 
   return (
     <>
-      {InfoVisibility.isNone(infoVisibility) || (
+      {infoVisibility === InfoVisibilityEnum.none || (
         <div
           className="data-[state=visible]:animate-fade-in data-[state=fade-out]:animate-fade-out data-[state=fade-out]:opacity-0"
           data-state={infoVisibility}

@@ -11,11 +11,11 @@ export type OnViewerStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): OnViewer => {
+export const createOnViewer = (value: boolean): OnViewer => {
   return value as OnViewer;
 };
 
-export const getStore = (
+export const getOnViewerStore = (
   getter: () => OnViewer,
   setter: (value: OnViewer) => void,
 ): OnViewerStore => {

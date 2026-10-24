@@ -1,14 +1,14 @@
 import { useAtomValue } from "jotai";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import type { JSX } from "react";
-import * as ChevronMark from "../../../../application/appState/chevronMark";
+import { ChevronMarkEnum } from "../../../../application/appState/chevronMark";
 import { chevronMarkAtom } from "../../../atoms";
 import { safeAreaPaddingLeft, safeAreaPaddingRight } from "../../utils/safeAreaPadding";
 
 export const ChevronLeft = (): JSX.Element | null => {
   const chevronMark = useAtomValue(chevronMarkAtom);
 
-  if (!ChevronMark.isLeft(chevronMark)) return null;
+  if (chevronMark !== ChevronMarkEnum.left) return null;
   return (
     <div className="fixed top-1/2 left-0 -translate-y-1/2" style={safeAreaPaddingLeft()}>
       <CircleChevronLeft className="size-15 stroke-green-500" />
@@ -19,7 +19,7 @@ export const ChevronLeft = (): JSX.Element | null => {
 export const ChevronRight = (): JSX.Element | null => {
   const chevronMark = useAtomValue(chevronMarkAtom);
 
-  if (!ChevronMark.isRight(chevronMark)) return null;
+  if (chevronMark !== ChevronMarkEnum.right) return null;
   return (
     <div className="fixed top-1/2 right-0 -translate-y-1/2" style={safeAreaPaddingRight()}>
       <CircleChevronRight className="size-15 stroke-green-500" />

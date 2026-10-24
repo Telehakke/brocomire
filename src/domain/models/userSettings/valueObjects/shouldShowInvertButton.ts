@@ -6,16 +6,14 @@ export type ShouldShowInvertButton = boolean & { [ShouldShowInvertButtonBrand]: 
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_SHOW_INVERT_BUTTON_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldShowInvertButton => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldShowInvertButton = (value?: unknown): ShouldShowInvertButton => {
+  if (!isBoolean(value)) return create(SHOULD_SHOW_INVERT_BUTTON_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldShowInvertButton, v2: ShouldShowInvertButton): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldShowInvertButton => {
   return value as ShouldShowInvertButton;

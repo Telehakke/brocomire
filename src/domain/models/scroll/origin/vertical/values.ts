@@ -1,4 +1,8 @@
-import * as ScrollPercentage from "../../scrollPercentage";
+import {
+  SCROLL_PERCENTAGE_CENTER,
+  SCROLL_PERCENTAGE_MAX,
+  SCROLL_PERCENTAGE_MIN,
+} from "../../scrollPercentage";
 import type { OriginValue } from "../origin";
 
 // -----Top--------- 0
@@ -9,7 +13,7 @@ import type { OriginValue } from "../origin";
 
 export const TopValue: OriginValue = {
   name: "Top",
-  value: ScrollPercentage.MIN,
+  value: SCROLL_PERCENTAGE_MIN,
 };
 
 export const UpValue: OriginValue = {
@@ -19,7 +23,7 @@ export const UpValue: OriginValue = {
 
 export const VCenterValue: OriginValue = {
   name: "VCenter",
-  value: ScrollPercentage.CENTER,
+  value: SCROLL_PERCENTAGE_CENTER,
 };
 
 export const DownValue: OriginValue = {
@@ -29,5 +33,5 @@ export const DownValue: OriginValue = {
 
 export const BottomValue: OriginValue = {
   name: "Bottom",
-  value: ScrollPercentage.MAX,
+  value: SCROLL_PERCENTAGE_MAX,
 };

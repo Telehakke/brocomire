@@ -1,15 +1,13 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type JSX, type ReactNode } from "react";
-import * as ChevronMark from "../../../../application/appState/chevronMark";
-import * as IsUserScrolled from "../../../../application/appState/isUserScrolled";
-import * as IsUserScrolling from "../../../../application/appState/isUserScrolling";
+import { createChevronMark } from "../../../../application/appState/chevronMark";
+import { createIsUserScrolled } from "../../../../application/appState/isUserScrolled";
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { PullManager } from "../../../../infrastructure/viewer/pullManager";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
 import {
   chevronMarkAtom,
   isUserScrolledAtom,
-  isUserScrollingAtom,
   UserSettingsAtom,
   viewerManagerAtom,
 } from "../../../atoms";
@@ -26,7 +24,6 @@ export const ViewerBody = (props: {
   children: ReactNode;
 }): JSX.Element => {
   const bodyRef = useRef<Body>(null);
-  const timerId = useRef<number | undefined>(undefined);
   const clickGestureManager = useRef(new ClickGestureManager());
   const pullManager = useRef(new PullManager());
   const touchMoveManager = useRef(new TouchMoveManager(0, 0));
@@ -34,7 +31,6 @@ export const ViewerBody = (props: {
   const viewerManager = useAtomValue(viewerManagerAtom);
   const setChevronMark = useSetAtom(chevronMarkAtom);
   const setIsUserScrolled = useSetAtom(isUserScrolledAtom);
-  const setIsUserScrolling = useSetAtom(isUserScrollingAtom);
 
   useEffect(() => {
     const body = bodyRef.current;
@@ -81,28 +77,18 @@ export const ViewerBody = (props: {
       pullManager.current.reset();
     }
     setChevronMark(pullManager.current.getChevronMark());
-    setIsUserScrolled(IsUserScrolled.create(true));
-    setIsUserScrolling(IsUserScrolling.create(true));
+    setIsUserScrolled(createIsUserScrolled(true));
   };
 
   const handleTouchEnd = (): void => {
     clickGestureManager.current.cancelLongPress();
     pullManager.current.onLeftSidePull(props.onLeftSidePull);
     pullManager.current.onRightSidePull(props.onRightSidePull);
-    setChevronMark(ChevronMark.create("none"));
-  };
-
-  const handleScrollEnd = (): void => {
-    setIsUserScrolling(IsUserScrolling.create(false));
+    setChevronMark(createChevronMark("none"));
   };
 
   const handleWheel = (): void => {
-    setIsUserScrolled(IsUserScrolled.create(true));
-    setIsUserScrolling(IsUserScrolling.create(true));
-    window.clearTimeout(timerId.current);
-    timerId.current = window.setTimeout(() => {
-      setIsUserScrolling(IsUserScrolling.create(false));
-    }, 100);
+    setIsUserScrolled(createIsUserScrolled(true));
   };
 
   return (
@@ -114,7 +100,6 @@ export const ViewerBody = (props: {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onScrollEnd={handleScrollEnd}
       onWheel={handleWheel}
     >
       {props.children}

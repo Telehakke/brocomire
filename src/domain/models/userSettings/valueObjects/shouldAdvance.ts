@@ -6,16 +6,14 @@ export type ShouldAdvance = boolean & { [ShouldAdvanceBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_ADVANCE_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldAdvance => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldAdvance = (value?: unknown): ShouldAdvance => {
+  if (!isBoolean(value)) return create(SHOULD_ADVANCE_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldAdvance, v2: ShouldAdvance): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldAdvance => {
   return value as ShouldAdvance;

@@ -1,4 +1,4 @@
-import * as ChevronMark from "../../application/appState/chevronMark";
+import { createChevronMark, type ChevronMark } from "../../application/appState/chevronMark";
 
 export class PullManager {
   private readonly DISTANCE = 100;
@@ -19,10 +19,10 @@ export class PullManager {
   }
 
   /** 表示するアイコンの種類 */
-  getChevronMark(): ChevronMark.ChevronMark {
-    if (this.canLeftPull()) return ChevronMark.create("left");
-    if (this.canRightPull()) return ChevronMark.create("right");
-    return ChevronMark.create("none");
+  getChevronMark(): ChevronMark {
+    if (this.canLeftPull()) return createChevronMark("left");
+    if (this.canRightPull()) return createChevronMark("right");
+    return createChevronMark("none");
   }
 
   /** 左端の限界を超えて引っ張るとactionを実行 */

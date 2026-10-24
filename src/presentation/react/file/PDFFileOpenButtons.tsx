@@ -2,12 +2,11 @@ import { atom, useSetAtom } from "jotai";
 import { FileText } from "lucide-react";
 import type { ChangeEvent } from "react";
 import type { JSX } from "react/jsx-runtime";
-import * as OnViewer from "../../../application/appState/onViewer";
+import { getOnViewerStore } from "../../../application/appState/onViewer";
 import { openFile } from "../../../application/file/openFile";
-import * as FileNavigator from "../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../domain/models/notification/notification";
-import * as UserSettings from "../../../domain/models/userSettings/userSettings";
-import { HashCalculator } from "../../../infrastructure/file/hashCalculator";
+import { getFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../domain/models/notification/notification";
+import { getUserSettingsStore } from "../../../domain/models/userSettings/userSettings";
 import { PDFFileManager } from "../../../infrastructure/file/pdfFileManager";
 import { LocalStorageUserSettingsRepository } from "../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import {
@@ -23,24 +22,24 @@ import {
 import { FileOpenButton } from "./FileOpenButtons";
 
 const openPDFFileAtom = atom(null, async (get, set, file: File) => {
-  set(fileManagerAtom, await PDFFileManager.create(file, new HashCalculator()));
+  set(fileManagerAtom, await PDFFileManager.create(file));
   void openFile({
     cache: get(cacheAtom),
     fileManager: get(fileManagerAtom),
-    fileNavigatorStore: FileNavigator.getStore(
+    fileNavigatorStore: getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    notificationStore: Notification.getStore(
+    notificationStore: getNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
-    onViewerStore: OnViewer.getStore(
+    onViewerStore: getOnViewerStore(
       () => get(onViewerAtom),
       (v) => set(onViewerAtom, v),
     ),
     scrollPercentage2D: get(scrollPercentage2DAtom),
-    userSettingsStore: UserSettings.getStore(
+    userSettingsStore: getUserSettingsStore(
       () => get(Atom.userSettings),
       (v) => set(Atom.userSettings, v),
     ),

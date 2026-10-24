@@ -1,5 +1,9 @@
 import type { BookFormatValue } from "../userSettings/valueObjects/bookFormat";
-import * as DisplayMode from "../userSettings/valueObjects/displayMode";
+import {
+  DisplayModeEnum,
+  type DisplayMode,
+  type DisplayModeValue,
+} from "../userSettings/valueObjects/displayMode";
 
 type FileNavigatorType = Readonly<{
   currentIndex: number;
@@ -21,11 +25,11 @@ export type FileNavigatorGetter = () => FileNavigator;
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: FileNavigatorType): FileNavigator => {
-  return value as FileNavigator;
+export const createFileNavigator = (currentIndex: number, fileLength: number): FileNavigator => {
+  return { currentIndex, fileLength } as FileNavigator;
 };
 
-export const getStore = (
+export const getFileNavigatorStore = (
   getter: () => FileNavigator,
   setter: (value: FileNavigator) => void,
 ): FileNavigatorStore => {
@@ -33,12 +37,15 @@ export const getStore = (
 };
 
 /** inputに新たなcurrentIndexをセットした新しいオブジェクトを返す */
-export const withCurrentIndex = (input: FileNavigator, currentIndex: number): FileNavigator => {
-  return create({ ...input, currentIndex });
+export const copyFileNavigatorWithCurrentIndex = (
+  input: FileNavigator,
+  currentIndex: number,
+): FileNavigator => {
+  return { ...input, currentIndex };
 };
 
 /** '現在のページ数 / 総ページ数' */
-export const getProgress = (input: FileNavigator): string => {
+export const getFileNavigatorProgress = (input: FileNavigator): string => {
   return `${input.currentIndex + 1} / ${input.fileLength}`;
 };
 
@@ -53,55 +60,60 @@ export const hasNextFile = (input: FileNavigator): boolean => {
 };
 
 /** currentIndexを1または2減らした新しいオブジェクトを返す */
-export const decrementIndex = (
+export const decrementCurrentIndex = (
   input: FileNavigator,
-  displayMode: DisplayMode.DisplayMode,
+  displayMode: DisplayMode,
 ): FileNavigator => {
-  const amount = DisplayMode.isSingle(displayMode) ? 1 : 2;
-  return create({ ...input, currentIndex: Math.max(input.currentIndex - amount, 0) });
+  const amount = displayMode === DisplayModeEnum.single ? 1 : 2;
+  return {
+    ...input,
+    currentIndex: Math.max(input.currentIndex - amount, 0),
+  };
 };
 
 /** currentIndexを1または2増やした新しいオブジェクトを返す */
-export const incrementIndex = (
+export const incrementCurrentIndex = (
   input: FileNavigator,
-  displayMode: DisplayMode.DisplayMode,
+  displayMode: DisplayMode,
 ): FileNavigator => {
-  const amount = DisplayMode.isSingle(displayMode) ? 1 : 2;
-  return create({
+  const amount = displayMode === DisplayModeEnum.single ? 1 : 2;
+  return {
     ...input,
     currentIndex: Math.min(input.currentIndex + amount, input.fileLength - 1),
-  });
+  };
 };
 
-/** ビューアで左側に表示される現在のインデックスを返す */
-export const getLeftIndex = (
+/** ビューアの左側に表示される画像リストのインデックスを返す */
+export const getLeftImageIndex = (
   input: FileNavigator,
   bookFormat: BookFormatValue,
-  displayMode: DisplayMode.DisplayModeValue,
+  displayMode: DisplayModeValue,
 ): number => {
-  const amount = leftIndexMap[displayMode][bookFormat][getParity(input.currentIndex)];
+  const amount = leftImageIndexMap[displayMode][bookFormat][getOddEven(input.currentIndex)];
   return input.currentIndex + amount;
 };
 
-/** ビューアで右側に表示される現在のインデックスを返す */
-export const getRightIndex = (
+/** ビューアの右側に表示される画像リストのインデックスを返す */
+export const getRightImageIndex = (
   input: FileNavigator,
   bookFormat: BookFormatValue,
-  displayMode: DisplayMode.DisplayModeValue,
+  displayMode: DisplayModeValue,
 ): number | undefined => {
-  const amount = rightIndexMap[displayMode][bookFormat][getParity(input.currentIndex)];
+  const amount = rightImageIndexMap[displayMode][bookFormat][getOddEven(input.currentIndex)];
   if (amount == null) return undefined;
   return input.currentIndex + amount;
 };
 
+/* -------------------------------------------------------------------------- */
+
 type Parity = "odd" | "even"; // 奇数・偶数
 
-const getParity = (value: number): Parity => {
+const getOddEven = (value: number): Parity => {
   return value % 2 === 1 ? "odd" : "even";
 };
 
-const leftIndexMap: Record<
-  DisplayMode.DisplayModeValue,
+const leftImageIndexMap: Record<
+  DisplayModeValue,
   Record<BookFormatValue, Record<Parity, number>>
 > = {
   single: {
@@ -109,38 +121,54 @@ const leftIndexMap: Record<
     horizontal: { odd: 0, even: 0 },
   },
   book: {
-    // 奇数インデックスは右ページに該当するため、左ページは+1（[0,-] -> [2,1] -> [4,3] -> ...）
+    // 画像の並び：[0,-] -> [2,1] -> [4,3] -> ...
+    // 奇数インデックスは右ページなので+1補正する
+    // 偶数インデックスは左ページなので補正の必要性なし
     vertical: { odd: 1, even: 0 },
-    // 偶数インデックスは右ページに該当するため、左ページは-1（[-,0] -> [1,2] -> [3,4] -> ...）
+    // 画像の並び：[-,0] -> [1,2] -> [3,4] -> ...
+    // 奇数インデックスは左ページなので補正の必要性なし
+    // 偶数インデックスは右ページなので-1補正する
     horizontal: { odd: 0, even: -1 },
   },
   double: {
-    // 偶数インデックスは右ページに該当するため、左ページは+1（[1,0] -> [3,2] -> [5,4] -> ...）
+    // 画像の並び：[1,0] -> [3,2] -> [5,4] -> ...
+    // 奇数インデックスは左ページなので補正の必要性なし
+    // 偶数インデックスは右ページなので+1補正する
     vertical: { odd: 0, even: 1 },
-    // 奇数インデックスは右ページに該当するため、左ページは-1（[0,1] -> [2,3] -> [4,5] -> ...）
+    // 画像の並び：[0,1] -> [2,3] -> [4,5] -> ...
+    // 奇数インデックスは右ページなので-1補正する
+    // 偶数インデックスは左ページなので補正の必要性なし
     horizontal: { odd: -1, even: 0 },
   },
 };
 
-const rightIndexMap: Record<
-  DisplayMode.DisplayModeValue,
+const rightImageIndexMap: Record<
+  DisplayModeValue,
   Record<BookFormatValue, Record<Parity, number | undefined>>
 > = {
   single: {
-    // 右ページは使用しない
+    // 右ページでは使用しない
     vertical: { odd: undefined, even: undefined },
     horizontal: { odd: undefined, even: undefined },
   },
   book: {
-    // 偶数インデックスは左ページに該当するため、右ページは-1（[0,-] -> [2,1] -> [4,3] -> ...）
+    // 画像の並び：[0,-] -> [2,1] -> [4,3] -> ...
+    // 奇数インデックスは右ページなので補正の必要性なし
+    // 偶数インデックスは左ページなので-1補正する
     vertical: { odd: 0, even: -1 },
-    // 奇数インデックスは左ページに該当するため、右ページは+1（[-,0] -> [1,2] -> [3,4] -> ...）
+    // 画像の並び：[-,0] -> [1,2] -> [3,4] -> ...
+    // 奇数インデックスは左ページなので+1補正する
+    // 偶数インデックスは右ページなので補正の必要性なし
     horizontal: { odd: 1, even: 0 },
   },
   double: {
-    // 奇数インデックスは左ページに該当するため、右ページは-1（[1,0] -> [3,2] -> [5,4] -> ...）
+    // 画像の並び：[1,0] -> [3,2] -> [5,4] -> ...
+    // 奇数インデックスは左ページなので-1補正する
+    // 偶数インデックスは右ページなので補正の必要性なし
     vertical: { odd: -1, even: 0 },
-    // 偶数インデックスは左ページに該当するため、右ページは+1（[0,1] -> [2,3] -> [4,5] -> ...）
+    // 画像の並び：[0,1] -> [2,3] -> [4,5] -> ...
+    // 奇数インデックスは右ページなので補正の必要性なし
+    // 偶数インデックスは左ページなので+1補正する
     horizontal: { odd: 0, even: 1 },
   },
 };

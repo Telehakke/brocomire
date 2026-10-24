@@ -1,4 +1,4 @@
-import * as ImageSize from "../../../../application/appState/imageSize";
+import { createImageSize, type ImageSizeStore } from "../../../../application/appState/imageSize";
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import type { FileNavigator } from "../../../../domain/models/file/fileNavigator";
 import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
@@ -16,7 +16,7 @@ type DrawImagesOptions = Readonly<{
   ctx: CanvasRenderingContext2D;
   fileNavigatorGetter: () => FileNavigator;
   images: [Image, Image];
-  imageSizeStore: ImageSize.ImageSizeStore;
+  imageSizeStore: ImageSizeStore;
   onSharpeningFilter: OnSharpeningFilter;
   scrollPercentage2D: ScrollPercentage2D;
   sharpeningFilterStrength: SharpeningFilterStrength;
@@ -33,7 +33,7 @@ export const drawImages = (o: DrawImagesOptions): void => {
     _drawImages(o.canvas, o.ctx, o.images, imageSize);
     if (o.onSharpeningFilter)
       sharpenCanvas(o.ctx, o.fileNavigatorGetter, imageSize, o.sharpeningFilterStrength);
-    o.imageSizeStore.set(ImageSize.create(imageSize));
+    o.imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));
     o.viewerManager.scrollToPercentage(o.scrollPercentage2D.x, o.scrollPercentage2D.y);
   }, 10);
 };

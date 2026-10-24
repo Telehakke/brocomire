@@ -6,16 +6,14 @@ export type IsSmoothScrollEnabled = boolean & { [IsSmoothScrollEnabledBrand]: un
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const IS_SMOOTH_SCROLL_ENABLED_DEFAULT = false;
 
-export const createSafe = (value?: unknown): IsSmoothScrollEnabled => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createIsSmoothScrollEnabled = (value?: unknown): IsSmoothScrollEnabled => {
+  if (!isBoolean(value)) return create(IS_SMOOTH_SCROLL_ENABLED_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: IsSmoothScrollEnabled, v2: IsSmoothScrollEnabled): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): IsSmoothScrollEnabled => {
   return value as IsSmoothScrollEnabled;

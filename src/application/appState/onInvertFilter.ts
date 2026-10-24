@@ -4,6 +4,6 @@ export type OnInvertFilter = boolean & { [OnInvertFilterBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): OnInvertFilter => {
+export const createOnInvertFilter = (value: boolean): OnInvertFilter => {
   return value as OnInvertFilter;
 };

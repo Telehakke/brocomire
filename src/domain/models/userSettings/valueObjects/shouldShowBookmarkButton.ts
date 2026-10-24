@@ -6,16 +6,14 @@ export type ShouldShowBookmarkButton = boolean & { [ShouldShowBookmarkButtonBran
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_SHOW_BOOKMARK_BUTTON_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldShowBookmarkButton => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldShowBookmarkButton = (value?: unknown): ShouldShowBookmarkButton => {
+  if (!isBoolean(value)) return create(SHOULD_SHOW_BOOKMARK_BUTTON_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldShowBookmarkButton, v2: ShouldShowBookmarkButton): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldShowBookmarkButton => {
   return value as ShouldShowBookmarkButton;

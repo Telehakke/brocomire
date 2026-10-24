@@ -88,7 +88,7 @@ const eslintBoundariesConfig: Config = {
   },
 };
 
-const typescriptEslintRecommended = {
+const tsEslintRecommended = {
   "@typescript-eslint/ban-ts-comment": "error",
   "no-array-constructor": "off",
   "@typescript-eslint/no-array-constructor": "error",
@@ -135,7 +135,7 @@ export default defineConfig({
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
       ...eslintBoundariesConfig.rules,
-      ...typescriptEslintRecommended,
+      ...tsEslintRecommended,
       "typescript/explicit-function-return-type": "error",
       "typescript/strict-boolean-expressions": "error",
     },
@@ -189,17 +189,6 @@ export default defineConfig({
   ]),
   build: {
     outDir: "docs",
-    rolldownOptions: {
-      output: {
-        codeSplitting: {
-          groups: [
-            { name: "pdfjs-vendor", test: /node_modules\/pdfjs-dist/ },
-            { name: "zipjs-vendor", test: /node_modules\/@zip.js/ },
-            { name: "vendor", test: /node_modules/ },
-          ],
-        },
-      },
-    },
     license: { fileName: "licenses.md" },
   },
   server: { host: true },

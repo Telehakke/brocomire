@@ -1,19 +1,27 @@
-import * as FileNavigator from "../../domain/models/file/fileNavigator";
-import * as Notification from "../../domain/models/notification/notification";
+import {
+  getFileNavigatorProgress,
+  hasNextFile,
+  incrementCurrentIndex,
+  type FileNavigatorStore,
+} from "../../domain/models/file/fileNavigator";
+import {
+  showNotificationMessage,
+  type NotificationStore,
+} from "../../domain/models/notification/notification";
 import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
 
 type MoveToNextPageOptions = Readonly<{
-  fileNavigatorStore: FileNavigator.FileNavigatorStore;
-  notificationStore: Notification.NotificationStore;
+  fileNavigatorStore: FileNavigatorStore;
+  notificationStore: NotificationStore;
   scrollPercentage2D: ScrollPercentage2D;
   userSettingsGetter: UserSettingsGetter;
 }>;
 
 /** 次のページへ移動 */
 export const moveToNextPage = (o: MoveToNextPageOptions): void => {
-  if (!FileNavigator.hasNextFile(o.fileNavigatorStore.get())) return;
+  if (!hasNextFile(o.fileNavigatorStore.get())) return;
 
   const { bookFormat, displayMode } = o.userSettingsGetter();
   _moveToNextPage(o.fileNavigatorStore, displayMode, o.notificationStore);
@@ -24,15 +32,15 @@ export const moveToNextPage = (o: MoveToNextPageOptions): void => {
 /* -------------------------------------------------------------------------- */
 
 const _moveToNextPage = (
-  fileNavigatorStore: FileNavigator.FileNavigatorStore,
+  fileNavigatorStore: FileNavigatorStore,
   displayMode: DisplayMode,
-  notificationStore: Notification.NotificationStore,
+  notificationStore: NotificationStore,
 ): void => {
-  const fileNavigator = FileNavigator.incrementIndex(fileNavigatorStore.get(), displayMode);
+  const fileNavigator = incrementCurrentIndex(fileNavigatorStore.get(), displayMode);
   fileNavigatorStore.set(fileNavigator);
-  showMessage(notificationStore, FileNavigator.getProgress(fileNavigator));
+  showMessage(notificationStore, getFileNavigatorProgress(fileNavigator));
 };
 
-const showMessage = (notificationStore: Notification.NotificationStore, message: string): void => {
-  notificationStore.set(Notification.showMessage(message));
+const showMessage = (notificationStore: NotificationStore, message: string): void => {
+  notificationStore.set(showNotificationMessage(message));
 };

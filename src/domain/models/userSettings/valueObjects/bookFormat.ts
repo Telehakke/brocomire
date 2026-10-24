@@ -10,29 +10,25 @@ export type BookFormat = BookFormatValue & { [BookFormatBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = BookFormatEnum.vertical;
+export const BOOK_FORMAT_DEFAULT = BookFormatEnum.vertical;
 
-export const createSafe = (value?: unknown): BookFormat => {
-  if (!isBookFormatValue(value)) return create(DEFAULT);
+export const createBookFormat = (value?: unknown): BookFormat => {
+  if (!isBookFormatValue(value)) return create(BOOK_FORMAT_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: BookFormat, v2: BookFormat): boolean => {
-  return v1 === v2;
+export const getBookFormatValues = (): readonly BookFormatValue[] => {
+  return values;
 };
 
-export const isVertical = (input: BookFormat): boolean => {
-  return input === BookFormatEnum.vertical;
-};
+/* -------------------------------------------------------------------------- */
 
-export const getValues = (): readonly BookFormatValue[] => {
-  return Object.values(BookFormatEnum);
-};
+const values = Object.values(BookFormatEnum);
 
 const create = (value: BookFormatValue): BookFormat => {
   return value as BookFormat;
 };
 
 const isBookFormatValue = (value: unknown): value is BookFormatValue => {
-  return Object.values(BookFormatEnum).some((v) => v === value);
+  return values.some((v) => v === value);
 };

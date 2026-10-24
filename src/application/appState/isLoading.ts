@@ -4,6 +4,6 @@ export type IsLoading = boolean & { [IsLoadingBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): IsLoading => {
+export const createIsLoading = (value: boolean): IsLoading => {
   return value as IsLoading;
 };

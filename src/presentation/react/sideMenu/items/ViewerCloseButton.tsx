@@ -1,13 +1,13 @@
 import { atom, useSetAtom } from "jotai";
 import { BookX } from "lucide-react";
 import type { JSX } from "react";
-import * as BookmarkIndex from "../../../../application/appState/bookmarkIndex";
-import * as IsOpenSideMenu from "../../../../application/appState/isOpenSideMenu";
-import * as OnViewer from "../../../../application/appState/onViewer";
+import { getBookmarkIndexStore } from "../../../../application/appState/bookmarkIndex";
+import { getIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
+import { getOnViewerStore } from "../../../../application/appState/onViewer";
 import { closeViewer } from "../../../../application/viewer/closeViewer";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
-import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
+import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
+import { getUserSettingsStore } from "../../../../domain/models/userSettings/userSettings";
+import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import {
   Atom,
@@ -23,30 +23,30 @@ import { LargeIconButton } from "../../utils/LargeIconButton";
 
 const closeViewerAtom = atom(null, (get, set) => {
   closeViewer({
-    bookmarkIndexStore: BookmarkIndex.getStore(
+    bookmarkIndexStore: getBookmarkIndexStore(
       () => get(bookmarkIndexAtom),
       (v) => set(bookmarkIndexAtom, v),
     ),
     cache: get(cacheAtom),
     fileManager: get(fileManagerAtom),
-    fileNavigatorStore: FileNavigator.getStore(
+    fileNavigatorStore: getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    isOpenSideMenuStore: IsOpenSideMenu.getStore(
+    isOpenSideMenuStore: getIsOpenSideMenuStore(
       () => get(isOpenSideMenuAtom),
       (v) => set(isOpenSideMenuAtom, v),
     ),
-    OnViewerStore: OnViewer.getStore(
+    OnViewerStore: getOnViewerStore(
       () => get(onViewerAtom),
       (v) => set(onViewerAtom, v),
     ),
-    userSettingsStore: UserSettings.getStore(
+    userSettingsStore: getUserSettingsStore(
       () => get(Atom.userSettings),
       (v) => set(Atom.userSettings, v),
     ),
     userSettingsRepository: new LocalStorageUserSettingsRepository(),
-    zoomPercentageStore: ZoomPercentage.getStore(
+    zoomPercentageStore: getZoomPercentageStore(
       () => get(zoomPercentageAtom),
       (v) => set(zoomPercentageAtom, v),
     ),

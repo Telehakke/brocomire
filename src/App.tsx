@@ -1,7 +1,7 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, type JSX } from "react";
 import { updateHistory } from "./application/viewer/updateHistory";
-import * as UserSettings from "./domain/models/userSettings/userSettings";
+import { getUserSettingsStore } from "./domain/models/userSettings/userSettings";
 import { LocalStorageUserSettingsRepository } from "./infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, fileManagerAtom, fileNavigatorAtom, onViewerAtom } from "./presentation/atoms";
 import { Home } from "./presentation/react/home/Home";
@@ -14,7 +14,7 @@ const updateHistoryAtom = atom(null, (get, set) => {
   updateHistory({
     fileManager: get(fileManagerAtom),
     fileNavigatorGetter: () => get(fileNavigatorAtom),
-    userSettingsStore: UserSettings.getStore(
+    userSettingsStore: getUserSettingsStore(
       () => get(Atom.userSettings),
       (v) => set(Atom.userSettings, v),
     ),

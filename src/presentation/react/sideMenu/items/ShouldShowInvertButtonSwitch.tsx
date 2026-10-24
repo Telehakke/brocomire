@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldShowInvertButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowInvertButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowInvertButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,7 +12,7 @@ export const ShouldShowInvertButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldShowInvertButton(
+      setShouldShowInvertButton(
         v,
         checked as ShouldShowInvertButton,
         new LocalStorageUserSettingsRepository(),

@@ -1,6 +1,4 @@
-import { isNotNull } from "../../utils/isNotNull";
-
-const SizeEnum = { none: "none", s: "s", m: "m", l: "l" } as const;
+export const SizeEnum = { none: "none", s: "s", m: "m", l: "l" } as const;
 
 export type SizeValue = (typeof SizeEnum)[keyof typeof SizeEnum];
 
@@ -17,45 +15,35 @@ export type TapAreaSize = TapAreaSizeValue & { [TapAreaSizeBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = SizeEnum.s;
+export const SIZE_DEFAULT = SizeEnum.s;
 
-export const createSafe = (value?: unknown): TapAreaSize => {
-  if (!isNotNull(value)) return create({ width: DEFAULT, height: DEFAULT });
-  return create(getTapAreaSizeValueOrDefault(value));
+export const createTapAreaSize = (width?: unknown, height?: unknown): TapAreaSize => {
+  return { width: createSizeValue(width), height: createSizeValue(height) } as TapAreaSize;
 };
 
-export const equals = (v1: TapAreaSize, v2: TapAreaSize): boolean => {
-  return v1.width === v2.width && v1.height === v2.height;
-};
-
-export const copyWith = (input: TapAreaSize, value: Partial<TapAreaSizeValue>): TapAreaSize => {
-  return create({
+export const copyTapAreaSizeWith = (
+  input: TapAreaSize,
+  value: Partial<TapAreaSizeValue>,
+): TapAreaSize => {
+  return {
     width: value.width ?? input.width,
     height: value.height ?? input.height,
-  });
+  } as TapAreaSize;
 };
 
-export const getValues = (): readonly SizeValue[] => {
-  return Object.values(SizeEnum);
+export const getSizeValues = (): readonly SizeValue[] => {
+  return values;
 };
 
-export const isNone = (value: SizeValue): boolean => {
-  return value === "none";
-};
+/* -------------------------------------------------------------------------- */
 
-const create = (value: TapAreaSizeValue): TapAreaSize => {
-  return value as TapAreaSize;
-};
+const values = Object.values(SizeEnum);
 
-const getTapAreaSizeValueOrDefault = (value: Record<string, unknown>): TapAreaSizeValue => {
-  const width = value.width;
-  const height = value.height;
-  return {
-    width: isSizeValue(width) ? width : DEFAULT,
-    height: isSizeValue(height) ? height : DEFAULT,
-  };
+const createSizeValue = (value?: unknown): SizeValue => {
+  if (!isSizeValue(value)) return SIZE_DEFAULT;
+  return value;
 };
 
 const isSizeValue = (value: unknown): value is SizeValue => {
-  return Object.keys(SizeEnum).some((v) => v === value);
+  return values.some((v) => v === value);
 };

@@ -8,16 +8,14 @@ export type ShouldShowFullscreenButton = boolean & {
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_SHOW_FULLSCREEN_BUTTON_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldShowFullscreenButton => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldShowFullscreenButton = (value?: unknown): ShouldShowFullscreenButton => {
+  if (!isBoolean(value)) return create(SHOULD_SHOW_FULLSCREEN_BUTTON_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldShowFullscreenButton, v2: ShouldShowFullscreenButton): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldShowFullscreenButton => {
   return value as ShouldShowFullscreenButton;

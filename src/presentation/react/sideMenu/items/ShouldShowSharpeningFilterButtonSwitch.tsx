@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldShowSharpeningFilterButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowSharpeningFilterButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowSharpeningFilterButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,7 +12,7 @@ export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldShowSharpeningFilterButton(
+      setShouldShowSharpeningFilterButton(
         v,
         checked as ShouldShowSharpeningFilterButton,
         new LocalStorageUserSettingsRepository(),

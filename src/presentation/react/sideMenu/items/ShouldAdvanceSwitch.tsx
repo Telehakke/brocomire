@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldAdvance } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldAdvance } from "../../../../domain/models/userSettings/valueObjects/shouldAdvance";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,11 +12,7 @@ export const ShouldAdvanceSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldAdvance(
-        v,
-        checked as ShouldAdvance,
-        new LocalStorageUserSettingsRepository(),
-      ),
+      setShouldAdvance(v, checked as ShouldAdvance, new LocalStorageUserSettingsRepository()),
     );
   };
 

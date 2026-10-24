@@ -1,4 +1,4 @@
-export type Visibility = "visible" | "fade-out" | "none";
+type Visibility = "visible" | "fade-out" | "hidden";
 
 type NotificationType = Readonly<{
   message: string | undefined;
@@ -18,11 +18,11 @@ export type NotificationStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const init = (): Notification => {
-  return create({ message: undefined, visibility: "none" });
+export const initNotification = (): Notification => {
+  return create({ message: undefined, visibility: "hidden" });
 };
 
-export const getStore = (
+export const getNotificationStore = (
   getter: () => Notification,
   setter: (value: Notification) => void,
 ): NotificationStore => {
@@ -30,34 +30,21 @@ export const getStore = (
 };
 
 /** メッセージを表示 */
-export const showMessage = (message?: string): Notification => {
+export const showNotificationMessage = (message?: string): Notification => {
   return create({ message, visibility: "visible" });
 };
 
 /** メッセージをフェードアウト */
-export const fadeOut = (input: Notification): Notification => {
+export const fadeOutNotification = (input: Notification): Notification => {
   return create({ ...input, visibility: "fade-out" });
 };
 
-/** メッセージを無くす */
-export const none = (input: Notification): Notification => {
-  return create({ ...input, visibility: "none" });
+/** メッセージを隠す */
+export const hideNotification = (input: Notification): Notification => {
+  return create({ ...input, visibility: "hidden" });
 };
 
-/** メッセージが表示されているかどうか */
-export const isVisible = (input: Notification): boolean => {
-  return input.visibility === "visible";
-};
-
-/** メッセージがフェードアウトしているかどうか */
-export const isFadeOut = (input: Notification): boolean => {
-  return input.visibility === "fade-out";
-};
-
-/** メッセージが無くされたかどうか */
-export const isNone = (input: Notification): boolean => {
-  return input.visibility === "none";
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: NotificationType): Notification => {
   return value as Notification;

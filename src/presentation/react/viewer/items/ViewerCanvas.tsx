@@ -1,17 +1,23 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type CSSProperties, type JSX } from "react";
-import * as ImageSize from "../../../../application/appState/imageSize";
+import { getImageSizeStore } from "../../../../application/appState/imageSize";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import type { IsLandscape } from "../../../../application/appState/isLandscape";
-import * as IsLoading from "../../../../application/appState/isLoading";
+import { createIsLoading } from "../../../../application/appState/isLoading";
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
+import {
+  getFileNavigatorStore,
+  type FileNavigator,
+} from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import type { ContentFitValue } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
 import type { IsSafeAreaEnabled } from "../../../../domain/models/userSettings/valueObjects/isSafeAreaEnabled";
-import * as SafeAreaLength from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
+import {
+  SAFE_AREA_LENGTH_MIN,
+  type SafeAreaLength,
+} from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import {
@@ -42,13 +48,7 @@ type Image = HTMLImageElement | undefined;
 
 const getImagesAtom = atom(
   null,
-  (
-    get,
-    _,
-    bookFormat: BookFormat,
-    displayMode: DisplayMode,
-    fileNavigator: FileNavigator.FileNavigator,
-  ) => {
+  (get, _, bookFormat: BookFormat, displayMode: DisplayMode, fileNavigator: FileNavigator) => {
     const { shouldPreload } = get(Atom.userSettings);
     return getImages({
       cache: shouldPreload ? get(cacheAtom) : undefined,
@@ -76,7 +76,7 @@ const drawImagesAtom = atom(
       ctx,
       fileNavigatorGetter: () => get(fileNavigatorAtom),
       images,
-      imageSizeStore: ImageSize.getStore(
+      imageSizeStore: getImageSizeStore(
         () => get(imageSizeAtom),
         (v) => set(imageSizeAtom, v),
       ),
@@ -92,7 +92,7 @@ const preloadFilesAtom = atom(null, (get, set) => {
   preloadFiles({
     cache: get(cacheAtom),
     fileManager: get(fileManagerAtom),
-    fileNavigatorStore: FileNavigator.getStore(
+    fileNavigatorStore: getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
@@ -139,12 +139,12 @@ export const ViewerCanvas = (): JSX.Element => {
       drawImages(canvas, ctx, images, onSharpeningFilter, sharpeningFilterStrength);
       preloadFiles();
       window.clearInterval(timerId.current);
-      setIsLoading(IsLoading.create(false));
+      setIsLoading(createIsLoading(false));
     });
     return (): void => {
       isMounded = false;
       timerId.current = window.setTimeout(() => {
-        setIsLoading(IsLoading.create(true));
+        setIsLoading(createIsLoading(true));
       }, 100);
     };
   }, [
@@ -177,23 +177,23 @@ export const ViewerCanvas = (): JSX.Element => {
 const safeAriaStyle = (
   isLandscape: IsLandscape,
   isSafeAreaEnabled: IsSafeAreaEnabled,
-  safeAreaLength: SafeAreaLength.SafeAreaLength,
+  safeAreaLength: SafeAreaLength,
 ): CSSProperties => {
   if (!isSafeAreaEnabled) return {};
   if (isLandscape) return landscapeStyle(safeAreaLength);
   return portraitStyle(safeAreaLength);
 };
 
-const landscapeStyle = (safeAreaLength: SafeAreaLength.SafeAreaLength): CSSProperties => {
-  if (SafeAreaLength.isMin(safeAreaLength))
+const landscapeStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+  if (safeAreaLength === SAFE_AREA_LENGTH_MIN)
     return { ...safeAreaPaddingLeft(), ...safeAreaPaddingRight() };
 
   const value = `${safeAreaLength}px`;
   return { paddingLeft: value, paddingRight: value };
 };
 
-const portraitStyle = (safeAreaLength: SafeAreaLength.SafeAreaLength): CSSProperties => {
-  if (SafeAreaLength.isMin(safeAreaLength))
+const portraitStyle = (safeAreaLength: SafeAreaLength): CSSProperties => {
+  if (safeAreaLength === SAFE_AREA_LENGTH_MIN)
     return { ...safeAreaPaddingTop(), ...safeAreaPaddingBottom() };
 
   const value = `${safeAreaLength}px`;

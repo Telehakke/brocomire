@@ -48,6 +48,7 @@ onmessage = (
         others[imageData.data[bottom + 2]];
     }
   }
+
   // メインスレッドへメッセージを送る
   // @ts-expect-error 型定義エラーの抑制
   postMessage({ currentIndex, dist }, [dist.data.buffer]);

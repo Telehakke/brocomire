@@ -6,16 +6,14 @@ export type ShouldPreload = boolean & { [ShouldPreloadBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_PRELOAD_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldPreload => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldPreload = (value?: unknown): ShouldPreload => {
+  if (!isBoolean(value)) return create(SHOULD_PRELOAD_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ShouldPreload, v2: ShouldPreload): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldPreload => {
   return value as ShouldPreload;

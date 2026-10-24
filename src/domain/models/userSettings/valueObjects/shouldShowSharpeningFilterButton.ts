@@ -8,19 +8,16 @@ export type ShouldShowSharpeningFilterButton = boolean & {
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = false;
+export const SHOULD_SHOW_SHARPENING_FILTER_BUTTON_DEFAULT = false;
 
-export const createSafe = (value?: unknown): ShouldShowSharpeningFilterButton => {
-  if (!isBoolean(value)) return create(DEFAULT);
+export const createShouldShowSharpeningFilterButton = (
+  value?: unknown,
+): ShouldShowSharpeningFilterButton => {
+  if (!isBoolean(value)) return create(SHOULD_SHOW_SHARPENING_FILTER_BUTTON_DEFAULT);
   return create(value);
 };
 
-export const equals = (
-  v1: ShouldShowSharpeningFilterButton,
-  v2: ShouldShowSharpeningFilterButton,
-): boolean => {
-  return v1 === v2;
-};
+/* -------------------------------------------------------------------------- */
 
 const create = (value: boolean): ShouldShowSharpeningFilterButton => {
   return value as ShouldShowSharpeningFilterButton;

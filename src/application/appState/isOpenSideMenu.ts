@@ -11,11 +11,11 @@ export type IsOpenSideMenuStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): IsOpenSideMenu => {
+export const createIsOpenSideMenu = (value: boolean): IsOpenSideMenu => {
   return value as IsOpenSideMenu;
 };
 
-export const getStore = (
+export const getIsOpenSideMenuStore = (
   getter: () => IsOpenSideMenu,
   setter: (value: IsOpenSideMenu) => void,
 ): IsOpenSideMenuStore => {

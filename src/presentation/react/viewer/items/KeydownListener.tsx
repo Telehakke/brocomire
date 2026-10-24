@@ -1,10 +1,10 @@
 import { atom, useSetAtom } from "jotai";
 import { useEffect } from "react";
-import * as IsOpenSideMenu from "../../../../application/appState/isOpenSideMenu";
-import * as IsUserScrolled from "../../../../application/appState/isUserScrolled";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../../domain/models/notification/notification";
-import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
+import { getIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
+import { getIsUserScrolledStore } from "../../../../application/appState/isUserScrolled";
+import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../../domain/models/notification/notification";
+import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import { KeydownMonitor } from "../../../../infrastructure/keyboard/keydownMonitor";
 import {
   Atom,
@@ -19,26 +19,26 @@ import {
 
 const getKeydownMonitorAtom = atom(null, (get, set) => {
   return new KeydownMonitor(
-    FileNavigator.getStore(
+    getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    IsOpenSideMenu.getStore(
+    getIsOpenSideMenuStore(
       () => get(isOpenSideMenuAtom),
       (v) => set(isOpenSideMenuAtom, v),
     ),
-    IsUserScrolled.getStore(
+    getIsUserScrolledStore(
       () => get(isUserScrolledAtom),
       (v) => set(isUserScrolledAtom, v),
     ),
-    Notification.getStore(
+    getNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
     get(scrollPercentage2DAtom),
     () => get(Atom.userSettings),
     get(viewerManagerAtom),
-    ZoomPercentage.getStore(
+    getZoomPercentageStore(
       () => get(zoomPercentageAtom),
       (v) => set(zoomPercentageAtom, v),
     ),

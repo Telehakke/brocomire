@@ -1,9 +1,9 @@
 import { atom, useSetAtom } from "jotai";
 import { useEffect } from "react";
-import * as IsUserScrolled from "../../../../application/appState/isUserScrolled";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
-import * as Notification from "../../../../domain/models/notification/notification";
-import * as ZoomPercentage from "../../../../domain/models/zoom/zoomPercentage";
+import { getIsUserScrolledStore } from "../../../../application/appState/isUserScrolled";
+import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
+import { getNotificationStore } from "../../../../domain/models/notification/notification";
+import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import { GamepadMonitor } from "../../../../infrastructure/gamepad/gamepadMonitor";
 import {
   Atom,
@@ -17,22 +17,22 @@ import {
 
 const getGamepadMonitorAtom = atom(null, (get, set) => {
   return new GamepadMonitor(
-    FileNavigator.getStore(
+    getFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    IsUserScrolled.getStore(
+    getIsUserScrolledStore(
       () => get(isUserScrolledAtom),
       (v) => set(isUserScrolledAtom, v),
     ),
-    Notification.getStore(
+    getNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
     get(scrollPercentage2DAtom),
     () => get(Atom.userSettings),
     get(viewerManagerAtom),
-    ZoomPercentage.getStore(
+    getZoomPercentageStore(
       () => get(zoomPercentageAtom),
       (v) => set(zoomPercentageAtom, v),
     ),

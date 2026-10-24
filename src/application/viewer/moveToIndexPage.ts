@@ -1,12 +1,19 @@
-import * as FileNavigator from "../../domain/models/file/fileNavigator";
-import * as Notification from "../../domain/models/notification/notification";
+import {
+  copyFileNavigatorWithCurrentIndex,
+  getFileNavigatorProgress,
+  type FileNavigatorStore,
+} from "../../domain/models/file/fileNavigator";
+import {
+  showNotificationMessage,
+  type NotificationStore,
+} from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 
 type MoveToIndexPageOptions = Readonly<{
-  fileNavigatorStore: FileNavigator.FileNavigatorStore;
+  fileNavigatorStore: FileNavigatorStore;
   index: number;
-  notificationStore: Notification.NotificationStore;
+  notificationStore: NotificationStore;
   scrollPercentage2D: ScrollPercentage2D;
   userSettingsGetter: UserSettingsGetter;
 }>;
@@ -22,15 +29,15 @@ export const moveToIndexPage = (o: MoveToIndexPageOptions): void => {
 /* -------------------------------------------------------------------------- */
 
 const updateFileNavigator = (
-  fileNavigatorStore: FileNavigator.FileNavigatorStore,
+  fileNavigatorStore: FileNavigatorStore,
   index: number,
-  notificationStore: Notification.NotificationStore,
+  notificationStore: NotificationStore,
 ): void => {
-  const fileNavigator = FileNavigator.withCurrentIndex(fileNavigatorStore.get(), index);
+  const fileNavigator = copyFileNavigatorWithCurrentIndex(fileNavigatorStore.get(), index);
   fileNavigatorStore.set(fileNavigator);
-  showMessage(notificationStore, FileNavigator.getProgress(fileNavigator));
+  showMessage(notificationStore, getFileNavigatorProgress(fileNavigator));
 };
 
-const showMessage = (notificationStore: Notification.NotificationStore, message: string): void => {
-  notificationStore.set(Notification.showMessage(message));
+const showMessage = (notificationStore: NotificationStore, message: string): void => {
+  notificationStore.set(showNotificationMessage(message));
 };

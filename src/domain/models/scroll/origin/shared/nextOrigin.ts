@@ -6,7 +6,7 @@ import { Left } from "../horizontal/left";
 import { Leftmost } from "../horizontal/leftmost";
 import { Right } from "../horizontal/right";
 import { Rightmost } from "../horizontal/rightmost";
-import type { Origin, OriginNameType } from "../origin";
+import type { Origin, OriginNameValue } from "../origin";
 import { Bottom } from "../vertical/bottom";
 import { Down } from "../vertical/down";
 import { Top } from "../vertical/top";
@@ -18,8 +18,8 @@ import { VCenter } from "../vertical/vCenter";
 // 水平方向の状態変化（横書き）: Leftmost -> Rightmost -> Leftmost...
 
 const map: Record<
-  OriginNameType,
-  Record<BookFormatValue, Record<ScrollStepCountValue, OriginNameType>>
+  OriginNameValue,
+  Record<BookFormatValue, Record<ScrollStepCountValue, OriginNameValue>>
 > = {
   // 垂直方向
   Top: {
@@ -42,6 +42,7 @@ const map: Record<
     vertical: { four: "Top", six: "Top" },
     horizontal: { four: "Top", six: "Top" },
   },
+
   // 水平方向
   Leftmost: {
     vertical: { four: "Rightmost", six: "Rightmost" },
@@ -66,7 +67,7 @@ const map: Record<
 } as const;
 
 export const nextOrigin = (
-  originName: OriginNameType,
+  originName: OriginNameValue,
   bookFormat: BookFormatValue,
   scrollStepCount: ScrollStepCountValue,
 ): Origin => {

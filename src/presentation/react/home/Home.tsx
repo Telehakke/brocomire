@@ -34,7 +34,7 @@ const Header = (): JSX.Element => {
           <p>ブラウザで動くコミックリーダー</p>
         </div>
       </div>
-      <p>v0.261023a</p>
+      <p>v0.261026a</p>
     </div>
   );
 };

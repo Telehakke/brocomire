@@ -1,53 +1,51 @@
 import { atom } from "jotai";
 import { selectAtom } from "jotai/utils";
-import * as BookmarkIndex from "../application/appState/bookmarkIndex";
-import * as ChevronMark from "../application/appState/chevronMark";
-import * as ImageSize from "../application/appState/imageSize";
-import * as InfoVisibility from "../application/appState/infoVisibility";
-import * as IsImageWiderThanViewer from "../application/appState/isImageWiderThanViewer";
-import * as IsLandscape from "../application/appState/isLandscape";
-import * as IsLoading from "../application/appState/isLoading";
-import * as IsOpenSideMenu from "../application/appState/isOpenSideMenu";
-import * as IsUserScrolled from "../application/appState/isUserScrolled";
-import * as IsUserScrolling from "../application/appState/isUserScrolling";
-import * as OnInvertFilter from "../application/appState/onInvertFilter";
-import * as OnSharpeningFilter from "../application/appState/onSharpeningFilter";
-import * as OnViewer from "../application/appState/onViewer";
+import { createBookmarkIndex } from "../application/appState/bookmarkIndex";
+import { createChevronMark } from "../application/appState/chevronMark";
+import { createImageSize } from "../application/appState/imageSize";
+import { createInfoVisibility } from "../application/appState/infoVisibility";
+import { createIsImageWiderThanViewer } from "../application/appState/isImageWiderThanViewer";
+import { createIsLandscape } from "../application/appState/isLandscape";
+import { createIsLoading } from "../application/appState/isLoading";
+import { createIsOpenSideMenu } from "../application/appState/isOpenSideMenu";
+import { createIsUserScrolled } from "../application/appState/isUserScrolled";
+import { createOnInvertFilter } from "../application/appState/onInvertFilter";
+import { createOnSharpeningFilter } from "../application/appState/onSharpeningFilter";
+import { createOnViewer } from "../application/appState/onViewer";
 import type { Cache } from "../domain/models/file/cache";
 import type { FileManager } from "../domain/models/file/fileManager";
-import * as FileNavigator from "../domain/models/file/fileNavigator";
-import * as Notification from "../domain/models/notification/notification";
+import { createFileNavigator } from "../domain/models/file/fileNavigator";
+import { initNotification } from "../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../domain/models/scroll/scrollPercentage2D";
-import * as UserSettings from "../domain/models/userSettings/userSettings";
+import { createUserSettings } from "../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../domain/models/viewer/viewerManager";
-import * as ZoomPercentage from "../domain/models/zoom/zoomPercentage";
+import { createZoomPercentage, ZOOM_PERCENTAGE_MIN } from "../domain/models/zoom/zoomPercentage";
 import { BlobCache } from "../infrastructure/file/blobCache";
 import { NullFileManager } from "../infrastructure/file/nullFileManager";
 import { ImageViewerManager } from "../infrastructure/viewer/imageViewerManager";
 
-export const bookmarkIndexAtom = atom(BookmarkIndex.create());
+export const bookmarkIndexAtom = atom(createBookmarkIndex());
 export const cacheAtom = atom<Cache>(() => new BlobCache());
-export const chevronMarkAtom = atom(ChevronMark.create("none"));
+export const chevronMarkAtom = atom(createChevronMark("none"));
 export const fileManagerAtom = atom<FileManager>(new NullFileManager());
-export const fileNavigatorAtom = atom(FileNavigator.create({ currentIndex: 0, fileLength: 0 }));
-export const imageSizeAtom = atom(ImageSize.create({ width: 0, height: 0 }));
-export const infoVisibilityAtom = atom(InfoVisibility.create("visible"));
-export const isImageWiderThanViewerAtom = atom(IsImageWiderThanViewer.create(undefined));
-export const isLandscapeAtom = atom(IsLandscape.create(false));
-export const isLoadingAtom = atom(IsLoading.create(false));
-export const isOpenSideMenuAtom = atom(IsOpenSideMenu.create(false));
-export const isUserScrolledAtom = atom(IsUserScrolled.create(false));
-export const isUserScrollingAtom = atom(IsUserScrolling.create(false));
-export const notificationAtom = atom(Notification.init());
-export const onInvertFilterAtom = atom(OnInvertFilter.create(false));
-export const onSharpeningFilterAtom = atom(OnSharpeningFilter.create(false));
-export const onViewerAtom = atom(OnViewer.create(false));
+export const fileNavigatorAtom = atom(createFileNavigator(0, 0));
+export const imageSizeAtom = atom(createImageSize(0, 0));
+export const infoVisibilityAtom = atom(createInfoVisibility("visible"));
+export const isImageWiderThanViewerAtom = atom(createIsImageWiderThanViewer(undefined));
+export const isLandscapeAtom = atom(createIsLandscape(false));
+export const isLoadingAtom = atom(createIsLoading(false));
+export const isOpenSideMenuAtom = atom(createIsOpenSideMenu(false));
+export const isUserScrolledAtom = atom(createIsUserScrolled(false));
+export const notificationAtom = atom(initNotification());
+export const onInvertFilterAtom = atom(createOnInvertFilter(false));
+export const onSharpeningFilterAtom = atom(createOnSharpeningFilter(false));
+export const onViewerAtom = atom(createOnViewer(false));
 export const scrollPercentage2DAtom = atom(() => new ScrollPercentage2D());
 export const viewerManagerAtom = atom<ViewerManager>(() => new ImageViewerManager());
-export const zoomPercentageAtom = atom(ZoomPercentage.createMin());
+export const zoomPercentageAtom = atom(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
 
 export const Atom = {
-  userSettings: atom(UserSettings.createSafe()),
+  userSettings: atom(createUserSettings()),
 } as const;
 
 export const UserSettingsAtom = {

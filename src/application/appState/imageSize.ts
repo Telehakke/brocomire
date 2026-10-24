@@ -16,11 +16,11 @@ export type ImageSizeStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: ImageSizeValue): ImageSize => {
-  return value as ImageSize;
+export const createImageSize = (width: number, height: number): ImageSize => {
+  return { width, height } as ImageSize;
 };
 
-export const getStore = (
+export const getImageSizeStore = (
   getter: () => ImageSize,
   setter: (value: ImageSize) => void,
 ): ImageSizeStore => {

@@ -26,14 +26,16 @@ export class ImageFileManger implements FileManager {
 
   async getBlob(index: number, cache?: Cache): Promise<Blob | undefined> {
     if (index < 0 || index >= this.getLength()) return undefined;
-    const blob = cache?.get(index) ?? this.files.at(index);
+
+    const blob = cache?.getBlob(index) ?? this.files.at(index);
     this.addCache(index, blob, cache);
     return blob;
   }
 
   private addCache(index: number, blob?: Blob, cache?: Cache): void {
     if (blob == null || cache == null) return;
-    cache.add(index, blob);
+
+    cache.addBlob(index, blob);
   }
 
   getHashedFileName(): string | undefined {

@@ -1,4 +1,4 @@
-const ScrollStepCountEnum = { four: "four", six: "six" } as const;
+export const ScrollStepCountEnum = { four: "four", six: "six" } as const;
 
 export type ScrollStepCountValue = (typeof ScrollStepCountEnum)[keyof typeof ScrollStepCountEnum];
 
@@ -10,25 +10,25 @@ export type ScrollStepCount = ScrollStepCountValue & { [ScrollStepCountBrand]: u
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = ScrollStepCountEnum.four;
+export const SCROLL_STEP_COUNT_DEFAULT = ScrollStepCountEnum.four;
 
-export const createSafe = (value?: unknown): ScrollStepCount => {
-  if (!isScrollStepCountValue(value)) return create(DEFAULT);
+export const createScrollStepCount = (value?: unknown): ScrollStepCount => {
+  if (!isScrollStepCountValue(value)) return create(SCROLL_STEP_COUNT_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: ScrollStepCount, v2: ScrollStepCount): boolean => {
-  return v1 === v2;
+export const getScrollStepCountValues = (): readonly ScrollStepCountValue[] => {
+  return values;
 };
 
-export const getValues = (): readonly ScrollStepCountValue[] => {
-  return Object.values(ScrollStepCountEnum);
-};
+/* -------------------------------------------------------------------------- */
+
+const values = Object.values(ScrollStepCountEnum);
 
 const create = (value: ScrollStepCountValue): ScrollStepCount => {
   return value as ScrollStepCount;
 };
 
 const isScrollStepCountValue = (value: unknown): value is ScrollStepCountValue => {
-  return Object.keys(ScrollStepCountEnum).some((v) => v === value);
+  return values.some((v) => v === value);
 };

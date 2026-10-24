@@ -11,11 +11,11 @@ export type IsUserScrolledStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): IsUserScrolled => {
+export const createIsUserScrolled = (value: boolean): IsUserScrolled => {
   return value as IsUserScrolled;
 };
 
-export const getStore = (
+export const getIsUserScrolledStore = (
   getter: () => IsUserScrolled,
   setter: (value: IsUserScrolled) => void,
 ): IsUserScrolledStore => {

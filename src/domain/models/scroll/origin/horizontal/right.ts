@@ -1,4 +1,4 @@
-import * as ScrollPercentage from "../../scrollPercentage";
+import { SCROLL_PERCENTAGE_CENTER, SCROLL_PERCENTAGE_MAX } from "../../scrollPercentage";
 import type { Origin } from "../origin";
 import { isEnd } from "../shared/isEnd";
 import { isStart } from "../shared/isStart";
@@ -10,7 +10,7 @@ export const Right: Origin = {
   ...RightValue,
 
   isInRange(value) {
-    return ScrollPercentage.CENTER < value && value < ScrollPercentage.MAX;
+    return SCROLL_PERCENTAGE_CENTER < value && value < SCROLL_PERCENTAGE_MAX;
   },
 
   isStartPosition(bookFormat) {

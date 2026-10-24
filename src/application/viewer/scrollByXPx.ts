@@ -1,10 +1,10 @@
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import * as IsUserScrolled from "../appState/isUserScrolled";
+import { createIsUserScrolled, type IsUserScrolledStore } from "../appState/isUserScrolled";
 
 type ScrollByXPxOptions = Readonly<{
   amount: number;
-  isUserScrolledStore: IsUserScrolled.IsUserScrolledStore;
+  isUserScrolledStore: IsUserScrolledStore;
   userSettingsGetter: UserSettingsGetter;
   viewerManager: ViewerManager;
 }>;
@@ -26,6 +26,6 @@ const _scrollByXPx = (
   viewerManager.scrollByPx(amount * scrollSpeed, 0);
 };
 
-const setIsUserScrolled = (isUserScrolledStore: IsUserScrolled.IsUserScrolledStore): void => {
-  isUserScrolledStore.set(IsUserScrolled.create(true));
+const setIsUserScrolled = (isUserScrolledStore: IsUserScrolledStore): void => {
+  isUserScrolledStore.set(createIsUserScrolled(true));
 };

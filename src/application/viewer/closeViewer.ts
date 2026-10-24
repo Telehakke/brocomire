@@ -3,10 +3,14 @@ import type { FileManager } from "../../domain/models/file/fileManager";
 import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
 import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
-import * as ZoomPercentage from "../../domain/models/zoom/zoomPercentage";
+import {
+  createZoomPercentage,
+  ZOOM_PERCENTAGE_MIN,
+  type ZoomPercentageStore,
+} from "../../domain/models/zoom/zoomPercentage";
 import type { BookmarkIndexStore } from "../appState/bookmarkIndex";
-import * as IsOpenSideMenu from "../appState/isOpenSideMenu";
-import * as OnViewer from "../appState/onViewer";
+import { createIsOpenSideMenu, type IsOpenSideMenuStore } from "../appState/isOpenSideMenu";
+import { createOnViewer, type OnViewerStore } from "../appState/onViewer";
 import { updateHistory } from "./updateHistory";
 
 type CloseViewerOptions = Readonly<{
@@ -14,11 +18,11 @@ type CloseViewerOptions = Readonly<{
   cache: Cache;
   fileManager: FileManager;
   fileNavigatorStore: FileNavigatorStore;
-  isOpenSideMenuStore: IsOpenSideMenu.IsOpenSideMenuStore;
-  OnViewerStore: OnViewer.OnViewerStore;
+  isOpenSideMenuStore: IsOpenSideMenuStore;
+  OnViewerStore: OnViewerStore;
   userSettingsStore: UserSettingsStore;
   userSettingsRepository: UserSettingsRepository;
-  zoomPercentageStore: ZoomPercentage.ZoomPercentageStore;
+  zoomPercentageStore: ZoomPercentageStore;
 }>;
 
 /** ビューアを閉じる */
@@ -38,14 +42,14 @@ const deleteBookmarkIndex = (bookmarkIndexStore: BookmarkIndexStore): void => {
   bookmarkIndexStore.set(undefined);
 };
 
-const closeSideMenu = (isOpenSideMenuStore: IsOpenSideMenu.IsOpenSideMenuStore): void => {
-  isOpenSideMenuStore.set(IsOpenSideMenu.create(false));
+const closeSideMenu = (isOpenSideMenuStore: IsOpenSideMenuStore): void => {
+  isOpenSideMenuStore.set(createIsOpenSideMenu(false));
 };
 
-const _closeViewer = (onViewerStore: OnViewer.OnViewerStore): void => {
-  onViewerStore.set(OnViewer.create(false));
+const _closeViewer = (onViewerStore: OnViewerStore): void => {
+  onViewerStore.set(createOnViewer(false));
 };
 
-const resetZoom = (zoomPercentageStore: ZoomPercentage.ZoomPercentageStore): void => {
-  zoomPercentageStore.set(ZoomPercentage.createMin());
+const resetZoom = (zoomPercentageStore: ZoomPercentageStore): void => {
+  zoomPercentageStore.set(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
 };

@@ -1,4 +1,8 @@
-import * as ScrollPercentage from "../../scrollPercentage";
+import {
+  SCROLL_PERCENTAGE_CENTER,
+  SCROLL_PERCENTAGE_MAX,
+  SCROLL_PERCENTAGE_MIN,
+} from "../../scrollPercentage";
 import type { OriginValue } from "../origin";
 
 // |           |            |
@@ -10,7 +14,7 @@ import type { OriginValue } from "../origin";
 
 export const LeftmostValue: OriginValue = {
   name: "Leftmost",
-  value: ScrollPercentage.MIN,
+  value: SCROLL_PERCENTAGE_MIN,
 };
 
 export const LeftValue: OriginValue = {
@@ -20,7 +24,7 @@ export const LeftValue: OriginValue = {
 
 export const HCenterValue: OriginValue = {
   name: "HCenter",
-  value: ScrollPercentage.CENTER,
+  value: SCROLL_PERCENTAGE_CENTER,
 };
 
 export const RightValue: OriginValue = {
@@ -30,5 +34,5 @@ export const RightValue: OriginValue = {
 
 export const RightmostValue: OriginValue = {
   name: "Rightmost",
-  value: ScrollPercentage.MAX,
+  value: SCROLL_PERCENTAGE_MAX,
 };

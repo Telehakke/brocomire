@@ -2,7 +2,11 @@ import { useAtomValue } from "jotai";
 import { Fullscreen as FullscreenIcon } from "lucide-react";
 import { useState } from "react";
 import type { JSX } from "react/jsx-runtime";
-import * as Fullscreen from "../../../infrastructure/viewer/fullscreen";
+import {
+  canUseFullscreen,
+  exitFullscreen,
+  requestFullscreen,
+} from "../../../infrastructure/viewer/fullscreen";
 import { UserSettingsAtom } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
@@ -22,7 +26,7 @@ type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
 const FullscreenIconBlueButton = (props: { setOnFullscreen: SetState<boolean> }): JSX.Element => {
   const handleClick = (): void => {
-    Fullscreen.exit();
+    exitFullscreen();
     props.setOnFullscreen(false);
   };
 
@@ -35,9 +39,9 @@ const FullscreenIconBlueButton = (props: { setOnFullscreen: SetState<boolean> })
 
 const FullscreenIconButton = (props: { setOnFullscreen: SetState<boolean> }): JSX.Element => {
   const handleClick = (): void => {
-    if (!Fullscreen.canUse()) return;
+    if (!canUseFullscreen()) return;
 
-    Fullscreen.execute();
+    requestFullscreen();
     props.setOnFullscreen(true);
   };
 

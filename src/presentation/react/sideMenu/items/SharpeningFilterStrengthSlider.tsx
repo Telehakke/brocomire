@@ -1,7 +1,11 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState, type JSX } from "react";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
-import * as SharpeningFilterStrength from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
+import { setSharpeningFilterStrength } from "../../../../domain/models/userSettings/userSettings";
+import {
+  SHARPENING_FILTER_STRENGTH_MAX,
+  SHARPENING_FILTER_STRENGTH_MIN,
+  type SharpeningFilterStrength,
+} from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
@@ -13,9 +17,9 @@ export const SharpeningFilterStrengthSlider = (): JSX.Element => {
 
   const handleValueChangedEnd = (value: number): void => {
     setUserSettings((v) =>
-      UserSettings.setSharpeningFilterStrength(
+      setSharpeningFilterStrength(
         v,
-        value as SharpeningFilterStrength.SharpeningFilterStrength,
+        value as SharpeningFilterStrength,
         new LocalStorageUserSettingsRepository(),
       ),
     );
@@ -24,8 +28,8 @@ export const SharpeningFilterStrengthSlider = (): JSX.Element => {
   return (
     <Slider
       label={(v) => `フィルター強度：${v}`}
-      min={SharpeningFilterStrength.MIN}
-      max={SharpeningFilterStrength.MAX}
+      min={SHARPENING_FILTER_STRENGTH_MIN}
+      max={SHARPENING_FILTER_STRENGTH_MAX}
       value={value}
       onValueChange={setValue}
       onValueChangeEnd={handleValueChangedEnd}

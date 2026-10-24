@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldShowProgressBar } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowProgressBar } from "../../../../domain/models/userSettings/valueObjects/shouldShowProgressBar";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,7 +12,7 @@ export const ShouldShowProgressBarSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldShowProgressBar(
+      setShouldShowProgressBar(
         v,
         checked as ShouldShowProgressBar,
         new LocalStorageUserSettingsRepository(),

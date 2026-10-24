@@ -6,6 +6,6 @@ export type IsImageWiderThanViewer =
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value?: boolean): IsImageWiderThanViewer => {
+export const createIsImageWiderThanViewer = (value?: boolean): IsImageWiderThanViewer => {
   return value as IsImageWiderThanViewer;
 };

@@ -11,11 +11,11 @@ export type BookmarkIndexStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value?: number): BookmarkIndex => {
+export const createBookmarkIndex = (value?: number): BookmarkIndex => {
   return value as BookmarkIndex;
 };
 
-export const getStore = (
+export const getBookmarkIndexStore = (
   getter: () => BookmarkIndex,
   setter: (value: BookmarkIndex) => void,
 ): BookmarkIndexStore => {

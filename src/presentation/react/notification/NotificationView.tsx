@@ -1,6 +1,9 @@
 import { useAtom } from "jotai";
 import { useEffect, useRef, type JSX } from "react";
-import * as Notification from "../../../domain/models/notification/notification";
+import {
+  fadeOutNotification,
+  hideNotification,
+} from "../../../domain/models/notification/notification";
 import { notificationAtom } from "../../atoms";
 import { safeAreaPaddingBottom } from "../utils/safeAreaPadding";
 
@@ -9,15 +12,15 @@ export const NotificationView = (): JSX.Element | null => {
   const [notification, setNotification] = useAtom(notificationAtom);
 
   useEffect(() => {
-    if (!Notification.isVisible(notification)) return;
+    if (notification.visibility !== "visible") return;
 
     window.clearTimeout(timerId.current);
     timerId.current = window.setTimeout(() => {
-      setNotification((v) => Notification.fadeOut(v));
+      setNotification((v) => fadeOutNotification(v));
     }, 1000);
   }, [notification, setNotification]);
 
-  if (Notification.isNone(notification)) return null;
+  if (notification.visibility === "hidden") return null;
   return (
     <div
       className="pointer-events-none fixed bottom-4 left-1/2 -translate-x-1/2"
@@ -42,9 +45,9 @@ const Text = (): JSX.Element => {
   };
 
   const handleAnimationEnd = (): void => {
-    if (!Notification.isFadeOut(notification)) return;
+    if (notification.visibility !== "fade-out") return;
 
-    setNotification((v) => Notification.none(v));
+    setNotification((v) => hideNotification(v));
   };
 
   return (

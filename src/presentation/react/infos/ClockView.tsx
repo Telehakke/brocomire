@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { JSX } from "react/jsx-runtime";
-import * as Clock from "../../../infrastructure/clock/clock";
+import { getMsecToNextClockUpdate, getTimeNow } from "../../../infrastructure/clock/clock";
 
 export const ClockView = (): JSX.Element => {
   const [value, setValue] = useState("");
@@ -9,8 +9,8 @@ export const ClockView = (): JSX.Element => {
     let isMounted = true;
     const routine = (): void => {
       if (!isMounted) return;
-      setValue(Clock.now());
-      window.setTimeout(routine, Clock.getMsecToNextUpdate());
+      setValue(getTimeNow());
+      window.setTimeout(routine, getMsecToNextClockUpdate());
     };
     routine();
     return (): void => {

@@ -10,29 +10,25 @@ export type DisplayMode = DisplayModeValue & { [DisplayModeBrand]: unknown };
 
 /* -------------------------------------------------------------------------- */
 
-export const DEFAULT = DisplayModeEnum.single;
+export const DISPLAY_MODE_DEFAULT = DisplayModeEnum.single;
 
-export const createSafe = (value?: unknown): DisplayMode => {
-  if (!isDisplayModeValue(value)) return create(DEFAULT);
+export const createDisplayMode = (value?: unknown): DisplayMode => {
+  if (!isDisplayModeValue(value)) return create(DISPLAY_MODE_DEFAULT);
   return create(value);
 };
 
-export const equals = (v1: DisplayMode, v2: DisplayMode): boolean => {
-  return v1 === v2;
+export const getDisplayModeValues = (): readonly DisplayModeValue[] => {
+  return values;
 };
 
-export const getValues = (): readonly DisplayModeValue[] => {
-  return Object.values(DisplayModeEnum);
-};
+/* -------------------------------------------------------------------------- */
 
-export const isSingle = (input: DisplayMode): boolean => {
-  return input === DisplayModeEnum.single;
-};
+const values = Object.values(DisplayModeEnum);
 
 const create = (value: DisplayModeValue): DisplayMode => {
   return value as DisplayMode;
 };
 
 const isDisplayModeValue = (value: unknown): value is DisplayModeValue => {
-  return Object.keys(DisplayModeEnum).some((v) => v === value);
+  return values.some((v) => v === value);
 };

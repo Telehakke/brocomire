@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import * as IsOpenSideMenu from "../../../application/appState/isOpenSideMenu";
+import { createIsOpenSideMenu } from "../../../application/appState/isOpenSideMenu";
 import { isOpenSideMenuAtom } from "../../atoms";
 import { Card } from "../utils/Card";
 import { SideMenuDialog } from "../utils/SideMenuDialog";
@@ -37,7 +37,7 @@ export const SideMenu = (): JSX.Element => {
   const [isOpen, setIsOpen] = useAtom(isOpenSideMenuAtom);
 
   const handleOpenChange = (open: boolean): void => {
-    setIsOpen(IsOpenSideMenu.create(open));
+    setIsOpen(createIsOpenSideMenu(open));
   };
 
   return (

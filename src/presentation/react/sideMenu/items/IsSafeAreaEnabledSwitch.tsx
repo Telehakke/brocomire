@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setIsSafeAreaEnabled } from "../../../../domain/models/userSettings/userSettings";
 import type { IsSafeAreaEnabled } from "../../../../domain/models/userSettings/valueObjects/isSafeAreaEnabled";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,7 +12,7 @@ export const IsSafeAreaEnabledSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setIsSafeAreaEnabled(
+      setIsSafeAreaEnabled(
         v,
         checked as IsSafeAreaEnabled,
         new LocalStorageUserSettingsRepository(),

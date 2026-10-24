@@ -11,11 +11,11 @@ export type IsLandscapeStore = Readonly<{
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): IsLandscape => {
+export const createIsLandscape = (value: boolean): IsLandscape => {
   return value as IsLandscape;
 };
 
-export const getStore = (
+export const getIsLandscapeStore = (
   getter: () => IsLandscape,
   setter: (value: IsLandscape) => void,
 ): IsLandscapeStore => {

@@ -4,6 +4,6 @@ export type OnSharpeningFilter = boolean & { [OnSharpeningFilterBrand]: unknown 
 
 /* -------------------------------------------------------------------------- */
 
-export const create = (value: boolean): OnSharpeningFilter => {
+export const createOnSharpeningFilter = (value: boolean): OnSharpeningFilter => {
   return value as OnSharpeningFilter;
 };

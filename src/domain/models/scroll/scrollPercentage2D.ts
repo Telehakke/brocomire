@@ -1,6 +1,7 @@
 import type { BookFormat, BookFormatValue } from "../userSettings/valueObjects/bookFormat";
 import type { ScrollStepCount } from "../userSettings/valueObjects/scrollStepCount";
 import { exhaustiveCheck } from "../utils/exhaustiveCheck";
+import type { ViewerManager } from "../viewer/viewerManager";
 import { HCenter } from "./origin/horizontal/hCenter";
 import { Left } from "./origin/horizontal/left";
 import { Leftmost } from "./origin/horizontal/leftmost";
@@ -12,17 +13,21 @@ import { Down } from "./origin/vertical/down";
 import { Top } from "./origin/vertical/top";
 import { Up } from "./origin/vertical/up";
 import { VCenter } from "./origin/vertical/vCenter";
-import * as ScrollPercentage from "./scrollPercentage";
+import {
+  createScrollPercentage,
+  SCROLL_PERCENTAGE_MIN,
+  type ScrollPercentage,
+} from "./scrollPercentage";
 
 type Position = { x: number | undefined; y: number | undefined };
 
 export class ScrollPercentage2D {
-  private _x: ScrollPercentage.ScrollPercentage;
-  private _y: ScrollPercentage.ScrollPercentage;
+  private _x: ScrollPercentage;
+  private _y: ScrollPercentage;
 
-  constructor() {
-    this._x = ScrollPercentage.createMin();
-    this._y = ScrollPercentage.createMin();
+  constructor(x?: ScrollPercentage, y?: ScrollPercentage) {
+    this._x = x ?? createScrollPercentage(SCROLL_PERCENTAGE_MIN);
+    this._y = y ?? createScrollPercentage(SCROLL_PERCENTAGE_MIN);
   }
 
   get x(): number {
@@ -33,29 +38,29 @@ export class ScrollPercentage2D {
     return this._y;
   }
 
-  setX(value: number): void {
-    this._x = ScrollPercentage.createSafe(value);
-  }
-
-  setY(value: number): void {
-    this._y = ScrollPercentage.createSafe(value);
-  }
-
+  /** 現在の状態に入力値を加算する */
   add(x: number, y: number): void {
-    this._x = ScrollPercentage.createSafe(this._x + x);
-    this._y = ScrollPercentage.createSafe(this._y + y);
+    this._x = createScrollPercentage(this._x + x);
+    this._y = createScrollPercentage(this._y + y);
+  }
+
+  /** viewerManagerの状態を元に値をセットする */
+  setFromViewerManager(viewerManager: ViewerManager): void {
+    const x = viewerManager.getScrollXPercentage();
+    const y = viewerManager.getScrollYPercentage();
+    if (x != null) this._x = createScrollPercentage(x);
+    if (y != null) this._y = createScrollPercentage(y);
   }
 
   /** 開始位置の座標をセットする */
   setStartPosition(bookFormat: BookFormatValue): void {
+    this._y = createScrollPercentage(Top.value);
     switch (bookFormat) {
       case "vertical":
-        this._x = ScrollPercentage.createSafe(Rightmost.value);
-        this._y = ScrollPercentage.createSafe(Top.value);
+        this._x = createScrollPercentage(Rightmost.value);
         break;
       case "horizontal":
-        this._x = ScrollPercentage.createSafe(Leftmost.value);
-        this._y = ScrollPercentage.createSafe(Top.value);
+        this._x = createScrollPercentage(Leftmost.value);
         break;
       default:
         exhaustiveCheck(bookFormat);
@@ -64,14 +69,13 @@ export class ScrollPercentage2D {
 
   /** 終了位置の座標をセットする */
   setEndPosition(bookFormat: BookFormatValue): void {
+    this._y = createScrollPercentage(Bottom.value);
     switch (bookFormat) {
       case "vertical":
-        this._x = ScrollPercentage.createSafe(Leftmost.value);
-        this._y = ScrollPercentage.createSafe(Bottom.value);
+        this._x = createScrollPercentage(Leftmost.value);
         break;
       case "horizontal":
-        this._x = ScrollPercentage.createSafe(Rightmost.value);
-        this._y = ScrollPercentage.createSafe(Bottom.value);
+        this._x = createScrollPercentage(Rightmost.value);
         break;
       default:
         exhaustiveCheck(bookFormat);
@@ -90,8 +94,8 @@ export class ScrollPercentage2D {
     } else {
       position = this.getNextX(bookFormat, scrollStepCount);
     }
-    if (position.x != null) this._x = ScrollPercentage.createSafe(position.x);
-    if (position.y != null) this._y = ScrollPercentage.createSafe(position.y);
+    if (position.x != null) this._x = createScrollPercentage(position.x);
+    if (position.y != null) this._y = createScrollPercentage(position.y);
   }
 
   /** 前のスクロール座標をセットする */
@@ -106,15 +110,15 @@ export class ScrollPercentage2D {
     } else {
       position = this.getPreviousX(bookFormat, scrollStepCount);
     }
-    if (position.x != null) this._x = ScrollPercentage.createSafe(position.x);
-    if (position.y != null) this._y = ScrollPercentage.createSafe(position.y);
+    if (position.x != null) this._x = createScrollPercentage(position.x);
+    if (position.y != null) this._y = createScrollPercentage(position.y);
   }
 
   /** 次のページに移動できるかどうか */
   canMoveToNextPage(bookFormat: BookFormat, canScrollX: boolean, canScrollY: boolean): boolean {
     return (
-      // 左右にスクロール不可、または水平方向が終了原点であり、かつ
-      // 上下にスクロール不可、または垂直方向が終了原点であればページ移動可能
+      // 左右にスクロール不可、または水平方向が終了位置であり、かつ
+      // 上下にスクロール不可、または垂直方向が終了位置であればページ移動可能
       (!canScrollX || this.getHOrigin().isEndPosition(bookFormat)) &&
       (!canScrollY || this.getVOrigin().isEndPosition(bookFormat))
     );
@@ -123,8 +127,8 @@ export class ScrollPercentage2D {
   /** 前のページに移動できるかどうか */
   canMoveToPreviousPage(bookFormat: BookFormat, canScrollX: boolean, canScrollY: boolean): boolean {
     return (
-      // 左右にスクロール不可、または水平方向が開始原点であり、かつ
-      // 上下にスクロール不可、または垂直方向が開始原点であればページ移動可能
+      // 左右にスクロール不可、または水平方向が開始位置であり、かつ
+      // 上下にスクロール不可、または垂直方向が開始位置であればページ移動可能
       (!canScrollX || this.getHOrigin().isStartPosition(bookFormat)) &&
       (!canScrollY || this.getVOrigin().isStartPosition(bookFormat))
     );

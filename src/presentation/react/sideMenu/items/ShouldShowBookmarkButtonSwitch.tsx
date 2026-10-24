@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import type { JSX } from "react/jsx-runtime";
-import * as UserSettings from "../../../../domain/models/userSettings/userSettings";
+import { setShouldShowBookmarkButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowBookmarkButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowBookmarkButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import { Atom, UserSettingsAtom } from "../../../atoms";
@@ -12,7 +12,7 @@ export const ShouldShowBookmarkButtonSwitch = (): JSX.Element => {
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>
-      UserSettings.setShouldShowBookmarkButton(
+      setShouldShowBookmarkButton(
         v,
         checked as ShouldShowBookmarkButton,
         new LocalStorageUserSettingsRepository(),

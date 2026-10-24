@@ -1,6 +1,10 @@
 import type { Cache } from "../../../../domain/models/file/cache";
 import type { FileManager } from "../../../../domain/models/file/fileManager";
-import * as FileNavigator from "../../../../domain/models/file/fileNavigator";
+import {
+  getLeftImageIndex,
+  getRightImageIndex,
+  type FileNavigator,
+} from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import type { DisplayMode } from "../../../../domain/models/userSettings/valueObjects/displayMode";
 
@@ -13,7 +17,7 @@ type GetImagesOptions = Readonly<{
   bookFormat: BookFormat;
   displayMode: DisplayMode;
   fileManager: FileManager;
-  fileNavigator: FileNavigator.FileNavigator;
+  fileNavigator: FileNavigator;
 }>;
 
 /**
@@ -21,8 +25,8 @@ type GetImagesOptions = Readonly<{
  * @returns [leftImage, rightImage]
  */
 export const getImages = async (o: GetImagesOptions): Promise<[Image, Image]> => {
-  const leftIndex = FileNavigator.getLeftIndex(o.fileNavigator, o.bookFormat, o.displayMode);
-  const rightIndex = FileNavigator.getRightIndex(o.fileNavigator, o.bookFormat, o.displayMode);
+  const leftIndex = getLeftImageIndex(o.fileNavigator, o.bookFormat, o.displayMode);
+  const rightIndex = getRightImageIndex(o.fileNavigator, o.bookFormat, o.displayMode);
   return await Promise.all([
     getImage(await getBlob(o.fileManager, leftIndex, o.cache)),
     getImage(await getBlob(o.fileManager, rightIndex, o.cache)),

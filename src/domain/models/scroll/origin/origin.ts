@@ -14,10 +14,10 @@ export const OriginNameEnum = {
   Rightmost: "Rightmost",
 } as const;
 
-export type OriginNameType = (typeof OriginNameEnum)[keyof typeof OriginNameEnum];
+export type OriginNameValue = (typeof OriginNameEnum)[keyof typeof OriginNameEnum];
 
 export type OriginValue = Readonly<{
-  name: OriginNameType;
+  name: OriginNameValue;
   value: number | undefined;
 }>;
 
