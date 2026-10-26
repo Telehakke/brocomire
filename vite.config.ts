@@ -189,6 +189,7 @@ export default defineConfig({
   ]),
   build: {
     outDir: "docs",
+    chunkSizeWarningLimit: 1000,
     license: { fileName: "licenses.md" },
   },
   server: { host: true },

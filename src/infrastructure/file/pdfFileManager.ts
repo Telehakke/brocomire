@@ -1,9 +1,10 @@
-// import * as pdf from "pdfjs-dist";
-import type { PDFDocumentProxy } from "pdfjs-dist";
+import { getDocument, GlobalWorkerOptions, type PDFDocumentProxy } from "pdfjs-dist";
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
 import { calculateHash } from "./calculateHash";
+
+GlobalWorkerOptions.workerSrc = workerSrc;
 
 export class PDFFileManager implements FileManager {
   private pdfDocument: PDFDocumentProxy | undefined;
@@ -15,10 +16,8 @@ export class PDFFileManager implements FileManager {
   }
 
   static async create(file: File): Promise<PDFFileManager> {
-    const pdf = await import("pdfjs-dist");
-    pdf.GlobalWorkerOptions.workerSrc = workerSrc;
     const data = new Uint8Array(await file.arrayBuffer());
-    const pdfDocument = await pdf.getDocument({
+    const pdfDocument = await getDocument({
       data,
       cMapUrl: `${import.meta.env.BASE_URL}cmaps/`,
       cMapPacked: true,

@@ -1,31 +1,24 @@
-import type { Entry, FileEntry } from "@zip.js/zip.js";
+import { BlobReader, BlobWriter, ZipReader, type Entry, type FileEntry } from "@zip.js/zip.js";
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
 import { calculateHash } from "./calculateHash";
 
 export class ZipFileManager implements FileManager {
-  private zip: typeof import("@zip.js/zip.js");
   private entries: readonly Entry[];
   private hashedFileName: string | undefined;
 
-  private constructor(
-    zip: typeof import("@zip.js/zip.js"),
-    entries: readonly Entry[],
-    hashedFileName?: string,
-  ) {
-    this.zip = zip;
+  private constructor(entries: readonly Entry[], hashedFileName?: string) {
     this.entries = entries;
     this.hashedFileName = hashedFileName;
   }
 
   static async create(file: File): Promise<ZipFileManager> {
-    const zip = await import("@zip.js/zip.js");
-    const reader = new zip.BlobReader(file);
-    const zipReader = new zip.ZipReader(reader);
+    const reader = new BlobReader(file);
+    const zipReader = new ZipReader(reader);
     const entries = await zipReader.getEntries();
     const imageFiles = this.filterImages(entries);
     await zipReader.close();
-    return new this(zip, imageFiles, await calculateHash(file.name));
+    return new this(imageFiles, await calculateHash(file.name));
   }
 
   private static filterImages(entries: Entry[]): Entry[] {
@@ -73,9 +66,7 @@ export class ZipFileManager implements FileManager {
     const blob = cache?.getBlob(index);
     if (blob != null) return blob;
 
-    return await (this.entries.at(index) as FileEntry | undefined)?.getData(
-      new this.zip.BlobWriter(),
-    );
+    return await (this.entries.at(index) as FileEntry | undefined)?.getData(new BlobWriter());
   }
 
   private addCache(index: number, blob?: Blob, cache?: Cache): void {
