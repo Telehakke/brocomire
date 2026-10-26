@@ -12,9 +12,22 @@ onmessage = (
   const dist = new ImageData(imageData.width, imageData.height);
   dist.data.set(imageData.data);
   const kernel = getKernel(strength);
-  const others = [...Array(256)].map((_, i) => i * kernel.other);
-  const centers = [...Array(256)].map((_, i) => i * kernel.center);
   const rowWidth = imageData.width * 4;
+
+  const setDistData = (
+    top: number,
+    left: number,
+    target: number,
+    right: number,
+    bottom: number,
+  ): void => {
+    dist.data[target] =
+      imageData.data[top] * kernel.other +
+      imageData.data[left] * kernel.other +
+      imageData.data[target] * kernel.center +
+      imageData.data[right] * kernel.other +
+      imageData.data[bottom] * kernel.other;
+  };
 
   // 最も外側の画素より内側を先鋭化する
   for (let y = 1; y < imageData.height - 1; y++) {
@@ -25,27 +38,9 @@ onmessage = (
       const left = target - 4;
       const right = target + 4;
       const bottom = target + rowWidth;
-
-      dist.data[target] =
-        others[imageData.data[top]] +
-        others[imageData.data[left]] +
-        centers[imageData.data[target]] +
-        others[imageData.data[right]] +
-        others[imageData.data[bottom]];
-
-      dist.data[target + 1] =
-        others[imageData.data[top + 1]] +
-        others[imageData.data[left + 1]] +
-        centers[imageData.data[target + 1]] +
-        others[imageData.data[right + 1]] +
-        others[imageData.data[bottom + 1]];
-
-      dist.data[target + 2] =
-        others[imageData.data[top + 2]] +
-        others[imageData.data[left + 2]] +
-        centers[imageData.data[target + 2]] +
-        others[imageData.data[right + 2]] +
-        others[imageData.data[bottom + 2]];
+      setDistData(top, left, target, right, bottom);
+      setDistData(top + 1, left + 1, target + 1, right + 1, bottom + 1);
+      setDistData(top + 2, left + 2, target + 2, right + 2, bottom + 2);
     }
   }
 
