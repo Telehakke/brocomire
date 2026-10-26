@@ -157,9 +157,12 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
     VitePWA({
-      includeAssets: ["favicon.svg"],
       registerType: "autoUpdate",
       devOptions: { enabled: true },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,svg,mjs,bcmap}"],
+      },
+
       manifest: {
         name: "ブラコミリ",
         short_name: "ブラコミリ",
