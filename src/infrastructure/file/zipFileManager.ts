@@ -24,21 +24,28 @@ export class ZipFileManager implements FileManager {
   private static filterImages(entries: Entry[]): Entry[] {
     return entries
       .filter((e) => {
-        const name = e.filename.toLowerCase();
-        // 隠しファイルは除外
-        if (name.startsWith("__")) return false;
-        if (name.startsWith(".")) return false;
-        // 拡張子が画像の種類であれば許可
-        if (name.endsWith(".jpg")) return true;
-        if (name.endsWith(".jpeg")) return true;
-        if (name.endsWith(".png")) return true;
-        if (name.endsWith(".webp")) return true;
-        if (name.endsWith(".avif")) return true;
-        if (name.endsWith(".heic")) return true;
-        if (name.endsWith(".jxl")) return true;
+        const filename = e.filename.toLowerCase();
+        if (this.isHiddenFile(filename)) return false;
+        if (this.isImageFile(filename)) return true;
         return false;
       })
       .sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  private static isHiddenFile(filename: string): boolean {
+    return filename.startsWith("__") || filename.startsWith(".");
+  }
+
+  private static isImageFile(filename: string): boolean {
+    return (
+      filename.endsWith(".jpg") ||
+      filename.endsWith(".jpeg") ||
+      filename.endsWith(".png") ||
+      filename.endsWith(".webp") ||
+      filename.endsWith(".avif") ||
+      filename.endsWith(".heic") ||
+      filename.endsWith(".jxl")
+    );
   }
 
   clear(): void {

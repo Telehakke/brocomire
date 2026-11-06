@@ -19,7 +19,6 @@ import {
   type SafeAreaLength,
 } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
-import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import {
   Atom,
   cacheAtom,
@@ -29,6 +28,7 @@ import {
   isImageWiderThanViewerAtom,
   isLandscapeAtom,
   isLoadingAtom,
+  onInvertFilterAtom,
   onSharpeningFilterAtom,
   scrollPercentage2DAtom,
   UserSettingsAtom,
@@ -112,6 +112,7 @@ export const ViewerCanvas = (): JSX.Element => {
   const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
   const isLandscape = useAtomValue(isLandscapeAtom);
   const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+  const onInvertFilter = useAtomValue(onInvertFilterAtom);
   const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
   const sharpeningFilterStrength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
@@ -161,8 +162,7 @@ export const ViewerCanvas = (): JSX.Element => {
 
   return (
     <canvas
-      //className={`m-auto ${sharpeningFilterClassName(onSharpeningFilter, isUserScrolling)}`}
-      className="m-auto"
+      className={`m-auto ${onInvertFilter ? "invert" : ""}`}
       style={{
         ...safeAriaStyle(isLandscape, isSafeAreaEnabled, safeAreaLength),
         ...canvasStyle(contentFit, isImageWiderThanViewer),
@@ -208,20 +208,16 @@ const canvasStyle = (
 ): CSSProperties => {
   if (isImageWiderThanViewer == null)
     return { width: "100%", height: "100%", objectFit: "contain" };
+  return isImageWiderThanViewer ? canvasStyleMap[contentFit][0] : canvasStyleMap[contentFit][1];
+};
 
-  switch (contentFit) {
-    case "all":
-      return {
-        width: isImageWiderThanViewer ? "100%" : "auto",
-        height: isImageWiderThanViewer ? "auto" : "100%",
-      };
-    case "fill":
-      return {
-        width: isImageWiderThanViewer ? "auto" : "100%",
-        height: isImageWiderThanViewer ? "100%" : "auto",
-      };
-    default:
-      exhaustiveCheck(contentFit);
-      throw new Error();
-  }
+const canvasStyleMap: Record<ContentFitValue, [CSSProperties, CSSProperties]> = {
+  all: [
+    { width: "100%", height: "auto" },
+    { width: "auto", height: "100%" },
+  ],
+  fill: [
+    { width: "auto", height: "100%" },
+    { width: "100%", height: "auto" },
+  ],
 };

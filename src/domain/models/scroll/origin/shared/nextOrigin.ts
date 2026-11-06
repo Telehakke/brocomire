@@ -1,16 +1,10 @@
 import type { BookFormatValue } from "../../../userSettings/valueObjects/bookFormat";
 import type { ScrollStepCountValue } from "../../../userSettings/valueObjects/scrollStepCount";
-import { exhaustiveCheck } from "../../../utils/exhaustiveCheck";
-import { HCenter } from "../horizontal/hCenter";
-import { Left } from "../horizontal/left";
 import { Leftmost } from "../horizontal/leftmost";
-import { Right } from "../horizontal/right";
 import { Rightmost } from "../horizontal/rightmost";
 import type { Origin, OriginNameValue } from "../origin";
 import { Bottom } from "../vertical/bottom";
-import { Down } from "../vertical/down";
 import { Top } from "../vertical/top";
-import { Up } from "../vertical/up";
 import { VCenter } from "../vertical/vCenter";
 
 // 垂直方向の状態変化: Top -> VCenter -> Bottom -> Top...
@@ -19,50 +13,50 @@ import { VCenter } from "../vertical/vCenter";
 
 const map: Record<
   OriginNameValue,
-  Record<BookFormatValue, Record<ScrollStepCountValue, OriginNameValue>>
+  Record<BookFormatValue, Record<ScrollStepCountValue, () => Origin>>
 > = {
   // 垂直方向
   Top: {
-    vertical: { four: "Bottom", six: "VCenter" },
-    horizontal: { four: "Bottom", six: "VCenter" },
+    vertical: { four: () => Bottom, six: () => VCenter },
+    horizontal: { four: () => Bottom, six: () => VCenter },
   },
   Up: {
-    vertical: { four: "Bottom", six: "VCenter" },
-    horizontal: { four: "Bottom", six: "VCenter" },
+    vertical: { four: () => Bottom, six: () => VCenter },
+    horizontal: { four: () => Bottom, six: () => VCenter },
   },
   VCenter: {
-    vertical: { four: "Bottom", six: "Bottom" },
-    horizontal: { four: "Bottom", six: "Bottom" },
+    vertical: { four: () => Bottom, six: () => Bottom },
+    horizontal: { four: () => Bottom, six: () => Bottom },
   },
   Down: {
-    vertical: { four: "Bottom", six: "Bottom" },
-    horizontal: { four: "Bottom", six: "Bottom" },
+    vertical: { four: () => Bottom, six: () => Bottom },
+    horizontal: { four: () => Bottom, six: () => Bottom },
   },
   Bottom: {
-    vertical: { four: "Top", six: "Top" },
-    horizontal: { four: "Top", six: "Top" },
+    vertical: { four: () => Top, six: () => Top },
+    horizontal: { four: () => Top, six: () => Top },
   },
 
   // 水平方向
   Leftmost: {
-    vertical: { four: "Rightmost", six: "Rightmost" },
-    horizontal: { four: "Rightmost", six: "Rightmost" },
+    vertical: { four: () => Rightmost, six: () => Rightmost },
+    horizontal: { four: () => Rightmost, six: () => Rightmost },
   },
   Left: {
-    vertical: { four: "Leftmost", six: "Leftmost" },
-    horizontal: { four: "Rightmost", six: "Rightmost" },
+    vertical: { four: () => Leftmost, six: () => Leftmost },
+    horizontal: { four: () => Rightmost, six: () => Rightmost },
   },
   HCenter: {
-    vertical: { four: "Leftmost", six: "Leftmost" },
-    horizontal: { four: "Rightmost", six: "Rightmost" },
+    vertical: { four: () => Leftmost, six: () => Leftmost },
+    horizontal: { four: () => Rightmost, six: () => Rightmost },
   },
   Right: {
-    vertical: { four: "Leftmost", six: "Leftmost" },
-    horizontal: { four: "Rightmost", six: "Rightmost" },
+    vertical: { four: () => Leftmost, six: () => Leftmost },
+    horizontal: { four: () => Rightmost, six: () => Rightmost },
   },
   Rightmost: {
-    vertical: { four: "Leftmost", six: "Leftmost" },
-    horizontal: { four: "Leftmost", six: "Leftmost" },
+    vertical: { four: () => Leftmost, six: () => Leftmost },
+    horizontal: { four: () => Leftmost, six: () => Leftmost },
   },
 } as const;
 
@@ -71,30 +65,5 @@ export const nextOrigin = (
   bookFormat: BookFormatValue,
   scrollStepCount: ScrollStepCountValue,
 ): Origin => {
-  const name = map[originName][bookFormat][scrollStepCount];
-  switch (name) {
-    case "Top":
-      return Top;
-    case "Up":
-      return Up;
-    case "VCenter":
-      return VCenter;
-    case "Down":
-      return Down;
-    case "Bottom":
-      return Bottom;
-    case "Leftmost":
-      return Leftmost;
-    case "Left":
-      return Left;
-    case "HCenter":
-      return HCenter;
-    case "Right":
-      return Right;
-    case "Rightmost":
-      return Rightmost;
-    default:
-      exhaustiveCheck(name);
-      throw new Error();
-  }
+  return map[originName][bookFormat][scrollStepCount]();
 };

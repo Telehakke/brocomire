@@ -145,9 +145,9 @@ export const setBookFormat = (
   bookFormat: BookFormat,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { bookFormat });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, bookFormat };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setContentFit = (
@@ -155,9 +155,9 @@ export const setContentFit = (
   contentFit: ContentFit,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { contentFit });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, contentFit };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setDisplayMode = (
@@ -165,9 +165,9 @@ export const setDisplayMode = (
   displayMode: DisplayMode,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { displayMode });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, displayMode };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setHistoryList = (
@@ -175,9 +175,9 @@ export const setHistoryList = (
   historyList: HistoryList,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { historyList });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, historyList };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setIsSafeAreaEnabled = (
@@ -185,9 +185,9 @@ export const setIsSafeAreaEnabled = (
   isSafeAreaEnabled: IsSafeAreaEnabled,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { isSafeAreaEnabled });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, isSafeAreaEnabled };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setIsSmoothScrollEnabled = (
@@ -195,9 +195,9 @@ export const setIsSmoothScrollEnabled = (
   isSmoothScrollEnabled: IsSmoothScrollEnabled,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { isSmoothScrollEnabled });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, isSmoothScrollEnabled };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setLongPressRecognitionTime = (
@@ -205,9 +205,9 @@ export const setLongPressRecognitionTime = (
   longPressRecognitionTime: LongPressRecognitionTime,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { longPressRecognitionTime });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, longPressRecognitionTime };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setMenuOpacity = (
@@ -215,9 +215,9 @@ export const setMenuOpacity = (
   menuOpacity: MenuOpacity,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { menuOpacity });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, menuOpacity };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setSafeAreaLength = (
@@ -225,9 +225,9 @@ export const setSafeAreaLength = (
   safeAreaLength: SafeAreaLength,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { safeAreaLength });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, safeAreaLength };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setScrollSpeed = (
@@ -235,9 +235,9 @@ export const setScrollSpeed = (
   scrollSpeed: ScrollSpeed,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { scrollSpeed });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, scrollSpeed };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setScrollStepCount = (
@@ -245,9 +245,9 @@ export const setScrollStepCount = (
   scrollStepCount: ScrollStepCount,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { scrollStepCount });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, scrollStepCount };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setSharpeningFilterStrength = (
@@ -255,9 +255,9 @@ export const setSharpeningFilterStrength = (
   sharpeningFilterStrength: SharpeningFilterStrength,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { sharpeningFilterStrength });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, sharpeningFilterStrength };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldAdvance = (
@@ -265,9 +265,9 @@ export const setShouldAdvance = (
   shouldAdvance: ShouldAdvance,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldAdvance });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldAdvance };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldPreload = (
@@ -275,9 +275,9 @@ export const setShouldPreload = (
   shouldPreload: ShouldPreload,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldPreload });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldPreload };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldShowBookmarkButton = (
@@ -285,9 +285,9 @@ export const setShouldShowBookmarkButton = (
   shouldShowBookmarkButton: ShouldShowBookmarkButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldShowBookmarkButton });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldShowBookmarkButton };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldShowFullscreenButton = (
@@ -295,9 +295,9 @@ export const setShouldShowFullscreenButton = (
   shouldShowFullscreenButton: ShouldShowFullscreenButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldShowFullscreenButton });
-  repository.save(result);
-  return result;
+  const userSetting: UserSettings = { ...input, shouldShowFullscreenButton };
+  repository.save(userSetting);
+  return userSetting;
 };
 
 export const setShouldShowInvertButton = (
@@ -305,9 +305,9 @@ export const setShouldShowInvertButton = (
   shouldShowInvertButton: ShouldShowInvertButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldShowInvertButton });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldShowInvertButton };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldShowProgressBar = (
@@ -315,9 +315,9 @@ export const setShouldShowProgressBar = (
   shouldShowProgressBar: ShouldShowProgressBar,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldShowProgressBar });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldShowProgressBar };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setShouldShowSharpeningFilterButton = (
@@ -325,9 +325,9 @@ export const setShouldShowSharpeningFilterButton = (
   shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { shouldShowSharpeningFilterButton });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, shouldShowSharpeningFilterButton };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setTapAreaSize = (
@@ -335,9 +335,9 @@ export const setTapAreaSize = (
   tapAreaSize: TapAreaSize,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { tapAreaSize });
-  repository.save(result);
-  return result;
+  const userSettings: UserSettings = { ...input, tapAreaSize };
+  repository.save(userSettings);
+  return userSettings;
 };
 
 export const setZoomStep = (
@@ -345,37 +345,7 @@ export const setZoomStep = (
   zoomStep: ZoomStep,
   repository: UserSettingsRepository,
 ): UserSettings => {
-  const result = copyWith(input, { zoomStep });
-  repository.save(result);
-  return result;
-};
-
-/* -------------------------------------------------------------------------- */
-
-const copyWith = (input: UserSettings, value: Partial<UserSettings>): UserSettings => {
-  return {
-    bookFormat: value.bookFormat ?? input.bookFormat,
-    contentFit: value.contentFit ?? input.contentFit,
-    displayMode: value.displayMode ?? input.displayMode,
-    historyList: value.historyList ?? input.historyList,
-    isSafeAreaEnabled: value.isSafeAreaEnabled ?? input.isSafeAreaEnabled,
-    isSmoothScrollEnabled: value.isSmoothScrollEnabled ?? input.isSmoothScrollEnabled,
-    longPressRecognitionTime: value.longPressRecognitionTime ?? input.longPressRecognitionTime,
-    menuOpacity: value.menuOpacity ?? input.menuOpacity,
-    safeAreaLength: value.safeAreaLength ?? input.safeAreaLength,
-    scrollSpeed: value.scrollSpeed ?? input.scrollSpeed,
-    scrollStepCount: value.scrollStepCount ?? input.scrollStepCount,
-    sharpeningFilterStrength: value.sharpeningFilterStrength ?? input.sharpeningFilterStrength,
-    shouldAdvance: value.shouldAdvance ?? input.shouldAdvance,
-    shouldPreload: value.shouldPreload ?? input.shouldPreload,
-    shouldShowBookmarkButton: value.shouldShowBookmarkButton ?? input.shouldShowBookmarkButton,
-    shouldShowFullscreenButton:
-      value.shouldShowFullscreenButton ?? input.shouldShowFullscreenButton,
-    shouldShowInvertButton: value.shouldShowInvertButton ?? input.shouldShowInvertButton,
-    shouldShowProgressBar: value.shouldShowProgressBar ?? input.shouldShowProgressBar,
-    shouldShowSharpeningFilterButton:
-      value.shouldShowSharpeningFilterButton ?? input.shouldShowSharpeningFilterButton,
-    tapAreaSize: value.tapAreaSize ?? input.tapAreaSize,
-    zoomStep: value.zoomStep ?? input.zoomStep,
-  };
+  const userSettings: UserSettings = { ...input, zoomStep };
+  repository.save(userSettings);
+  return userSettings;
 };

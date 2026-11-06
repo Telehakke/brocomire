@@ -138,6 +138,7 @@ export default defineConfig({
       ...tsEslintRecommended,
       "typescript/explicit-function-return-type": "error",
       "typescript/strict-boolean-expressions": "error",
+      complexity: ["error", { max: 7 }],
     },
     options: {
       typeAware: true,
@@ -192,7 +193,7 @@ export default defineConfig({
   ]),
   build: {
     outDir: "docs",
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1100,
     license: { fileName: "licenses.md" },
   },
   server: { host: true },

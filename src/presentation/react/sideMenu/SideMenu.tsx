@@ -59,16 +59,14 @@ export const SideMenu = (): JSX.Element => {
           <ViewerCloseButton />
         </div>
         <SelectPageSlider />
-        <Card>
+        <Card footer={`1：1枚の画像を表示\n1・2：表紙だけ1枚、以降は2枚\n2：2枚の画像を並べて表示`}>
           <BookFormatSegmentGroup />
           <ContentFitSegmentGroup />
+          <DisplayModeSegmentGroup />
         </Card>
         <Card footer="ディスプレイのノッチやパンチホールなどを避けてコンテンツを表示します">
           <IsSafeAreaEnabledSwitch />
           <SafeAreaLengthSlider />
-        </Card>
-        <Card footer={`1：1枚の画像を表示\n1・2：表紙だけ1枚、以降は2枚\n2：2枚の画像を並べて表示`}>
-          <DisplayModeSegmentGroup />
         </Card>
         <Card footer="拡大時に次、または前のページに移動するのに必要な最大タップ数">
           <ScrollStepCountSegmentGroup />

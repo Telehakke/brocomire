@@ -3,12 +3,10 @@ import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { JSX } from "react/jsx-runtime";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import { scroll } from "../../../../application/viewer/scroll";
-import type { ContentFit } from "../../../../domain/models/userSettings/valueObjects/contentFit";
-import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
+import type { ContentFitValue } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import type { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
 import {
   isImageWiderThanViewerAtom,
-  onInvertFilterAtom,
   scrollPercentage2DAtom,
   UserSettingsAtom,
   viewerManagerAtom,
@@ -28,7 +26,6 @@ export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   const divRef = useRef<HTMLDivElement | null>(null);
   const contentFit = useAtomValue(UserSettingsAtom.contentFit);
   const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
-  const onInvertFilter = useAtomValue(onInvertFilterAtom);
   const zoomPercentage = useAtomValue(zoomPercentageAtom);
   const scroll = useSetAtom(scrollAtom);
 
@@ -43,11 +40,7 @@ export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   }, [scroll]);
 
   return (
-    <div
-      className={`flex ${onInvertFilter ? "invert" : ""}`}
-      style={contentStyle(contentFit, isImageWiderThanViewer, zoomPercentage)}
-      ref={divRef}
-    >
+    <div style={contentStyle(contentFit, isImageWiderThanViewer, zoomPercentage)} ref={divRef}>
       {props.children}
     </div>
   );
@@ -56,26 +49,28 @@ export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
 /* -------------------------------------------------------------------------- */
 
 const contentStyle = (
-  contentFit: ContentFit,
+  contentFit: ContentFitValue,
   isImageWiderThanViewer: IsImageWiderThanViewer,
   zoomPercentage: ZoomPercentage,
 ): CSSProperties => {
   if (isImageWiderThanViewer == null) return { width: "100%", height: "100%" };
 
+  const styleMap = getContentStyleMap(zoomPercentage);
+  return isImageWiderThanViewer ? styleMap[contentFit][0] : styleMap[contentFit][1];
+};
+
+const getContentStyleMap = (
+  zoomPercentage: ZoomPercentage,
+): Record<ContentFitValue, [CSSProperties, CSSProperties]> => {
   const scale = `${zoomPercentage}%`;
-  switch (contentFit) {
-    case "all":
-      return {
-        width: isImageWiderThanViewer ? scale : "100%",
-        height: isImageWiderThanViewer ? "100%" : scale,
-      };
-    case "fill":
-      return {
-        width: isImageWiderThanViewer ? "100%" : scale,
-        height: isImageWiderThanViewer ? scale : "100%",
-      };
-    default:
-      exhaustiveCheck(contentFit);
-      throw new Error();
-  }
+  return {
+    all: [
+      { width: scale, height: "100%" },
+      { width: "100%", height: scale },
+    ],
+    fill: [
+      { width: "100%", height: scale },
+      { width: scale, height: "100%" },
+    ],
+  };
 };
