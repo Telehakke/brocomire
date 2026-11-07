@@ -40,7 +40,11 @@ export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   }, [scroll]);
 
   return (
-    <div style={contentStyle(contentFit, isImageWiderThanViewer, zoomPercentage)} ref={divRef}>
+    <div
+      className="flex"
+      style={contentStyle(contentFit, isImageWiderThanViewer, zoomPercentage)}
+      ref={divRef}
+    >
       {props.children}
     </div>
   );

@@ -14,10 +14,6 @@ import {
   type LongPressRecognitionTime,
 } from "./valueObjects/longPressRecognitionTime";
 import { createMenuOpacity, type MenuOpacity } from "./valueObjects/menuOpacity";
-import {
-  createMonochromeTolerance,
-  type MonochromeTolerance,
-} from "./valueObjects/monochromeTolerance";
 import { createSafeAreaLength, type SafeAreaLength } from "./valueObjects/safeAreaLength";
 import { createScrollSpeed, type ScrollSpeed } from "./valueObjects/scrollSpeed";
 import { createScrollStepCount, type ScrollStepCount } from "./valueObjects/scrollStepCount";
@@ -40,10 +36,6 @@ import {
   type ShouldShowInvertButton,
 } from "./valueObjects/shouldShowInvertButton";
 import {
-  createShouldShowInvertMonochromeButton,
-  type ShouldShowInvertMonochromeButton,
-} from "./valueObjects/shouldShowInvertMonochromeButton";
-import {
   createShouldShowProgressBar,
   type ShouldShowProgressBar,
 } from "./valueObjects/shouldShowProgressBar";
@@ -63,7 +55,6 @@ export type UserSettings = Readonly<{
   isSmoothScrollEnabled: IsSmoothScrollEnabled;
   longPressRecognitionTime: LongPressRecognitionTime;
   menuOpacity: MenuOpacity;
-  monochromeTolerance: MonochromeTolerance;
   safeAreaLength: SafeAreaLength;
   scrollSpeed: ScrollSpeed;
   scrollStepCount: ScrollStepCount;
@@ -73,7 +64,6 @@ export type UserSettings = Readonly<{
   shouldShowBookmarkButton: ShouldShowBookmarkButton;
   shouldShowFullscreenButton: ShouldShowFullscreenButton;
   shouldShowInvertButton: ShouldShowInvertButton;
-  shouldShowInvertMonochromeButton: ShouldShowInvertMonochromeButton;
   shouldShowProgressBar: ShouldShowProgressBar;
   shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton;
   tapAreaSize: TapAreaSize;
@@ -100,7 +90,6 @@ export const createUserSettings = (value?: unknown): UserSettings => {
       isSmoothScrollEnabled: createIsSmoothScrollEnabled(),
       longPressRecognitionTime: createLongPressRecognitionTime(),
       menuOpacity: createMenuOpacity(),
-      monochromeTolerance: createMonochromeTolerance(),
       safeAreaLength: createSafeAreaLength(),
       scrollSpeed: createScrollSpeed(),
       scrollStepCount: createScrollStepCount(),
@@ -110,7 +99,6 @@ export const createUserSettings = (value?: unknown): UserSettings => {
       shouldShowBookmarkButton: createShouldShowBookmarkButton(),
       shouldShowFullscreenButton: createShouldShowFullscreenButton(),
       shouldShowInvertButton: createShouldShowInvertButton(),
-      shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(),
       shouldShowProgressBar: createShouldShowProgressBar(),
       shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(),
       tapAreaSize: createTapAreaSize(),
@@ -127,7 +115,6 @@ export const createUserSettings = (value?: unknown): UserSettings => {
     isSmoothScrollEnabled: createIsSmoothScrollEnabled(v.isSmoothScrollEnabled),
     longPressRecognitionTime: createLongPressRecognitionTime(v.longPressRecognitionTime),
     menuOpacity: createMenuOpacity(v.menuOpacity),
-    monochromeTolerance: createMonochromeTolerance(v.monochromeTolerance),
     safeAreaLength: createSafeAreaLength(v.safeAreaLength),
     scrollSpeed: createScrollSpeed(v.scrollSpeed),
     scrollStepCount: createScrollStepCount(v.scrollStepCount),
@@ -137,9 +124,6 @@ export const createUserSettings = (value?: unknown): UserSettings => {
     shouldShowBookmarkButton: createShouldShowBookmarkButton(v.shouldShowBookmarkButton),
     shouldShowFullscreenButton: createShouldShowFullscreenButton(v.shouldShowFullscreenButton),
     shouldShowInvertButton: createShouldShowInvertButton(v.shouldShowInvertButton),
-    shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(
-      v.shouldShowInvertMonochromeButton,
-    ),
     shouldShowProgressBar: createShouldShowProgressBar(v.shouldShowProgressBar),
     shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(
       v.shouldShowSharpeningFilterButton,
@@ -236,16 +220,6 @@ export const setMenuOpacity = (
   return userSettings;
 };
 
-export const setMonochromeTolerance = (
-  input: UserSettings,
-  monochromeTolerance: MonochromeTolerance,
-  repository: UserSettingsRepository,
-): UserSettings => {
-  const userSetting: UserSettings = { ...input, monochromeTolerance };
-  repository.save(userSetting);
-  return userSetting;
-};
-
 export const setSafeAreaLength = (
   input: UserSettings,
   safeAreaLength: SafeAreaLength,
@@ -334,16 +308,6 @@ export const setShouldShowInvertButton = (
   const userSettings: UserSettings = { ...input, shouldShowInvertButton };
   repository.save(userSettings);
   return userSettings;
-};
-
-export const setShouldShowInvertMonochromeButton = (
-  input: UserSettings,
-  shouldShowInvertMonochromeButton: ShouldShowInvertMonochromeButton,
-  repository: UserSettingsRepository,
-): UserSettings => {
-  const userSetting: UserSettings = { ...input, shouldShowInvertMonochromeButton };
-  repository.save(userSetting);
-  return userSetting;
 };
 
 export const setShouldShowProgressBar = (

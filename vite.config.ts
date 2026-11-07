@@ -1,92 +1,8 @@
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { default as react, reactCompilerPreset } from "@vitejs/plugin-react";
-import type { Config } from "eslint-plugin-boundaries";
-import { recommended } from "eslint-plugin-boundaries/config";
 import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig, lazyPlugins } from "vite-plus";
-
-const eslintBoundariesConfig: Config = {
-  settings: {
-    ...recommended.settings,
-    // @ts-expect-error 型定義なし
-    "import/resolver": {
-      typescript: {
-        alwaysTryTypes: true,
-      },
-    },
-    "boundaries/elements": [
-      { type: "domain", pattern: "src/domain/**" },
-      { type: "application", pattern: "src/application/**" },
-      { type: "infrastructure", pattern: "src/infrastructure/**" },
-      { type: "presentation", pattern: "src/presentation/**" },
-    ],
-    "boundaries/files": [{ category: "test", pattern: "**/*.test.ts" }],
-  },
-  rules: {
-    ...recommended.rules,
-    "boundaries/dependencies": [
-      "error",
-      {
-        default: "allow",
-        policies: [
-          // Domain層のルール
-          {
-            from: { element: { type: "domain" } },
-            disallow: {
-              to: {
-                element: { type: "application" },
-              },
-            },
-            message: "Domain層でApplication層をimportしてはいけません",
-          },
-          {
-            from: { element: { type: "domain" } },
-            disallow: {
-              to: {
-                element: { type: "infrastructure" },
-              },
-            },
-            message: "Domain層でInfrastructure層をimportしてはいけません",
-          },
-          {
-            from: { element: { type: "domain" } },
-            disallow: {
-              to: {
-                element: { type: "presentation" },
-              },
-            },
-            message: "Domain層でPresentation層をimportしてはいけません",
-          },
-          // Application層のルール
-          {
-            from: { element: { type: "application" } },
-            disallow: {
-              to: {
-                element: { type: "infrastructure" },
-              },
-            },
-            message: "Application層でInfrastructure層をimportしてはいけません",
-          },
-          {
-            from: { element: { type: "application" } },
-            disallow: {
-              to: {
-                element: { type: "presentation" },
-              },
-            },
-            message: "Application層でPresentation層をimportしてはいけません",
-          },
-          // テストファイルは依存の向きを制限しない
-          {
-            from: { file: { categories: "test" } },
-            allow: { to: { element: { type: "*" } } },
-          },
-        ],
-      },
-    ],
-  },
-};
 
 const tsEslintRecommended = {
   "@typescript-eslint/ban-ts-comment": "error",
@@ -122,9 +38,6 @@ export default defineConfig({
   },
   lint: {
     plugins: ["react", "typescript", "oxc"],
-    settings: {
-      ...eslintBoundariesConfig.settings,
-    },
     rules: {
       "react/rules-of-hooks": "error",
       "react/only-export-components": [
@@ -134,7 +47,6 @@ export default defineConfig({
         },
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
-      ...eslintBoundariesConfig.rules,
       ...tsEslintRecommended,
       "typescript/explicit-function-return-type": "error",
       "typescript/strict-boolean-expressions": "error",
@@ -149,9 +61,56 @@ export default defineConfig({
         name: "vite-plus",
         specifier: "vite-plus/oxlint-plugin",
       },
-      "eslint-plugin-boundaries",
     ],
     ignorePatterns: ["dev-dist/**", "docs/**"],
+    overrides: [
+      {
+        files: ["src/domain/**/*.ts"],
+        rules: {
+          "no-restricted-imports": [
+            "error",
+            {
+              patterns: [
+                {
+                  group: ["**/application/**"],
+                  message: "Domain層でApplication層をimportしてはいけません",
+                },
+                {
+                  group: ["**/infrastructure/**"],
+                  message: "Domain層でInfrastructure層をimportしてはいけません",
+                },
+                {
+                  group: ["**/presentation/**"],
+                  message: "Domain層でPresentation層をimportしてはいけません",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        files: ["src/application/**/*.ts"],
+        rules: {
+          "no-restricted-imports": [
+            "error",
+            {
+              patterns: [
+                {
+                  group: ["**/infrastructure/**"],
+                  message: "Application層でInfrastructure層をimportしてはいけません",
+                },
+                {
+                  group: ["**/presentation/**"],
+                  message: "Application層でPresentation層をimportしてはいけません",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      { files: ["src/domain/**/*.test.ts"], rules: { "no-restricted-imports": "off" } },
+      { files: ["src/application/**/*.test.ts"], rules: { "no-restricted-imports": "off" } },
+    ],
   },
   plugins: lazyPlugins(() => [
     react(),

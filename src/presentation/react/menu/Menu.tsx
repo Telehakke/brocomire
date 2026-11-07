@@ -9,7 +9,6 @@ import { infoVisibilityAtom, UserSettingsAtom } from "../../atoms";
 import { BookmarkButton } from "../commandButtons/BookmarkButton";
 import { FullscreenButton } from "../commandButtons/FullscreenButton";
 import { InvertFilterButton } from "../commandButtons/InvertFilterButton";
-import { InvertMonochromeButton } from "../commandButtons/InvertMonochromeButton";
 import { SharpeningFilterButton } from "../commandButtons/SharpeningFilterButton";
 import { SideMenuOpenButton } from "../commandButtons/SideMenuOpenButton";
 import { ClockView } from "../infos/ClockView";
@@ -65,7 +64,6 @@ const LeftTopGroup = (): JSX.Element => {
       <SideMenuOpenButton />
       <SharpeningFilterButton />
       <InvertFilterButton />
-      <InvertMonochromeButton />
       <BookmarkButton />
       <FullscreenButton />
     </div>
