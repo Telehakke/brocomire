@@ -1,9 +1,12 @@
 import { createImageSize, type ImageSizeStore } from "../../../../application/appState/imageSize";
+import type { OnInvertMonochrome } from "../../../../application/appState/onInvertMonochrome";
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import type { FileNavigator } from "../../../../domain/models/file/fileNavigator";
 import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
+import type { MonochromeTolerance } from "../../../../domain/models/userSettings/valueObjects/monochromeTolerance";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
+import { InvertMonochromeCanvas } from "./invertMonochromeCanvas";
 import { sharpenCanvas } from "./sharpenCanvas";
 
 type Image = HTMLImageElement | undefined;
@@ -17,6 +20,8 @@ type DrawImagesOptions = Readonly<{
   fileNavigatorGetter: () => FileNavigator;
   images: [Image, Image];
   imageSizeStore: ImageSizeStore;
+  monochromeTolerance: MonochromeTolerance;
+  onInvertMonochrome: OnInvertMonochrome;
   onSharpeningFilter: OnSharpeningFilter;
   scrollPercentage2D: ScrollPercentage2D;
   sharpeningFilterStrength: SharpeningFilterStrength;
@@ -31,6 +36,8 @@ export const drawImages = (o: DrawImagesOptions): void => {
   window.setTimeout(() => {
     const imageSize = getImageSize(o.images);
     _drawImages(o.canvas, o.ctx, o.images, imageSize);
+    if (o.onInvertMonochrome)
+      InvertMonochromeCanvas({ ctx: o.ctx, imageSize, tolerance: o.monochromeTolerance });
     if (o.onSharpeningFilter)
       sharpenCanvas(o.ctx, o.fileNavigatorGetter, imageSize, o.sharpeningFilterStrength);
     o.imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));

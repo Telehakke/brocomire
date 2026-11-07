@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from "react";
 
 const className = {
-  _: "size-10 p-2 rounded-full transition",
+  _: "size-10 p-2 transition",
   bg: "bg-blue-300/75",
   hoverBg: "group-hover:bg-blue-400/75",
   activeBg: " group-active:bg-blue-500/75",
@@ -12,7 +12,7 @@ export const IconBlueButton = {
   className,
   Button: (props: { onClick: () => void; children: ReactNode }): JSX.Element => {
     const className = {
-      _: "group rounded-full transition select-none",
+      _: "group overflow-clip rounded-full transition select-none",
       outline: "outline-blue-500/75 focus-visible:outline-2",
     };
 

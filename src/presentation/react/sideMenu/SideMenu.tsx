@@ -16,6 +16,7 @@ import { IsSafeAreaEnabledSwitch } from "./items/IsSafeAreaEnabledSwitch";
 import { IsSmoothScrollEnabledSwitch } from "./items/IsSmoothScrollEnabledSwitch";
 import { LongPressRecognitionTimeSlider } from "./items/LongPressRecognitionTimeSlider";
 import { MenuOpacitySlider } from "./items/MenuOpacitySlider";
+import { MonochromeToleranceSlider } from "./items/MonochromeToleranceSlider";
 import { SafeAreaLengthSlider } from "./items/SafeAreaLengthSlider";
 import { ScrollSpeedSlider } from "./items/ScrollSpeedSlider";
 import { ScrollStepCountSegmentGroup } from "./items/ScrollStepCountSegmentGroup";
@@ -26,6 +27,7 @@ import { ShouldPreloadSwitch } from "./items/ShouldPreloadSwitch";
 import { ShouldShowBookmarkButtonSwitch } from "./items/ShouldShowBookmarkButtonSwitch";
 import { ShouldShowFullscreenButtonSwitch } from "./items/ShouldShowFullscreenButtonSwitch";
 import { ShouldShowInvertButtonSwitch } from "./items/ShouldShowInvertButtonSwitch";
+import { ShouldShowInvertMonochromeButtonSwitch } from "./items/ShouldShowInvertMonochromeButtonSwitch";
 import { ShouldShowProgressBarSwitch } from "./items/ShouldShowProgressBarSwitch";
 import { ShouldShowSharpeningFilterButtonSwitch } from "./items/ShouldShowSharpeningFilterButtonSwitch";
 import { TapAreaHeightSegmentGroup } from "./items/TapAreaHeightSegmentGroup";
@@ -94,6 +96,8 @@ export const SideMenu = (): JSX.Element => {
           <ShouldShowSharpeningFilterButtonSwitch />
           <SharpeningFilterStrengthSlider />
           <ShouldShowInvertButtonSwitch />
+          <ShouldShowInvertMonochromeButtonSwitch />
+          <MonochromeToleranceSlider />
           <ShouldShowBookmarkButtonSwitch />
           <ShouldShowFullscreenButtonSwitch />
         </Card>

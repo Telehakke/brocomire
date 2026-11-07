@@ -12,6 +12,7 @@ import {
   setIsSmoothScrollEnabled,
   setLongPressRecognitionTime,
   setMenuOpacity,
+  setMonochromeTolerance,
   setSafeAreaLength,
   setScrollSpeed,
   setScrollStepCount,
@@ -21,6 +22,7 @@ import {
   setShouldShowBookmarkButton,
   setShouldShowFullscreenButton,
   setShouldShowInvertButton,
+  setShouldShowInvertMonochromeButton,
   setShouldShowProgressBar,
   setShouldShowSharpeningFilterButton,
   setTapAreaSize,
@@ -43,6 +45,10 @@ import {
   LONG_PRESS_RECOGNITION_TIME_MIN,
 } from "./valueObjects/longPressRecognitionTime";
 import { createMenuOpacity, MENU_OPACITY_MIN } from "./valueObjects/menuOpacity";
+import {
+  createMonochromeTolerance,
+  MONOCHROME_TOLERANCE_MIN,
+} from "./valueObjects/monochromeTolerance";
 import { createSafeAreaLength, SAFE_AREA_LENGTH_MIN } from "./valueObjects/safeAreaLength";
 import { createScrollSpeed, SCROLL_SPEED_MIN } from "./valueObjects/scrollSpeed";
 import { createScrollStepCount, ScrollStepCountEnum } from "./valueObjects/scrollStepCount";
@@ -65,6 +71,10 @@ import {
   SHOULD_SHOW_INVERT_BUTTON_DEFAULT,
 } from "./valueObjects/shouldShowInvertButton";
 import {
+  createShouldShowInvertMonochromeButton,
+  SHOULD_SHOW_INVERT_MONOCHROME_BUTTON_DEFAULT,
+} from "./valueObjects/shouldShowInvertMonochromeButton";
+import {
   createShouldShowProgressBar,
   SHOULD_SHOW_PROGRESS_BAR_DEFAULT,
 } from "./valueObjects/shouldShowProgressBar";
@@ -84,6 +94,7 @@ const userSettingsDefault: UserSettings = {
   isSmoothScrollEnabled: createIsSmoothScrollEnabled(),
   longPressRecognitionTime: createLongPressRecognitionTime(),
   menuOpacity: createMenuOpacity(),
+  monochromeTolerance: createMonochromeTolerance(),
   safeAreaLength: createSafeAreaLength(),
   scrollSpeed: createScrollSpeed(),
   scrollStepCount: createScrollStepCount(),
@@ -93,6 +104,7 @@ const userSettingsDefault: UserSettings = {
   shouldShowBookmarkButton: createShouldShowBookmarkButton(),
   shouldShowFullscreenButton: createShouldShowFullscreenButton(),
   shouldShowInvertButton: createShouldShowInvertButton(),
+  shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(),
   shouldShowProgressBar: createShouldShowProgressBar(),
   shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(),
   tapAreaSize: createTapAreaSize(),
@@ -181,6 +193,16 @@ describe("createUserSettings", () => {
     ).toEqual({
       ...userSettingsDefault,
       menuOpacity: createMenuOpacity(MENU_OPACITY_MIN + 1),
+    });
+
+    expect(
+      createUserSettings({
+        ...userSettingsDefault,
+        monochromeTolerance: createMonochromeTolerance(MONOCHROME_TOLERANCE_MIN + 1),
+      }),
+    ).toEqual({
+      ...userSettingsDefault,
+      monochromeTolerance: createMonochromeTolerance(MONOCHROME_TOLERANCE_MIN + 1),
     });
 
     expect(
@@ -281,6 +303,20 @@ describe("createUserSettings", () => {
     ).toEqual({
       ...userSettingsDefault,
       shouldShowInvertButton: createShouldShowInvertButton(!SHOULD_SHOW_INVERT_BUTTON_DEFAULT),
+    });
+
+    expect(
+      createUserSettings({
+        ...userSettingsDefault,
+        shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(
+          !SHOULD_SHOW_INVERT_MONOCHROME_BUTTON_DEFAULT,
+        ),
+      }),
+    ).toEqual({
+      ...userSettingsDefault,
+      shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(
+        !SHOULD_SHOW_INVERT_MONOCHROME_BUTTON_DEFAULT,
+      ),
     });
 
     expect(
@@ -462,6 +498,22 @@ test("setMenuOpacity", () => {
   expect(repository.value).toEqual(expected);
 });
 
+test("setMonochromeTolerance", () => {
+  const repository = new InMemoryUserSettingsRepository();
+  const expected: UserSettings = {
+    ...userSettingsDefault,
+    monochromeTolerance: createMonochromeTolerance(MONOCHROME_TOLERANCE_MIN + 1),
+  };
+  expect(
+    setMonochromeTolerance(
+      createUserSettings(userSettingsDefault),
+      createMonochromeTolerance(MONOCHROME_TOLERANCE_MIN + 1),
+      repository,
+    ),
+  ).toEqual(expected);
+  expect(repository.value).toEqual(expected);
+});
+
 test("setSafeAreaLength", () => {
   const repository = new InMemoryUserSettingsRepository();
   const expected: UserSettings = {
@@ -602,6 +654,24 @@ test("setShouldShowInvertButton", () => {
     setShouldShowInvertButton(
       createUserSettings(userSettingsDefault),
       createShouldShowInvertButton(!SHOULD_SHOW_INVERT_BUTTON_DEFAULT),
+      repository,
+    ),
+  ).toEqual(expected);
+  expect(repository.value).toEqual(expected);
+});
+
+test("setShouldShowInvertMonochromeButton", () => {
+  const repository = new InMemoryUserSettingsRepository();
+  const expected: UserSettings = {
+    ...userSettingsDefault,
+    shouldShowInvertMonochromeButton: createShouldShowInvertMonochromeButton(
+      !SHOULD_SHOW_INVERT_MONOCHROME_BUTTON_DEFAULT,
+    ),
+  };
+  expect(
+    setShouldShowInvertMonochromeButton(
+      createUserSettings(userSettingsDefault),
+      createShouldShowInvertMonochromeButton(!SHOULD_SHOW_INVERT_MONOCHROME_BUTTON_DEFAULT),
       repository,
     ),
   ).toEqual(expected);
