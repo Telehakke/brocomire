@@ -10,6 +10,7 @@ import { createIsLoading } from "../application/appState/isLoading";
 import { createIsOpenSideMenu } from "../application/appState/isOpenSideMenu";
 import { createIsUserScrolled } from "../application/appState/isUserScrolled";
 import { createOnInvertFilter } from "../application/appState/onInvertFilter";
+import { createOnInvertLightness } from "../application/appState/onInvertLightness";
 import { createOnSharpeningFilter } from "../application/appState/onSharpeningFilter";
 import { createOnViewer } from "../application/appState/onViewer";
 import type { Cache } from "../domain/models/file/cache";
@@ -38,6 +39,7 @@ export const isOpenSideMenuAtom = atom(createIsOpenSideMenu(false));
 export const isUserScrolledAtom = atom(createIsUserScrolled(false));
 export const notificationAtom = atom(initNotification());
 export const onInvertFilterAtom = atom(createOnInvertFilter(false));
+export const onInvertLightnessAtom = atom(createOnInvertLightness(false));
 export const onSharpeningFilterAtom = atom(createOnSharpeningFilter(false));
 export const onViewerAtom = atom(createOnViewer(false));
 export const scrollPercentage2DAtom = atom(() => new ScrollPercentage2D());
@@ -66,6 +68,10 @@ export const UserSettingsAtom = {
   shouldShowBookmarkButton: selectAtom(Atom.userSettings, (u) => u.shouldShowBookmarkButton),
   shouldShowFullscreenButton: selectAtom(Atom.userSettings, (u) => u.shouldShowFullscreenButton),
   shouldShowInvertButton: selectAtom(Atom.userSettings, (u) => u.shouldShowInvertButton),
+  shouldShowInvertLightnessButton: selectAtom(
+    Atom.userSettings,
+    (u) => u.shouldShowInvertLightnessButton,
+  ),
   shouldShowProgressBar: selectAtom(Atom.userSettings, (u) => u.shouldShowProgressBar),
   shouldShowSharpeningFilterButton: selectAtom(
     Atom.userSettings,

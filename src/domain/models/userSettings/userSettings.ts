@@ -36,6 +36,10 @@ import {
   type ShouldShowInvertButton,
 } from "./valueObjects/shouldShowInvertButton";
 import {
+  createShouldShowInvertLightnessButton,
+  type ShouldShowInvertLightnessButton,
+} from "./valueObjects/shouldShowInvertLightnessButton";
+import {
   createShouldShowProgressBar,
   type ShouldShowProgressBar,
 } from "./valueObjects/shouldShowProgressBar";
@@ -64,6 +68,7 @@ export type UserSettings = Readonly<{
   shouldShowBookmarkButton: ShouldShowBookmarkButton;
   shouldShowFullscreenButton: ShouldShowFullscreenButton;
   shouldShowInvertButton: ShouldShowInvertButton;
+  shouldShowInvertLightnessButton: ShouldShowInvertLightnessButton;
   shouldShowProgressBar: ShouldShowProgressBar;
   shouldShowSharpeningFilterButton: ShouldShowSharpeningFilterButton;
   tapAreaSize: TapAreaSize;
@@ -99,6 +104,7 @@ export const createUserSettings = (value?: unknown): UserSettings => {
       shouldShowBookmarkButton: createShouldShowBookmarkButton(),
       shouldShowFullscreenButton: createShouldShowFullscreenButton(),
       shouldShowInvertButton: createShouldShowInvertButton(),
+      shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(),
       shouldShowProgressBar: createShouldShowProgressBar(),
       shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(),
       tapAreaSize: createTapAreaSize(),
@@ -124,6 +130,9 @@ export const createUserSettings = (value?: unknown): UserSettings => {
     shouldShowBookmarkButton: createShouldShowBookmarkButton(v.shouldShowBookmarkButton),
     shouldShowFullscreenButton: createShouldShowFullscreenButton(v.shouldShowFullscreenButton),
     shouldShowInvertButton: createShouldShowInvertButton(v.shouldShowInvertButton),
+    shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(
+      v.shouldShowInvertLightnessButton,
+    ),
     shouldShowProgressBar: createShouldShowProgressBar(v.shouldShowProgressBar),
     shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(
       v.shouldShowSharpeningFilterButton,
@@ -308,6 +317,16 @@ export const setShouldShowInvertButton = (
   const userSettings: UserSettings = { ...input, shouldShowInvertButton };
   repository.save(userSettings);
   return userSettings;
+};
+
+export const setShouldShowInvertLightnessButton = (
+  input: UserSettings,
+  shouldShowInvertLightnessButton: ShouldShowInvertLightnessButton,
+  repository: UserSettingsRepository,
+): UserSettings => {
+  const userSetting: UserSettings = { ...input, shouldShowInvertLightnessButton };
+  repository.save(userSetting);
+  return userSetting;
 };
 
 export const setShouldShowProgressBar = (

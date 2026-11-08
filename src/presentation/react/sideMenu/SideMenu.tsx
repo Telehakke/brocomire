@@ -26,6 +26,7 @@ import { ShouldPreloadSwitch } from "./items/ShouldPreloadSwitch";
 import { ShouldShowBookmarkButtonSwitch } from "./items/ShouldShowBookmarkButtonSwitch";
 import { ShouldShowFullscreenButtonSwitch } from "./items/ShouldShowFullscreenButtonSwitch";
 import { ShouldShowInvertButtonSwitch } from "./items/ShouldShowInvertButtonSwitch";
+import { ShouldShowInvertLightnessButtonSwitch } from "./items/ShouldShowInvertLightnessButtonSwitch";
 import { ShouldShowProgressBarSwitch } from "./items/ShouldShowProgressBarSwitch";
 import { ShouldShowSharpeningFilterButtonSwitch } from "./items/ShouldShowSharpeningFilterButtonSwitch";
 import { TapAreaHeightSegmentGroup } from "./items/TapAreaHeightSegmentGroup";
@@ -94,6 +95,7 @@ export const SideMenu = (): JSX.Element => {
           <ShouldShowSharpeningFilterButtonSwitch />
           <SharpeningFilterStrengthSlider />
           <ShouldShowInvertButtonSwitch />
+          <ShouldShowInvertLightnessButtonSwitch />
           <ShouldShowBookmarkButtonSwitch />
           <ShouldShowFullscreenButtonSwitch />
         </Card>

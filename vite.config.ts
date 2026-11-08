@@ -34,7 +34,7 @@ const tsEslintRecommended = {
 export default defineConfig({
   fmt: {
     sortTailwindcss: true,
-    ignorePatterns: ["dev-dist/**", "docs/**"],
+    ignorePatterns: ["dev-dist/**", "docs/**", "public"],
   },
   lint: {
     plugins: ["react", "typescript", "oxc"],

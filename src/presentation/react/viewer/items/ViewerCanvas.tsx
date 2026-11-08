@@ -4,6 +4,7 @@ import { getImageSizeStore } from "../../../../application/appState/imageSize";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import type { IsLandscape } from "../../../../application/appState/isLandscape";
 import { createIsLoading } from "../../../../application/appState/isLoading";
+import type { OnInvertLightness } from "../../../../application/appState/onInvertLightness";
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
 import {
@@ -29,6 +30,7 @@ import {
   isLandscapeAtom,
   isLoadingAtom,
   onInvertFilterAtom,
+  onInvertLightnessAtom,
   onSharpeningFilterAtom,
   scrollPercentage2DAtom,
   UserSettingsAtom,
@@ -68,6 +70,7 @@ const drawImagesAtom = atom(
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
     images: [Image, Image],
+    onInvertLightness: OnInvertLightness,
     onSharpeningFilter: OnSharpeningFilter,
     sharpeningFilterStrength: SharpeningFilterStrength,
   ) => {
@@ -80,6 +83,7 @@ const drawImagesAtom = atom(
         () => get(imageSizeAtom),
         (v) => set(imageSizeAtom, v),
       ),
+      onInvertLightness,
       onSharpeningFilter,
       scrollPercentage2D: get(scrollPercentage2DAtom),
       sharpeningFilterStrength,
@@ -113,6 +117,7 @@ export const ViewerCanvas = (): JSX.Element => {
   const isLandscape = useAtomValue(isLandscapeAtom);
   const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
   const onInvertFilter = useAtomValue(onInvertFilterAtom);
+  const onInvertLightness = useAtomValue(onInvertLightnessAtom);
   const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
   const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
   const sharpeningFilterStrength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
@@ -137,7 +142,14 @@ export const ViewerCanvas = (): JSX.Element => {
 
     void getImages(bookFormat, displayMode, fileNavigator).then((images) => {
       if (!isMounded) return;
-      drawImages(canvas, ctx, images, onSharpeningFilter, sharpeningFilterStrength);
+      drawImages(
+        canvas,
+        ctx,
+        images,
+        onInvertLightness,
+        onSharpeningFilter,
+        sharpeningFilterStrength,
+      );
       preloadFiles();
       window.clearInterval(timerId.current);
       setIsLoading(createIsLoading(false));
@@ -155,6 +167,7 @@ export const ViewerCanvas = (): JSX.Element => {
     drawImages,
     fileNavigator, // インデックスの変更で再レンダリング
     getImages,
+    onInvertLightness, // 明度反転の有効化・無効化で再レンダリング
     onSharpeningFilter, // 先鋭化フィルターの有効化・無効化で再レンダリング
     preloadFiles,
     setIsLoading,

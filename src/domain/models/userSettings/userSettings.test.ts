@@ -21,6 +21,7 @@ import {
   setShouldShowBookmarkButton,
   setShouldShowFullscreenButton,
   setShouldShowInvertButton,
+  setShouldShowInvertLightnessButton,
   setShouldShowProgressBar,
   setShouldShowSharpeningFilterButton,
   setTapAreaSize,
@@ -65,6 +66,10 @@ import {
   SHOULD_SHOW_INVERT_BUTTON_DEFAULT,
 } from "./valueObjects/shouldShowInvertButton";
 import {
+  createShouldShowInvertLightnessButton,
+  SHOULD_SHOW_INVERT_LIGHTNESS_BUTTON_DEFAULT,
+} from "./valueObjects/shouldShowInvertLightnessButton";
+import {
   createShouldShowProgressBar,
   SHOULD_SHOW_PROGRESS_BAR_DEFAULT,
 } from "./valueObjects/shouldShowProgressBar";
@@ -93,6 +98,7 @@ const userSettingsDefault: UserSettings = {
   shouldShowBookmarkButton: createShouldShowBookmarkButton(),
   shouldShowFullscreenButton: createShouldShowFullscreenButton(),
   shouldShowInvertButton: createShouldShowInvertButton(),
+  shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(),
   shouldShowProgressBar: createShouldShowProgressBar(),
   shouldShowSharpeningFilterButton: createShouldShowSharpeningFilterButton(),
   tapAreaSize: createTapAreaSize(),
@@ -281,6 +287,20 @@ describe("createUserSettings", () => {
     ).toEqual({
       ...userSettingsDefault,
       shouldShowInvertButton: createShouldShowInvertButton(!SHOULD_SHOW_INVERT_BUTTON_DEFAULT),
+    });
+
+    expect(
+      createUserSettings({
+        ...userSettingsDefault,
+        shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(
+          !SHOULD_SHOW_INVERT_LIGHTNESS_BUTTON_DEFAULT,
+        ),
+      }),
+    ).toEqual({
+      ...userSettingsDefault,
+      shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(
+        !SHOULD_SHOW_INVERT_LIGHTNESS_BUTTON_DEFAULT,
+      ),
     });
 
     expect(
@@ -602,6 +622,24 @@ test("setShouldShowInvertButton", () => {
     setShouldShowInvertButton(
       createUserSettings(userSettingsDefault),
       createShouldShowInvertButton(!SHOULD_SHOW_INVERT_BUTTON_DEFAULT),
+      repository,
+    ),
+  ).toEqual(expected);
+  expect(repository.value).toEqual(expected);
+});
+
+test("setShouldShowInvertLightnessButton", () => {
+  const repository = new InMemoryUserSettingsRepository();
+  const expected: UserSettings = {
+    ...userSettingsDefault,
+    shouldShowInvertLightnessButton: createShouldShowInvertLightnessButton(
+      !SHOULD_SHOW_INVERT_LIGHTNESS_BUTTON_DEFAULT,
+    ),
+  };
+  expect(
+    setShouldShowInvertLightnessButton(
+      createUserSettings(userSettingsDefault),
+      createShouldShowInvertLightnessButton(!SHOULD_SHOW_INVERT_LIGHTNESS_BUTTON_DEFAULT),
       repository,
     ),
   ).toEqual(expected);
