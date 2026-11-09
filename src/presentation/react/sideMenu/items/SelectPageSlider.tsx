@@ -1,29 +1,27 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState, type Dispatch, type JSX, type SetStateAction } from "react";
-import { getIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
+import { createIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
 import { handleThumbnailClick } from "../../../../application/sideMenu/handleThumbnailClick";
 import type { FileManager } from "../../../../domain/models/file/fileManager";
-import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
-import { getNotificationStore } from "../../../../domain/models/notification/notification";
+import { createFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
+import { createNotificationStore } from "../../../../domain/models/notification/notification";
 import { type BookFormatValue } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
-import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
+import { createZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import {
-  Atom,
-  cacheAtom,
+  bookFormatAtom,
   fileManagerAtom,
   fileNavigatorAtom,
   isOpenSideMenuAtom,
   notificationAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
-  viewerManagerAtom,
+  userSettingsAtom,
   zoomPercentageAtom,
 } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const SelectPageSlider = (): JSX.Element => {
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
+  const bookFormat = useAtomValue(bookFormatAtom);
 
   return <Container key={bookFormat} />;
 };
@@ -31,7 +29,7 @@ export const SelectPageSlider = (): JSX.Element => {
 /* -------------------------------------------------------------------------- */
 
 const Container = (): JSX.Element => {
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
+  const bookFormat = useAtomValue(bookFormatAtom);
   const fileManager = useAtomValue(fileManagerAtom);
   const fileNavigator = useAtomValue(fileNavigatorAtom);
   const [blob, setBlob] = useState<Blob | undefined>(undefined);
@@ -57,7 +55,7 @@ const PageSlider = (props: {
   setBlob: SetState<Blob | undefined>;
 }): JSX.Element => {
   const fileManager = useAtomValue(fileManagerAtom);
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
+  const bookFormat = useAtomValue(bookFormatAtom);
 
   const handleValueChangedEnd = async (value: number): Promise<void> => {
     props.setBlob(await fileManager.getBlob(helper(bookFormat).correctIndex(value, fileManager)));
@@ -79,33 +77,31 @@ const PageSlider = (props: {
 /* -------------------------------------------------------------------------- */
 
 const handleThumbnailClickAtom = atom(null, (get, set, index: number) => {
-  const fileNavigatorStore = getFileNavigatorStore(
+  const fileNavigatorStore = createFileNavigatorStore(
     () => get(fileNavigatorAtom),
     (v) => set(fileNavigatorAtom, v),
   );
-  const isOpenSideMenuStore = getIsOpenSideMenuStore(
+  const isOpenSideMenuStore = createIsOpenSideMenuStore(
     () => get(isOpenSideMenuAtom),
     (v) => set(isOpenSideMenuAtom, v),
   );
-  const notificationStore = getNotificationStore(
+  const notificationStore = createNotificationStore(
     () => get(notificationAtom),
     (v) => set(notificationAtom, v),
   );
-  const zoomPercentageStore = getZoomPercentageStore(
+  const zoomPercentageStore = createZoomPercentageStore(
     () => get(zoomPercentageAtom),
     (v) => set(zoomPercentageAtom, v),
   );
-  handleThumbnailClick({
-    cache: get(cacheAtom),
+  handleThumbnailClick(
     fileNavigatorStore,
     index,
     isOpenSideMenuStore,
     notificationStore,
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    userSettingsGetter: () => get(Atom.userSettings),
-    viewerManager: get(viewerManagerAtom),
+    get(scrollPercentage2DAtom),
+    () => get(userSettingsAtom),
     zoomPercentageStore,
-  });
+  );
 });
 
 type Image = HTMLImageElement | null;
@@ -113,7 +109,7 @@ type Image = HTMLImageElement | null;
 const Thumbnail = (props: { blob?: Blob; index: number }): JSX.Element | null => {
   const imageRef = useRef<Image>(null);
   const fileManager = useAtomValue(fileManagerAtom);
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
+  const bookFormat = useAtomValue(bookFormatAtom);
   const handleThumbnailClick = useSetAtom(handleThumbnailClickAtom);
 
   useEffect(() => {

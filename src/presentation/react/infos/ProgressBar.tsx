@@ -1,11 +1,11 @@
 import { useAtomValue } from "jotai";
 import type { JSX } from "react/jsx-runtime";
 import { BookFormatEnum } from "../../../domain/models/userSettings/valueObjects/bookFormat";
-import { fileNavigatorAtom, UserSettingsAtom } from "../../atoms";
+import { bookFormatAtom, fileNavigatorAtom } from "../../atoms";
 import { LinearProgress } from "../utils/LinearProgress";
 
 export const ProgressBar = (): JSX.Element | null => {
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
+  const bookFormat = useAtomValue(bookFormatAtom);
   const fileNavigator = useAtomValue(fileNavigatorAtom);
 
   return (

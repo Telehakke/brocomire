@@ -56,41 +56,41 @@ export class KeydownMonitor {
     this._handleKeyDown(
       ev,
       () =>
-        goToLeftPosition({
-          fileNavigatorStore: this.fileNavigatorStore,
-          isUserScrolledStore: this.isUserScrolledStore,
-          notificationStore: this.notificationStore,
-          scrollPercentage2D: this.scrollPercentage2D,
-          userSettingsGetter: this.userSettingsGetter,
-          viewerManager: this.viewerManager,
-        }),
+        goToLeftPosition(
+          this.fileNavigatorStore,
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsGetter,
+          this.viewerManager,
+        ),
       () =>
-        goToRightPosition({
-          fileNavigatorStore: this.fileNavigatorStore,
-          isUserScrolledStore: this.isUserScrolledStore,
-          notificationStore: this.notificationStore,
-          scrollPercentage2D: this.scrollPercentage2D,
-          userSettingsGetter: this.userSettingsGetter,
-          viewerManager: this.viewerManager,
-        }),
+        goToRightPosition(
+          this.fileNavigatorStore,
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsGetter,
+          this.viewerManager,
+        ),
       () =>
-        zoomIn({
-          isUserScrolledStore: this.isUserScrolledStore,
-          notificationStore: this.notificationStore,
-          scrollPercentage2D: this.scrollPercentage2D,
-          userSettingsGetter: this.userSettingsGetter,
-          viewerManager: this.viewerManager,
-          zoomPercentageStore: this.zoomPercentageStore,
-        }),
+        zoomIn(
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsGetter,
+          this.viewerManager,
+          this.zoomPercentageStore,
+        ),
       () =>
-        zoomOut({
-          isUserScrolledStore: this.isUserScrolledStore,
-          notificationStore: this.notificationStore,
-          scrollPercentage2D: this.scrollPercentage2D,
-          userSettingsGetter: this.userSettingsGetter,
-          viewerManager: this.viewerManager,
-          zoomPercentageStore: this.zoomPercentageStore,
-        }),
+        zoomOut(
+          this.isUserScrolledStore,
+          this.notificationStore,
+          this.scrollPercentage2D,
+          this.userSettingsGetter,
+          this.viewerManager,
+          this.zoomPercentageStore,
+        ),
     );
   };
 

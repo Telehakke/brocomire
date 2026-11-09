@@ -3,12 +3,12 @@ import type { JSX } from "react";
 import { setShouldShowSharpeningFilterButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowSharpeningFilterButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowSharpeningFilterButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldShowSharpeningFilterButtonAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowSharpeningFilterButtonSwitch = (): JSX.Element => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowSharpeningFilterButton);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowButton = useAtomValue(shouldShowSharpeningFilterButtonAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

@@ -9,24 +9,36 @@ import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { goToNextPosition } from "./goToNextPosition";
 import { goToPreviousPosition } from "./goToPreviousPosition";
 
-type GoToLeftPositionOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** 左側へ進む */
-export const goToLeftPosition = (o: GoToLeftPositionOptions): void => {
-  const { bookFormat } = o.userSettingsGetter();
+export const goToLeftPosition = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  const { bookFormat } = userSettingsGetter();
   switch (bookFormat) {
     case BookFormatEnum.vertical:
-      goToNextPosition({ ...o });
+      goToNextPosition(
+        fileNavigatorStore,
+        isUserScrolledStore,
+        notificationStore,
+        scrollPercentage2D,
+        userSettingsGetter,
+        viewerManager,
+      );
       break;
     case BookFormatEnum.horizontal:
-      goToPreviousPosition({ ...o });
+      goToPreviousPosition(
+        fileNavigatorStore,
+        isUserScrolledStore,
+        notificationStore,
+        scrollPercentage2D,
+        userSettingsGetter,
+        viewerManager,
+      );
       break;
     default:
       exhaustiveCheck(bookFormat);

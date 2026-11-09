@@ -1,12 +1,12 @@
 import { atom, useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { getIsLandscapeStore } from "../../../../application/appState/isLandscape";
+import { createIsLandscapeStore } from "../../../../application/appState/isLandscape";
 import { LandscapeMonitor } from "../../../../infrastructure/device/landscapeMonitor";
 import { isLandscapeAtom } from "../../../atoms";
 
 const getLandscapeMonitorAtom = atom(null, (get, set) => {
   return new LandscapeMonitor(
-    getIsLandscapeStore(
+    createIsLandscapeStore(
       () => get(isLandscapeAtom),
       (v) => set(isLandscapeAtom, v),
     ),

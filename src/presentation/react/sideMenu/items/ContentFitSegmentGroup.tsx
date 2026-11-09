@@ -8,12 +8,12 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { contentFitAtom, userSettingsAtom } from "../../../atoms";
 import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const ContentFitSegmentGroup = (): JSX.Element => {
-  const contentFit = useAtomValue(UserSettingsAtom.contentFit);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const contentFit = useAtomValue(contentFitAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((v) =>

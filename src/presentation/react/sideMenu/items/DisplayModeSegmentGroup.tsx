@@ -8,12 +8,12 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/displayMode";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { displayModeAtom, userSettingsAtom } from "../../../atoms";
 import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const DisplayModeSegmentGroup = (): JSX.Element => {
-  const displayMode = useAtomValue(UserSettingsAtom.displayMode);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const displayMode = useAtomValue(displayModeAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((v) =>

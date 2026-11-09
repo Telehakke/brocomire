@@ -142,7 +142,7 @@ export const createUserSettings = (value?: unknown): UserSettings => {
   };
 };
 
-export const getUserSettingsStore = (
+export const createUserSettingsStore = (
   getter: () => UserSettings,
   setter: (value: UserSettings) => void,
 ): UserSettingsStore => {

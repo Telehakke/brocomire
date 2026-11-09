@@ -5,7 +5,7 @@ import {
   createInfoVisibility,
   InfoVisibilityEnum,
 } from "../../../application/appState/infoVisibility";
-import { infoVisibilityAtom, UserSettingsAtom } from "../../atoms";
+import { infoVisibilityAtom, menuOpacityAtom, shouldShowProgressBarAtom } from "../../atoms";
 import { BookmarkButton } from "../commandButtons/BookmarkButton";
 import { FullscreenButton } from "../commandButtons/FullscreenButton";
 import { InvertFilterButton } from "../commandButtons/InvertFilterButton";
@@ -22,8 +22,8 @@ import {
 
 export const Menu = (): JSX.Element | null => {
   const [infoVisibility, setInfoVisibility] = useAtom(infoVisibilityAtom);
-  const menuOpacity = useAtomValue(UserSettingsAtom.menuOpacity);
-  const shouldShowProgressBar = useAtomValue(UserSettingsAtom.shouldShowProgressBar);
+  const menuOpacity = useAtomValue(menuOpacityAtom);
+  const shouldShowProgressBar = useAtomValue(shouldShowProgressBarAtom);
 
   const handleAnimationEnd = (): void => {
     if (infoVisibility !== InfoVisibilityEnum.fadeOut) return;

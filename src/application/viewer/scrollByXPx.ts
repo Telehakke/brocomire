@@ -2,17 +2,15 @@ import type { UserSettingsGetter } from "../../domain/models/userSettings/userSe
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
 import { createIsUserScrolled, type IsUserScrolledStore } from "../appState/isUserScrolled";
 
-type ScrollByXPxOptions = Readonly<{
-  amount: number;
-  isUserScrolledStore: IsUserScrolledStore;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** 現在の位置からさらにピクセル値で指定した位置に水平スクロール */
-export const scrollByXPx = (o: ScrollByXPxOptions): void => {
-  _scrollByXPx(o.viewerManager, o.amount, o.userSettingsGetter);
-  setIsUserScrolled(o.isUserScrolledStore);
+export const scrollByXPx = (
+  amount: number,
+  isUserScrolledStore: IsUserScrolledStore,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  _scrollByXPx(viewerManager, amount, userSettingsGetter);
+  setIsUserScrolled(isUserScrolledStore);
 };
 
 /* -------------------------------------------------------------------------- */

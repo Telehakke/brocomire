@@ -8,12 +8,12 @@ import {
   type SafeAreaLength,
 } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { safeAreaLengthAtom, userSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const SafeAreaLengthSlider = (): JSX.Element => {
-  const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const safeAreaLength = useAtomValue(safeAreaLengthAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(safeAreaLength);
 
   const handleValueChangedEnd = (value: number): void => {

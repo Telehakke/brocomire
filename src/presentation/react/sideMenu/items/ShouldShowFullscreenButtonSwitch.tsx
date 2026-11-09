@@ -3,12 +3,12 @@ import type { JSX } from "react";
 import { setShouldShowFullscreenButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowFullscreenButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowFullscreenButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldShowFullscreenButtonAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowFullscreenButtonSwitch = (): JSX.Element => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowFullscreenButton);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowButton = useAtomValue(shouldShowFullscreenButtonAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

@@ -6,25 +6,22 @@ import { scroll } from "../../../../application/viewer/scroll";
 import type { ContentFitValue } from "../../../../domain/models/userSettings/valueObjects/contentFit";
 import type { ZoomPercentage } from "../../../../domain/models/zoom/zoomPercentage";
 import {
+  contentFitAtom,
   isImageWiderThanViewerAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
   viewerManagerAtom,
   zoomPercentageAtom,
 } from "../../../atoms";
 
 const scrollAtom = atom(null, (get) => {
-  scroll({
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    viewerManager: get(viewerManagerAtom),
-  });
+  scroll(get(scrollPercentage2DAtom), get(viewerManagerAtom));
 });
 
 /* -------------------------------------------------------------------------- */
 
 export const ViewerContent = (props: { children: ReactNode }): JSX.Element => {
   const divRef = useRef<HTMLDivElement | null>(null);
-  const contentFit = useAtomValue(UserSettingsAtom.contentFit);
+  const contentFit = useAtomValue(contentFitAtom);
   const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
   const zoomPercentage = useAtomValue(zoomPercentageAtom);
   const scroll = useSetAtom(scrollAtom);

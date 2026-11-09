@@ -12,21 +12,19 @@ import type { UserSettingsGetter } from "../../domain/models/userSettings/userSe
 import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
 import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
 
-type PreloadFilesOptions = Readonly<{
-  cache: Cache;
-  fileManager: FileManager;
-  fileNavigatorStore: FileNavigatorStore;
-  userSettingsGetter: UserSettingsGetter;
-}>;
-
 /** 前後ページの画像ファイルを先読み */
-export const preloadFiles = (o: PreloadFilesOptions): void => {
-  if (!o.userSettingsGetter().shouldPreload) return;
+export const preloadFiles = (
+  cache: Cache,
+  fileManager: FileManager,
+  fileNavigatorStore: FileNavigatorStore,
+  userSettingsGetter: UserSettingsGetter,
+): void => {
+  if (!userSettingsGetter().shouldPreload) return;
 
-  const { bookFormat, displayMode } = o.userSettingsGetter();
-  preloadAfterFiles(bookFormat, o.cache, displayMode, o.fileManager, o.fileNavigatorStore.get());
-  preloadBeforeFiles(bookFormat, o.cache, displayMode, o.fileManager, o.fileNavigatorStore.get());
-  trimCache(bookFormat, o.cache, displayMode, o.fileNavigatorStore.get());
+  const { bookFormat, displayMode } = userSettingsGetter();
+  preloadAfterFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorStore.get());
+  preloadBeforeFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorStore.get());
+  trimCache(bookFormat, cache, displayMode, fileNavigatorStore.get());
 };
 
 /* -------------------------------------------------------------------------- */

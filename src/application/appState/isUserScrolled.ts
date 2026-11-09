@@ -15,7 +15,7 @@ export const createIsUserScrolled = (value: boolean): IsUserScrolled => {
   return value as IsUserScrolled;
 };
 
-export const getIsUserScrolledStore = (
+export const createIsUserScrolledStore = (
   getter: () => IsUserScrolled,
   setter: (value: IsUserScrolled) => void,
 ): IsUserScrolledStore => {

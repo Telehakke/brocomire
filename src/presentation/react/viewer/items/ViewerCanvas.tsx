@@ -1,6 +1,6 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, type CSSProperties, type JSX } from "react";
-import { getImageSizeStore } from "../../../../application/appState/imageSize";
+import { createImageSizeStore } from "../../../../application/appState/imageSize";
 import type { IsImageWiderThanViewer } from "../../../../application/appState/isImageWiderThanViewer";
 import type { IsLandscape } from "../../../../application/appState/isLandscape";
 import { createIsLoading } from "../../../../application/appState/isLoading";
@@ -8,7 +8,7 @@ import type { OnInvertLightness } from "../../../../application/appState/onInver
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
 import { preloadFiles } from "../../../../application/file/preloadFiles";
 import {
-  getFileNavigatorStore,
+  createFileNavigatorStore,
   type FileNavigator,
 } from "../../../../domain/models/file/fileNavigator";
 import type { BookFormat } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
@@ -21,19 +21,24 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/safeAreaLength";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import {
-  Atom,
+  bookFormatAtom,
   cacheAtom,
+  contentFitAtom,
+  displayModeAtom,
   fileManagerAtom,
   fileNavigatorAtom,
   imageSizeAtom,
   isImageWiderThanViewerAtom,
   isLandscapeAtom,
   isLoadingAtom,
+  isSafeAreaEnabledAtom,
   onInvertFilterAtom,
   onInvertLightnessAtom,
   onSharpeningFilterAtom,
+  safeAreaLengthAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
+  sharpeningFilterStrengthAtom,
+  userSettingsAtom,
   viewerManagerAtom,
 } from "../../../atoms";
 import {
@@ -51,7 +56,7 @@ type Image = HTMLImageElement | undefined;
 const getImagesAtom = atom(
   null,
   (get, _, bookFormat: BookFormat, displayMode: DisplayMode, fileNavigator: FileNavigator) => {
-    const { shouldPreload } = get(Atom.userSettings);
+    const { shouldPreload } = get(userSettingsAtom);
     return getImages({
       cache: shouldPreload ? get(cacheAtom) : undefined,
       bookFormat,
@@ -79,7 +84,7 @@ const drawImagesAtom = atom(
       ctx,
       fileNavigatorGetter: () => get(fileNavigatorAtom),
       images,
-      imageSizeStore: getImageSizeStore(
+      imageSizeStore: createImageSizeStore(
         () => get(imageSizeAtom),
         (v) => set(imageSizeAtom, v),
       ),
@@ -93,15 +98,15 @@ const drawImagesAtom = atom(
 );
 
 const preloadFilesAtom = atom(null, (get, set) => {
-  preloadFiles({
-    cache: get(cacheAtom),
-    fileManager: get(fileManagerAtom),
-    fileNavigatorStore: getFileNavigatorStore(
+  preloadFiles(
+    get(cacheAtom),
+    get(fileManagerAtom),
+    createFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    userSettingsGetter: () => get(Atom.userSettings),
-  });
+    () => get(userSettingsAtom),
+  );
 });
 
 /* -------------------------------------------------------------------------- */
@@ -109,18 +114,18 @@ const preloadFilesAtom = atom(null, (get, set) => {
 export const ViewerCanvas = (): JSX.Element => {
   const canvasRef = useRef<Canvas>(null);
   const timerId = useRef<number | undefined>(undefined);
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
-  const contentFit = useAtomValue(UserSettingsAtom.contentFit);
-  const displayMode = useAtomValue(UserSettingsAtom.displayMode);
+  const bookFormat = useAtomValue(bookFormatAtom);
+  const contentFit = useAtomValue(contentFitAtom);
+  const displayMode = useAtomValue(displayModeAtom);
   const fileNavigator = useAtomValue(fileNavigatorAtom);
   const isImageWiderThanViewer = useAtomValue(isImageWiderThanViewerAtom);
   const isLandscape = useAtomValue(isLandscapeAtom);
-  const isSafeAreaEnabled = useAtomValue(UserSettingsAtom.isSafeAreaEnabled);
+  const isSafeAreaEnabled = useAtomValue(isSafeAreaEnabledAtom);
   const onInvertFilter = useAtomValue(onInvertFilterAtom);
   const onInvertLightness = useAtomValue(onInvertLightnessAtom);
   const onSharpeningFilter = useAtomValue(onSharpeningFilterAtom);
-  const safeAreaLength = useAtomValue(UserSettingsAtom.safeAreaLength);
-  const sharpeningFilterStrength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
+  const safeAreaLength = useAtomValue(safeAreaLengthAtom);
+  const sharpeningFilterStrength = useAtomValue(sharpeningFilterStrengthAtom);
   const viewerManager = useAtomValue(viewerManagerAtom);
   const drawImages = useSetAtom(drawImagesAtom);
   const getImages = useSetAtom(getImagesAtom);

@@ -1,34 +1,34 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { Sparkle } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { getIsUserScrolledStore } from "../../../application/appState/isUserScrolled";
+import { createIsUserScrolledStore } from "../../../application/appState/isUserScrolled";
 import { createOnSharpeningFilter } from "../../../application/appState/onSharpeningFilter";
 import { updateScrollPercentage2D } from "../../../application/viewer/updateScrollPercentage2D";
 import {
   isUserScrolledAtom,
   onSharpeningFilterAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
+  shouldShowSharpeningFilterButtonAtom,
   viewerManagerAtom,
 } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 const updateScrollPercentage2DAtom = atom(null, (get, set) => {
-  updateScrollPercentage2D({
-    isUserScrolledStore: getIsUserScrolledStore(
+  updateScrollPercentage2D(
+    createIsUserScrolledStore(
       () => get(isUserScrolledAtom),
       (v) => set(isUserScrolledAtom, v),
     ),
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    viewerManager: get(viewerManagerAtom),
-  });
+    get(scrollPercentage2DAtom),
+    get(viewerManagerAtom),
+  );
 });
 
 /* -------------------------------------------------------------------------- */
 
 export const SharpeningFilterButton = (): JSX.Element | null => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowSharpeningFilterButton);
+  const shouldShowButton = useAtomValue(shouldShowSharpeningFilterButtonAtom);
   const onFilter = useAtomValue(onSharpeningFilterAtom);
 
   if (!shouldShowButton) return null;

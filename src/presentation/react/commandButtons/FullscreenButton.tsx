@@ -7,12 +7,12 @@ import {
   exitFullscreen,
   requestFullscreen,
 } from "../../../infrastructure/viewer/fullscreen";
-import { UserSettingsAtom } from "../../atoms";
+import { shouldShowFullscreenButtonAtom } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 export const FullscreenButton = (): JSX.Element | null => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowFullscreenButton);
+  const shouldShowButton = useAtomValue(shouldShowFullscreenButtonAtom);
   const [onFullscreen, setOnFullscreen] = useState(false);
 
   if (!shouldShowButton) return null;

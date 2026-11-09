@@ -3,12 +3,12 @@ import type { JSX } from "react";
 import { setShouldAdvance } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldAdvance } from "../../../../domain/models/userSettings/valueObjects/shouldAdvance";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldAdvanceAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldAdvanceSwitch = (): JSX.Element => {
-  const shouldAdvance = useAtomValue(UserSettingsAtom.shouldAdvance);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldAdvance = useAtomValue(shouldAdvanceAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

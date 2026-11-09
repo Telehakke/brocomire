@@ -3,12 +3,12 @@ import type { JSX } from "react/jsx-runtime";
 import { setShouldShowProgressBar } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowProgressBar } from "../../../../domain/models/userSettings/valueObjects/shouldShowProgressBar";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldShowProgressBarAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowProgressBarSwitch = (): JSX.Element => {
-  const shouldShowProgressBar = useAtomValue(UserSettingsAtom.shouldShowProgressBar);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowProgressBar = useAtomValue(shouldShowProgressBarAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

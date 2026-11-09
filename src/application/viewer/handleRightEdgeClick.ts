@@ -7,20 +7,32 @@ import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { goToNextPosition } from "./goToNextPosition";
 import { goToRightPosition } from "./goToRightPosition";
 
-type HandleRightEdgeClickOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** ビューアの右端をクリック */
-export const handleRightEdgeClick = (o: HandleRightEdgeClickOptions): void => {
-  if (o.userSettingsGetter().shouldAdvance) {
-    goToNextPosition({ ...o });
+export const handleRightEdgeClick = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  if (userSettingsGetter().shouldAdvance) {
+    goToNextPosition(
+      fileNavigatorStore,
+      isUserScrolledStore,
+      notificationStore,
+      scrollPercentage2D,
+      userSettingsGetter,
+      viewerManager,
+    );
     return;
   }
-  goToRightPosition({ ...o });
+  goToRightPosition(
+    fileNavigatorStore,
+    isUserScrolledStore,
+    notificationStore,
+    scrollPercentage2D,
+    userSettingsGetter,
+    viewerManager,
+  );
 };

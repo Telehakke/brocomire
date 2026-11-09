@@ -8,12 +8,12 @@ import {
   type MenuOpacity,
 } from "../../../../domain/models/userSettings/valueObjects/menuOpacity";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { menuOpacityAtom, userSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const MenuOpacitySlider = (): JSX.Element => {
-  const menuOpacity = useAtomValue(UserSettingsAtom.menuOpacity);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const menuOpacity = useAtomValue(menuOpacityAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(menuOpacity);
 
   const handleValueChangeEnd = (value: number): void => {

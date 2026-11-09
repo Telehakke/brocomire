@@ -8,7 +8,7 @@ import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveMan
 import {
   chevronMarkAtom,
   isUserScrolledAtom,
-  UserSettingsAtom,
+  longPressRecognitionTimeAtom,
   viewerManagerAtom,
 } from "../../../atoms";
 
@@ -27,7 +27,7 @@ export const ViewerBody = (props: {
   const clickGestureManager = useRef(new ClickGestureManager());
   const pullManager = useRef(new PullManager());
   const touchMoveManager = useRef(new TouchMoveManager(0, 0));
-  const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
+  const longPressRecognitionTime = useAtomValue(longPressRecognitionTimeAtom);
   const viewerManager = useAtomValue(viewerManagerAtom);
   const setChevronMark = useSetAtom(chevronMarkAtom);
   const setIsUserScrolled = useSetAtom(isUserScrolledAtom);

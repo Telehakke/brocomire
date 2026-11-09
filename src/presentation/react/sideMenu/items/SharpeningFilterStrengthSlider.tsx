@@ -7,12 +7,12 @@ import {
   type SharpeningFilterStrength,
 } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { sharpeningFilterStrengthAtom, userSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const SharpeningFilterStrengthSlider = (): JSX.Element => {
-  const strength = useAtomValue(UserSettingsAtom.sharpeningFilterStrength);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const strength = useAtomValue(sharpeningFilterStrengthAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(strength);
 
   const handleValueChangedEnd = (value: number): void => {

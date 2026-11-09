@@ -7,22 +7,25 @@ import { exhaustiveCheck } from "../../domain/models/utils/exhaustiveCheck";
 import { moveToNextPage } from "./moveToNextPage";
 import { moveToPreviousPage } from "./moveToPreviousPage";
 
-type MoveToLeftPageOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-}>;
-
 /** 左側のページへ移動 */
-export const moveToLeftPage = (o: MoveToLeftPageOptions): void => {
-  const { bookFormat } = o.userSettingsGetter();
+export const moveToLeftPage = (
+  fileNavigatorStore: FileNavigatorStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+): void => {
+  const { bookFormat } = userSettingsGetter();
   switch (bookFormat) {
     case BookFormatEnum.vertical:
-      moveToNextPage({ ...o });
+      moveToNextPage(fileNavigatorStore, notificationStore, scrollPercentage2D, userSettingsGetter);
       break;
     case BookFormatEnum.horizontal:
-      moveToPreviousPage({ ...o });
+      moveToPreviousPage(
+        fileNavigatorStore,
+        notificationStore,
+        scrollPercentage2D,
+        userSettingsGetter,
+      );
       break;
     default:
       exhaustiveCheck(bookFormat);

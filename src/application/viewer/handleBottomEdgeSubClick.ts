@@ -6,16 +6,21 @@ import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
 import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { goToPreviousPosition } from "./goToPreviousPosition";
 
-type HandleBottomEdgeSubClickOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** ビューアの下端を右クリック */
-export const handleBottomEdgeSubClick = (o: HandleBottomEdgeSubClickOptions): void => {
-  goToPreviousPosition({ ...o });
+export const handleBottomEdgeSubClick = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  goToPreviousPosition(
+    fileNavigatorStore,
+    isUserScrolledStore,
+    notificationStore,
+    scrollPercentage2D,
+    userSettingsGetter,
+    viewerManager,
+  );
 };

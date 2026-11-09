@@ -8,12 +8,12 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/bookFormat";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { bookFormatAtom, userSettingsAtom } from "../../../atoms";
 import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const BookFormatSegmentGroup = (): JSX.Element => {
-  const bookFormat = useAtomValue(UserSettingsAtom.bookFormat);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const bookFormat = useAtomValue(bookFormatAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((v) =>

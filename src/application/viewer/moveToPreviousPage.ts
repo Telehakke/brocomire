@@ -12,20 +12,18 @@ import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercen
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/displayMode";
 
-type MoveToPreviousPageOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-}>;
-
 /** 前のページに戻る */
-export const moveToPreviousPage = (o: MoveToPreviousPageOptions): void => {
-  if (!hasPreviousFile(o.fileNavigatorStore.get())) return;
+export const moveToPreviousPage = (
+  fileNavigatorStore: FileNavigatorStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+): void => {
+  if (!hasPreviousFile(fileNavigatorStore.get())) return;
 
-  const { bookFormat, displayMode } = o.userSettingsGetter();
-  _moveToNextPage(o.fileNavigatorStore, displayMode, o.notificationStore);
-  o.scrollPercentage2D.setEndPosition(bookFormat);
+  const { bookFormat, displayMode } = userSettingsGetter();
+  _moveToNextPage(fileNavigatorStore, displayMode, notificationStore);
+  scrollPercentage2D.setEndPosition(bookFormat);
   // スクロール処理は画像が生成されてから行うため、ここではスクロール位置だけを設定する
 };
 

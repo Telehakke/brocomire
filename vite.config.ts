@@ -152,9 +152,17 @@ export default defineConfig({
   ]),
   build: {
     outDir: "docs",
-    chunkSizeWarningLimit: 1100,
+    chunkSizeWarningLimit: 1000,
     license: { fileName: "licenses.md" },
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [{ name: "vendor", test: /node_modules/ }],
+        },
+      },
+    },
   },
+
   server: { host: true },
   base: "/brocomire/",
 });

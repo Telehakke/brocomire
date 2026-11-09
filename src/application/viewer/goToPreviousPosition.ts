@@ -9,24 +9,27 @@ import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { moveToPreviousPage } from "./moveToPreviousPage";
 import { updateScrollPercentage2D } from "./updateScrollPercentage2D";
 
-type GoToPreviousOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** 前へ戻る */
-export const goToPreviousPosition = (o: GoToPreviousOptions): void => {
-  updateScrollPercentage2D({ ...o });
-  const { bookFormat, scrollStepCount } = o.userSettingsGetter();
-  if (canMoveToPreviousPage(o.scrollPercentage2D, bookFormat, o.viewerManager)) {
-    moveToPreviousPage({ ...o });
+export const goToPreviousPosition = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  updateScrollPercentage2D(isUserScrolledStore, scrollPercentage2D, viewerManager);
+  const { bookFormat, scrollStepCount } = userSettingsGetter();
+  if (canMoveToPreviousPage(scrollPercentage2D, bookFormat, viewerManager)) {
+    moveToPreviousPage(
+      fileNavigatorStore,
+      notificationStore,
+      scrollPercentage2D,
+      userSettingsGetter,
+    );
     return;
   }
-  _goToPreviousPosition(o.scrollPercentage2D, bookFormat, scrollStepCount, o.viewerManager);
+  _goToPreviousPosition(scrollPercentage2D, bookFormat, scrollStepCount, viewerManager);
 };
 
 /* -------------------------------------------------------------------------- */

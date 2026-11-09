@@ -1,4 +1,3 @@
-import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
 import {
   createFileNavigator,
@@ -17,37 +16,34 @@ import {
   type UserSettingsStore,
 } from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
-import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
 import { createOnViewer, type OnViewerStore } from "../appState/onViewer";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
-type OpenFileOptions = Readonly<{
-  cache: Cache;
-  fileManager: FileManager;
-  fileNavigatorStore: FileNavigatorStore;
-  notificationStore: NotificationStore;
-  onViewerStore: OnViewerStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsStore: UserSettingsStore;
-  userSettingsRepository: UserSettingsRepository;
-  viewerManager: ViewerManager;
-}>;
-
 /** ファイルを開く */
-export const openFile = async (o: OpenFileOptions): Promise<void> => {
-  if (!o.fileManager.hasFiles()) return;
+export const openFile = async (
+  fileManager: FileManager,
+  fileNavigatorStore: FileNavigatorStore,
+  notificationStore: NotificationStore,
+  onViewerStore: OnViewerStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsStore: UserSettingsStore,
+  userSettingsRepository: UserSettingsRepository,
+): Promise<void> => {
+  if (!fileManager.hasFiles()) return;
 
-  const { historyList } = o.userSettingsStore.get();
-  const bookId = createBookId(o.fileManager.getHashedFileName());
+  const { historyList } = userSettingsStore.get();
+  const bookId = createBookId(fileManager.getHashedFileName());
   const newHistoryList = tryPrependHistoryList(historyList, bookId);
-  updateHistoryList(o.userSettingsStore, newHistoryList, o.userSettingsRepository);
-  initFileNavigator(o.fileNavigatorStore, o.fileManager.getLength());
-  openViewer(o.onViewerStore);
-  moveToIndexPage({
-    index: getClosedPageIndex(historyList, bookId) ?? 0,
-    userSettingsGetter: () => o.userSettingsStore.get(),
-    ...o,
-  });
+  updateHistoryList(userSettingsStore, newHistoryList, userSettingsRepository);
+  initFileNavigator(fileNavigatorStore, fileManager.getLength());
+  openViewer(onViewerStore);
+  moveToIndexPage(
+    fileNavigatorStore,
+    getClosedPageIndex(historyList, bookId) ?? 0,
+    notificationStore,
+    scrollPercentage2D,
+    () => userSettingsStore.get(),
+  );
 };
 
 /* -------------------------------------------------------------------------- */

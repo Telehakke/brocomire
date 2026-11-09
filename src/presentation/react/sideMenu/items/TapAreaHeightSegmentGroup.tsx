@@ -8,12 +8,12 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { tapAreaSizeAtom, userSettingsAtom } from "../../../atoms";
 import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const TapAreaHeightSegmentGroup = (): JSX.Element => {
-  const tapAreaSize = useAtomValue(UserSettingsAtom.tapAreaSize);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const tapAreaSize = useAtomValue(tapAreaSizeAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((v) =>

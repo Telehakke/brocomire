@@ -26,7 +26,7 @@ export const subZoomPercentage = (input: ZoomPercentage, amount: number): ZoomPe
   return create(Math.max(input - amount, ZOOM_PERCENTAGE_MIN));
 };
 
-export const getZoomPercentageStore = (
+export const createZoomPercentageStore = (
   getter: () => ZoomPercentage,
   setter: (value: ZoomPercentage) => void,
 ): ZoomPercentageStore => {

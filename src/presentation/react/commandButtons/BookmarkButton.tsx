@@ -3,20 +3,20 @@ import { Bookmark } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
 import { createBookmarkIndex } from "../../../application/appState/bookmarkIndex";
 import { moveToIndexPage } from "../../../application/viewer/moveToIndexPage";
-import { getFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
-import { getNotificationStore } from "../../../domain/models/notification/notification";
+import { createFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
+import { createNotificationStore } from "../../../domain/models/notification/notification";
 import {
-  Atom,
   bookmarkIndexAtom,
   fileNavigatorAtom,
   notificationAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
+  shouldShowBookmarkButtonAtom,
+  userSettingsAtom,
 } from "../../atoms";
 import { IconButton } from "../utils/IconButton";
 
 export const BookmarkButton = (): JSX.Element | null => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowBookmarkButton);
+  const shouldShowButton = useAtomValue(shouldShowBookmarkButtonAtom);
 
   if (!shouldShowButton) return null;
   return (
@@ -47,19 +47,19 @@ const AddBookmarkButton = (): JSX.Element => {
 /* -------------------------------------------------------------------------- */
 
 const moveToIndexPageAtom = atom(null, (get, set, index: number) => {
-  moveToIndexPage({
-    fileNavigatorStore: getFileNavigatorStore(
+  moveToIndexPage(
+    createFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
     index,
-    notificationStore: getNotificationStore(
+    createNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    userSettingsGetter: () => get(Atom.userSettings),
-  });
+    get(scrollPercentage2DAtom),
+    () => get(userSettingsAtom),
+  );
 });
 
 const GoToBookmarkButton = (): JSX.Element | null => {

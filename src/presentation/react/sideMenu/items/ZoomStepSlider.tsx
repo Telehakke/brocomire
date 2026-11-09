@@ -7,12 +7,12 @@ import {
   type ZoomStep,
 } from "../../../../domain/models/userSettings/valueObjects/zoomStep";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { userSettingsAtom, zoomStepAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const ZoomStepSlider = (): JSX.Element => {
-  const zoomStep = useAtomValue(UserSettingsAtom.zoomStep);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const zoomStep = useAtomValue(zoomStepAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(zoomStep);
 
   const handleValueChangedEnd = (value: number): void => {

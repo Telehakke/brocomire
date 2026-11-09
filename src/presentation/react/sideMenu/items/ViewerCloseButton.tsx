@@ -1,56 +1,52 @@
 import { atom, useSetAtom } from "jotai";
 import { BookX } from "lucide-react";
 import type { JSX } from "react";
-import { getBookmarkIndexStore } from "../../../../application/appState/bookmarkIndex";
-import { getIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
-import { getOnViewerStore } from "../../../../application/appState/onViewer";
+import { createBookmarkIndexStore } from "../../../../application/appState/bookmarkIndex";
+import { createIsOpenSideMenuStore } from "../../../../application/appState/isOpenSideMenu";
+import { createOnViewerStore } from "../../../../application/appState/onViewer";
 import { closeViewer } from "../../../../application/viewer/closeViewer";
-import { getFileNavigatorStore } from "../../../../domain/models/file/fileNavigator";
-import { getUserSettingsStore } from "../../../../domain/models/userSettings/userSettings";
-import { getZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
+import { createUserSettingsStore } from "../../../../domain/models/userSettings/userSettings";
+import { createZoomPercentageStore } from "../../../../domain/models/zoom/zoomPercentage";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
 import {
-  Atom,
   bookmarkIndexAtom,
   cacheAtom,
   fileManagerAtom,
   fileNavigatorAtom,
   isOpenSideMenuAtom,
   onViewerAtom,
+  userSettingsAtom,
   zoomPercentageAtom,
 } from "../../../atoms";
 import { LargeIconButton } from "../../utils/LargeIconButton";
 
 const closeViewerAtom = atom(null, (get, set) => {
-  closeViewer({
-    bookmarkIndexStore: getBookmarkIndexStore(
+  closeViewer(
+    createBookmarkIndexStore(
       () => get(bookmarkIndexAtom),
       (v) => set(bookmarkIndexAtom, v),
     ),
-    cache: get(cacheAtom),
-    fileManager: get(fileManagerAtom),
-    fileNavigatorStore: getFileNavigatorStore(
-      () => get(fileNavigatorAtom),
-      (v) => set(fileNavigatorAtom, v),
-    ),
-    isOpenSideMenuStore: getIsOpenSideMenuStore(
+    get(cacheAtom),
+    get(fileManagerAtom),
+    () => get(fileNavigatorAtom),
+    createIsOpenSideMenuStore(
       () => get(isOpenSideMenuAtom),
       (v) => set(isOpenSideMenuAtom, v),
     ),
-    OnViewerStore: getOnViewerStore(
+    createOnViewerStore(
       () => get(onViewerAtom),
       (v) => set(onViewerAtom, v),
     ),
-    userSettingsStore: getUserSettingsStore(
-      () => get(Atom.userSettings),
-      (v) => set(Atom.userSettings, v),
+    createUserSettingsStore(
+      () => get(userSettingsAtom),
+      (v) => set(userSettingsAtom, v),
     ),
-    userSettingsRepository: new LocalStorageUserSettingsRepository(),
-    zoomPercentageStore: getZoomPercentageStore(
+    new LocalStorageUserSettingsRepository(),
+    createZoomPercentageStore(
       () => get(zoomPercentageAtom),
       (v) => set(zoomPercentageAtom, v),
     ),
-  });
+  );
 });
 
 export const ViewerCloseButton = (): JSX.Element => {

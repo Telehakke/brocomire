@@ -3,12 +3,12 @@ import type { JSX } from "react/jsx-runtime";
 import { setShouldShowInvertLightnessButton } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldShowInvertLightnessButton } from "../../../../domain/models/userSettings/valueObjects/shouldShowInvertLightnessButton";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldShowInvertLightnessButtonAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldShowInvertLightnessButtonSwitch = (): JSX.Element => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowInvertLightnessButton);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldShowButton = useAtomValue(shouldShowInvertLightnessButtonAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

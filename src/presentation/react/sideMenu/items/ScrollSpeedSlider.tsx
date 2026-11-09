@@ -7,12 +7,12 @@ import {
   type ScrollSpeed,
 } from "../../../../domain/models/userSettings/valueObjects/scrollSpeed";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { scrollSpeedAtom, userSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const ScrollSpeedSlider = (): JSX.Element => {
-  const scrollSpeed = useAtomValue(UserSettingsAtom.scrollSpeed);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const scrollSpeed = useAtomValue(scrollSpeedAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(scrollSpeed);
 
   const handleValueChangeEnd = (value: number): void => {

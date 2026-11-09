@@ -1,34 +1,34 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { Sun } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
-import { getIsUserScrolledStore } from "../../../application/appState/isUserScrolled";
+import { createIsUserScrolledStore } from "../../../application/appState/isUserScrolled";
 import { createOnInvertLightness } from "../../../application/appState/onInvertLightness";
 import { updateScrollPercentage2D } from "../../../application/viewer/updateScrollPercentage2D";
 import {
   isUserScrolledAtom,
   onInvertLightnessAtom,
   scrollPercentage2DAtom,
-  UserSettingsAtom,
+  shouldShowInvertLightnessButtonAtom,
   viewerManagerAtom,
 } from "../../atoms";
 import { IconBlueButton } from "../utils/IconBlueButton";
 import { IconButton } from "../utils/IconButton";
 
 const updateScrollPercentage2DAtom = atom(null, (get, set) => {
-  updateScrollPercentage2D({
-    isUserScrolledStore: getIsUserScrolledStore(
+  updateScrollPercentage2D(
+    createIsUserScrolledStore(
       () => get(isUserScrolledAtom),
       (v) => set(isUserScrolledAtom, v),
     ),
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    viewerManager: get(viewerManagerAtom),
-  });
+    get(scrollPercentage2DAtom),
+    get(viewerManagerAtom),
+  );
 });
 
 /* -------------------------------------------------------------------------- */
 
 export const InvertLightnessButton = (): JSX.Element | null => {
-  const shouldShowButton = useAtomValue(UserSettingsAtom.shouldShowInvertLightnessButton);
+  const shouldShowButton = useAtomValue(shouldShowInvertLightnessButtonAtom);
   const onInvert = useAtomValue(onInvertLightnessAtom);
 
   if (!shouldShowButton) return null;

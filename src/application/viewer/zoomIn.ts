@@ -13,21 +13,19 @@ import {
 import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { updateScrollPercentage2D } from "./updateScrollPercentage2D";
 
-type ZoomInOptions = Readonly<{
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-  zoomPercentageStore: ZoomPercentageStore;
-}>;
-
 /** 拡大 */
-export const zoomIn = (o: ZoomInOptions): void => {
-  if (o.zoomPercentageStore.get() === ZOOM_PERCENTAGE_MAX) return;
+export const zoomIn = (
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+  zoomPercentageStore: ZoomPercentageStore,
+): void => {
+  if (zoomPercentageStore.get() === ZOOM_PERCENTAGE_MAX) return;
 
-  _zoomIn(o.userSettingsGetter, o.zoomPercentageStore, o.notificationStore);
-  updateScrollPercentage2D({ ...o });
+  _zoomIn(userSettingsGetter, zoomPercentageStore, notificationStore);
+  updateScrollPercentage2D(isUserScrolledStore, scrollPercentage2D, viewerManager);
 };
 
 /* -------------------------------------------------------------------------- */

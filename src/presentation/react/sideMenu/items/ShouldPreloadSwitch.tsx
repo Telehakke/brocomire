@@ -3,12 +3,12 @@ import type { JSX } from "react/jsx-runtime";
 import { setShouldPreload } from "../../../../domain/models/userSettings/userSettings";
 import type { ShouldPreload } from "../../../../domain/models/userSettings/valueObjects/shouldPreload";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { shouldPreloadAtom, userSettingsAtom } from "../../../atoms";
 import { Switch } from "../../utils/Switch";
 
 export const ShouldPreloadSwitch = (): JSX.Element => {
-  const shouldPreload = useAtomValue(UserSettingsAtom.shouldPreload);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const shouldPreload = useAtomValue(shouldPreloadAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleCheckedChange = (checked: boolean): void => {
     setUserSettings((v) =>

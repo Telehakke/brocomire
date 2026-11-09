@@ -2,44 +2,40 @@ import { atom, useSetAtom } from "jotai";
 import { FileImage } from "lucide-react";
 import type { ChangeEvent } from "react";
 import type { JSX } from "react/jsx-runtime";
-import { getOnViewerStore } from "../../../application/appState/onViewer";
+import { createOnViewerStore } from "../../../application/appState/onViewer";
 import { openImageFiles } from "../../../application/file/openImageFiles";
-import { getFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
-import { getNotificationStore } from "../../../domain/models/notification/notification";
+import { createFileNavigatorStore } from "../../../domain/models/file/fileNavigator";
+import { createNotificationStore } from "../../../domain/models/notification/notification";
 import { ImageFileManger } from "../../../infrastructure/file/imageFileManager";
 import {
-  Atom,
-  cacheAtom,
   fileManagerAtom,
   fileNavigatorAtom,
   notificationAtom,
   onViewerAtom,
   scrollPercentage2DAtom,
-  viewerManagerAtom,
+  userSettingsAtom,
 } from "../../atoms";
 import { FileOpenButton } from "./FileOpenButtons";
 
 const openImageFilesAtom = atom(null, (get, set, files: File[]) => {
   set(fileManagerAtom, ImageFileManger.create(files));
-  openImageFiles({
-    cache: get(cacheAtom),
-    fileManager: get(fileManagerAtom),
-    fileNavigatorStore: getFileNavigatorStore(
+  openImageFiles(
+    get(fileManagerAtom),
+    createFileNavigatorStore(
       () => get(fileNavigatorAtom),
       (v) => set(fileNavigatorAtom, v),
     ),
-    notificationStore: getNotificationStore(
+    createNotificationStore(
       () => get(notificationAtom),
       (v) => set(notificationAtom, v),
     ),
-    onViewerStore: getOnViewerStore(
+    createOnViewerStore(
       () => get(onViewerAtom),
       (v) => set(onViewerAtom, v),
     ),
-    scrollPercentage2D: get(scrollPercentage2DAtom),
-    userSettingsGetter: () => get(Atom.userSettings),
-    viewerManager: get(viewerManagerAtom),
-  });
+    get(scrollPercentage2DAtom),
+    () => get(userSettingsAtom),
+  );
 });
 
 export const ImageFilesOpenButton = (): JSX.Element => {

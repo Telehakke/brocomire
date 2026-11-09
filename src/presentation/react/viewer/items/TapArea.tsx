@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type CSSProperties, type JSX } from "react
 import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
 import { SmoothScroll } from "../../../../infrastructure/viewer/smoothScroll";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
-import { UserSettingsAtom } from "../../../atoms";
+import { isSmoothScrollEnabledAtom, longPressRecognitionTimeAtom } from "../../../atoms";
 
 export const TapArea = (props: {
   className: string;
@@ -17,8 +17,8 @@ export const TapArea = (props: {
   const clickGestureManager = useRef(new ClickGestureManager());
   const smoothScroll = useRef(new SmoothScroll());
   const touchMoveManager = useRef(new TouchMoveManager(0, 0));
-  const longPressRecognitionTime = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
-  const isSmoothScrollEnabled = useAtomValue(UserSettingsAtom.isSmoothScrollEnabled);
+  const longPressRecognitionTime = useAtomValue(longPressRecognitionTimeAtom);
+  const isSmoothScrollEnabled = useAtomValue(isSmoothScrollEnabledAtom);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {

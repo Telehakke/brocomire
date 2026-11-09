@@ -46,37 +46,55 @@ export const scrollPercentage2DAtom = atom(() => new ScrollPercentage2D());
 export const viewerManagerAtom = atom<ViewerManager>(() => new ImageViewerManager());
 export const zoomPercentageAtom = atom(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
 
-export const Atom = {
-  userSettings: atom(createUserSettings()),
-} as const;
+/* -------------------------------------------------------------------------- */
 
-export const UserSettingsAtom = {
-  bookFormat: selectAtom(Atom.userSettings, (u) => u.bookFormat),
-  contentFit: selectAtom(Atom.userSettings, (u) => u.contentFit),
-  displayMode: selectAtom(Atom.userSettings, (u) => u.displayMode),
-  historyList: selectAtom(Atom.userSettings, (u) => u.historyList),
-  isSafeAreaEnabled: selectAtom(Atom.userSettings, (u) => u.isSafeAreaEnabled),
-  isSmoothScrollEnabled: selectAtom(Atom.userSettings, (u) => u.isSmoothScrollEnabled),
-  longPressRecognitionTime: selectAtom(Atom.userSettings, (u) => u.longPressRecognitionTime),
-  menuOpacity: selectAtom(Atom.userSettings, (u) => u.menuOpacity),
-  safeAreaLength: selectAtom(Atom.userSettings, (u) => u.safeAreaLength),
-  scrollSpeed: selectAtom(Atom.userSettings, (u) => u.scrollSpeed),
-  scrollStepCount: selectAtom(Atom.userSettings, (u) => u.scrollStepCount),
-  sharpeningFilterStrength: selectAtom(Atom.userSettings, (u) => u.sharpeningFilterStrength),
-  shouldAdvance: selectAtom(Atom.userSettings, (u) => u.shouldAdvance),
-  shouldPreload: selectAtom(Atom.userSettings, (u) => u.shouldPreload),
-  shouldShowBookmarkButton: selectAtom(Atom.userSettings, (u) => u.shouldShowBookmarkButton),
-  shouldShowFullscreenButton: selectAtom(Atom.userSettings, (u) => u.shouldShowFullscreenButton),
-  shouldShowInvertButton: selectAtom(Atom.userSettings, (u) => u.shouldShowInvertButton),
-  shouldShowInvertLightnessButton: selectAtom(
-    Atom.userSettings,
-    (u) => u.shouldShowInvertLightnessButton,
-  ),
-  shouldShowProgressBar: selectAtom(Atom.userSettings, (u) => u.shouldShowProgressBar),
-  shouldShowSharpeningFilterButton: selectAtom(
-    Atom.userSettings,
-    (u) => u.shouldShowSharpeningFilterButton,
-  ),
-  tapAreaSize: selectAtom(Atom.userSettings, (u) => u.tapAreaSize),
-  zoomStep: selectAtom(Atom.userSettings, (u) => u.zoomStep),
-} as const;
+export const userSettingsAtom = atom(createUserSettings());
+export const bookFormatAtom = selectAtom(userSettingsAtom, (u) => u.bookFormat);
+export const contentFitAtom = selectAtom(userSettingsAtom, (u) => u.contentFit);
+export const displayModeAtom = selectAtom(userSettingsAtom, (u) => u.displayMode);
+export const historyListAtom = selectAtom(userSettingsAtom, (u) => u.historyList);
+export const isSafeAreaEnabledAtom = selectAtom(userSettingsAtom, (u) => u.isSafeAreaEnabled);
+export const isSmoothScrollEnabledAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.isSmoothScrollEnabled,
+);
+export const longPressRecognitionTimeAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.longPressRecognitionTime,
+);
+export const menuOpacityAtom = selectAtom(userSettingsAtom, (u) => u.menuOpacity);
+export const safeAreaLengthAtom = selectAtom(userSettingsAtom, (u) => u.safeAreaLength);
+export const scrollSpeedAtom = selectAtom(userSettingsAtom, (u) => u.scrollSpeed);
+export const scrollStepCountAtom = selectAtom(userSettingsAtom, (u) => u.scrollStepCount);
+export const sharpeningFilterStrengthAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.sharpeningFilterStrength,
+);
+export const shouldAdvanceAtom = selectAtom(userSettingsAtom, (u) => u.shouldAdvance);
+export const shouldPreloadAtom = selectAtom(userSettingsAtom, (u) => u.shouldPreload);
+export const shouldShowBookmarkButtonAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowBookmarkButton,
+);
+export const shouldShowFullscreenButtonAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowFullscreenButton,
+);
+export const shouldShowInvertButtonAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowInvertButton,
+);
+export const shouldShowInvertLightnessButtonAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowInvertLightnessButton,
+);
+export const shouldShowProgressBarAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowProgressBar,
+);
+export const shouldShowSharpeningFilterButtonAtom = selectAtom(
+  userSettingsAtom,
+  (u) => u.shouldShowSharpeningFilterButton,
+);
+export const tapAreaSizeAtom = selectAtom(userSettingsAtom, (u) => u.tapAreaSize);
+export const zoomStepAtom = selectAtom(userSettingsAtom, (u) => u.zoomStep);

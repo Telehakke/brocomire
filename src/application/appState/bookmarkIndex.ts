@@ -15,7 +15,7 @@ export const createBookmarkIndex = (value?: number): BookmarkIndex => {
   return value as BookmarkIndex;
 };
 
-export const getBookmarkIndexStore = (
+export const createBookmarkIndexStore = (
   getter: () => BookmarkIndex,
   setter: (value: BookmarkIndex) => void,
 ): BookmarkIndexStore => {

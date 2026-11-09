@@ -8,12 +8,12 @@ import {
   type LongPressRecognitionTime,
 } from "../../../../domain/models/userSettings/valueObjects/longPressRecognitionTime";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { longPressRecognitionTimeAtom, userSettingsAtom } from "../../../atoms";
 import { Slider } from "../../utils/Slider";
 
 export const LongPressRecognitionTimeSlider = (): JSX.Element => {
-  const time = useAtomValue(UserSettingsAtom.longPressRecognitionTime);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const time = useAtomValue(longPressRecognitionTimeAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
   const [value, setValue] = useState<number>(time);
 
   const handleValueChangeEnd = (value: number): void => {

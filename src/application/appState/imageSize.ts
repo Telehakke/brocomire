@@ -20,7 +20,7 @@ export const createImageSize = (width: number, height: number): ImageSize => {
   return { width, height } as ImageSize;
 };
 
-export const getImageSizeStore = (
+export const createImageSizeStore = (
   getter: () => ImageSize,
   setter: (value: ImageSize) => void,
 ): ImageSizeStore => {

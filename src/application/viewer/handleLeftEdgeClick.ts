@@ -7,20 +7,32 @@ import type { IsUserScrolledStore } from "../appState/isUserScrolled";
 import { goToLeftPosition } from "./goToLeftPosition";
 import { goToNextPosition } from "./goToNextPosition";
 
-type HandleLeftEdgeClickOptions = Readonly<{
-  fileNavigatorStore: FileNavigatorStore;
-  isUserScrolledStore: IsUserScrolledStore;
-  notificationStore: NotificationStore;
-  scrollPercentage2D: ScrollPercentage2D;
-  userSettingsGetter: UserSettingsGetter;
-  viewerManager: ViewerManager;
-}>;
-
 /** ビューアの左端をクリック */
-export const handleLeftEdgeClick = (o: HandleLeftEdgeClickOptions): void => {
-  if (o.userSettingsGetter().shouldAdvance) {
-    goToNextPosition({ ...o });
+export const handleLeftEdgeClick = (
+  fileNavigatorStore: FileNavigatorStore,
+  isUserScrolledStore: IsUserScrolledStore,
+  notificationStore: NotificationStore,
+  scrollPercentage2D: ScrollPercentage2D,
+  userSettingsGetter: UserSettingsGetter,
+  viewerManager: ViewerManager,
+): void => {
+  if (userSettingsGetter().shouldAdvance) {
+    goToNextPosition(
+      fileNavigatorStore,
+      isUserScrolledStore,
+      notificationStore,
+      scrollPercentage2D,
+      userSettingsGetter,
+      viewerManager,
+    );
     return;
   }
-  goToLeftPosition({ ...o });
+  goToLeftPosition(
+    fileNavigatorStore,
+    isUserScrolledStore,
+    notificationStore,
+    scrollPercentage2D,
+    userSettingsGetter,
+    viewerManager,
+  );
 };

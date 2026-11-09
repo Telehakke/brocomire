@@ -22,7 +22,7 @@ export const initNotification = (): Notification => {
   return create({ message: undefined, visibility: "hidden" });
 };
 
-export const getNotificationStore = (
+export const createNotificationStore = (
   getter: () => Notification,
   setter: (value: Notification) => void,
 ): NotificationStore => {

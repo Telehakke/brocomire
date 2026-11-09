@@ -29,7 +29,7 @@ export const createFileNavigator = (currentIndex: number, fileLength: number): F
   return { currentIndex, fileLength } as FileNavigator;
 };
 
-export const getFileNavigatorStore = (
+export const createFileNavigatorStore = (
   getter: () => FileNavigator,
   setter: (value: FileNavigator) => void,
 ): FileNavigatorStore => {

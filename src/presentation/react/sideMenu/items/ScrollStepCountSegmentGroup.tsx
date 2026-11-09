@@ -8,12 +8,12 @@ import {
 } from "../../../../domain/models/userSettings/valueObjects/scrollStepCount";
 import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
 import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
-import { Atom, UserSettingsAtom } from "../../../atoms";
+import { scrollStepCountAtom, userSettingsAtom } from "../../../atoms";
 import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
 
 export const ScrollStepCountSegmentGroup = (): JSX.Element => {
-  const scrollStepCount = useAtomValue(UserSettingsAtom.scrollStepCount);
-  const setUserSettings = useSetAtom(Atom.userSettings);
+  const scrollStepCount = useAtomValue(scrollStepCountAtom);
+  const setUserSettings = useSetAtom(userSettingsAtom);
 
   const handleValueChange = (value: string | null): void => {
     setUserSettings((v) =>

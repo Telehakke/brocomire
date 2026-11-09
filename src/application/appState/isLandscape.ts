@@ -15,7 +15,7 @@ export const createIsLandscape = (value: boolean): IsLandscape => {
   return value as IsLandscape;
 };
 
-export const getIsLandscapeStore = (
+export const createIsLandscapeStore = (
   getter: () => IsLandscape,
   setter: (value: IsLandscape) => void,
 ): IsLandscapeStore => {

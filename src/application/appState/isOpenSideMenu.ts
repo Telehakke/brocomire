@@ -15,7 +15,7 @@ export const createIsOpenSideMenu = (value: boolean): IsOpenSideMenu => {
   return value as IsOpenSideMenu;
 };
 
-export const getIsOpenSideMenuStore = (
+export const createIsOpenSideMenuStore = (
   getter: () => IsOpenSideMenu,
   setter: (value: IsOpenSideMenu) => void,
 ): IsOpenSideMenuStore => {

@@ -15,7 +15,7 @@ export const createOnViewer = (value: boolean): OnViewer => {
   return value as OnViewer;
 };
 
-export const getOnViewerStore = (
+export const createOnViewerStore = (
   getter: () => OnViewer,
   setter: (value: OnViewer) => void,
 ): OnViewerStore => {
