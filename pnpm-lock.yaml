@@ -199,6 +199,9 @@ importers:
       react-dom:
         specifier: ^19.3.1
         version: 19.3.1(react@19.3.1)
+      twgl.js:
+        specifier: ^7.0.0
+        version: 7.0.0
     devDependencies:
       '@babel/core':
         specifier: ^8.0.10
@@ -3404,6 +3407,9 @@ packages:
 
   tslib@2.9.1:
     resolution: {integrity: sha512-a4Ux9VKuIMHsOS7ENbEq6hK2ZGYIT27Rtl0E4eD9KqwxhKiQeMZE/9xb3IdYwWaSOyIBQLExhQgXDTYoiCxnWA==}
+
+  twgl.js@7.0.0:
+    resolution: {integrity: sha512-9HHZ8emdZb2nKPU0FDIGDlkp6AD9rWFv7ThqdbmUqyBhD3WTQpLN+89w4B+YshGwD1fL6PMVpVKZqC0pikgmcA==}
 
   type-fest@0.16.0:
     resolution: {integrity: sha512-eaBzG6MxNzEn9kiwvtre90cXaNLkmadMWa1zQMs3XORCXNbsH/OewwbxC5ia9dCxIxnTAsSxXJaa/p5y8DlvJg==}
@@ -7006,6 +7012,8 @@ snapshots:
   totalist@3.0.1: {}
 
   tslib@2.9.1: {}
+
+  twgl.js@7.0.0: {}
 
   type-fest@0.16.0: {}
 

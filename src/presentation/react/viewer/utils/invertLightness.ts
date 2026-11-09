@@ -23,7 +23,8 @@ export const invertLightness = (
 // RGB(0から1の範囲) を HSV(h: 0 ~ 6, s: 0 ~ 1, v: 0 ~ 1) へ変換
 const rgbToHsv = (r: number, g: number, b: number): [number, number, number] => {
   const max = Math.max(r, g, b);
-  const diff = max - Math.min(r, g, b);
+  const min = Math.min(r, g, b);
+  const diff = max - min;
 
   let h = 0;
   if (diff !== 0) {
@@ -37,7 +38,8 @@ const rgbToHsv = (r: number, g: number, b: number): [number, number, number] => 
     }
   }
 
-  return [h, max === 0 ? 0 : diff / max, max];
+  const s = max === 0 ? 0 : diff / max;
+  return [h, s, max];
 };
 
 // HSV(h: 0 ~ 6, s: 0 ~ 1, v: 0 ~ 1)  を RGB(0から1の範囲) へ変換

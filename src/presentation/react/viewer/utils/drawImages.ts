@@ -5,8 +5,8 @@ import type { FileNavigator } from "../../../../domain/models/file/fileNavigator
 import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
-import { invertLightness } from "./invertLightness";
-import { sharpenCanvas } from "./sharpenCanvas";
+import { invertLightnessWebGL } from "./invertLightnessWebGL";
+import { sharpenCanvasWebGL } from "./sharpenCanvasWebGL";
 
 type Image = HTMLImageElement | undefined;
 type Size = Readonly<{ width: number; height: number }>;
@@ -34,9 +34,8 @@ export const drawImages = (o: DrawImagesOptions): void => {
   window.setTimeout(() => {
     const imageSize = getImageSize(o.images);
     _drawImages(o.canvas, o.ctx, o.images, imageSize);
-    if (o.onInvertLightness) invertLightness(o.ctx, imageSize);
-    if (o.onSharpeningFilter)
-      sharpenCanvas(o.ctx, o.fileNavigatorGetter, imageSize, o.sharpeningFilterStrength);
+    if (o.onInvertLightness) invertLightnessWebGL(o.canvas);
+    if (o.onSharpeningFilter) sharpenCanvasWebGL(o.canvas, o.sharpeningFilterStrength);
     o.imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));
     o.viewerManager.scrollToPercentage(o.scrollPercentage2D.x, o.scrollPercentage2D.y);
   }, 10);
