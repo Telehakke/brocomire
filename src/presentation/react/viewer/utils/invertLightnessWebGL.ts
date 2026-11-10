@@ -1,7 +1,10 @@
 import * as twgl from "twgl.js";
 
 /** WebGLを使用した明度の反転 */
-export const invertLightnessWebGL = (canvas: HTMLCanvasElement): void => {
+export const invertLightnessWebGL = (
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+): void => {
   const glCanvas = document.createElement("canvas");
   glCanvas.width = canvas.width;
   glCanvas.height = canvas.height;
@@ -32,9 +35,8 @@ export const invertLightnessWebGL = (canvas: HTMLCanvasElement): void => {
   twgl.setUniforms(programInfo, { u_image: texture });
   twgl.drawBufferInfo(gl, bufferInfo);
 
-  const ctx = canvas.getContext("2d");
-  ctx?.clearRect(0, 0, canvas.width, canvas.height);
-  ctx?.drawImage(glCanvas, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(glCanvas, 0, 0);
 };
 
 const vertexShader = `

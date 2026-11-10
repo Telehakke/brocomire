@@ -57,13 +57,13 @@ const getImagesAtom = atom(
   null,
   (get, _, bookFormat: BookFormat, displayMode: DisplayMode, fileNavigator: FileNavigator) => {
     const { shouldPreload } = get(userSettingsAtom);
-    return getImages({
-      cache: shouldPreload ? get(cacheAtom) : undefined,
+    return getImages(
+      shouldPreload ? get(cacheAtom) : undefined,
       bookFormat,
       displayMode,
-      fileManager: get(fileManagerAtom),
+      get(fileManagerAtom),
       fileNavigator,
-    });
+    );
   },
 );
 
@@ -79,21 +79,20 @@ const drawImagesAtom = atom(
     onSharpeningFilter: OnSharpeningFilter,
     sharpeningFilterStrength: SharpeningFilterStrength,
   ) => {
-    drawImages({
+    drawImages(
       canvas,
       ctx,
-      fileNavigatorGetter: () => get(fileNavigatorAtom),
       images,
-      imageSizeStore: createImageSizeStore(
+      createImageSizeStore(
         () => get(imageSizeAtom),
         (v) => set(imageSizeAtom, v),
       ),
       onInvertLightness,
       onSharpeningFilter,
-      scrollPercentage2D: get(scrollPercentage2DAtom),
+      get(scrollPercentage2DAtom),
       sharpeningFilterStrength,
-      viewerManager: get(viewerManagerAtom),
-    });
+      get(viewerManagerAtom),
+    );
   },
 );
 

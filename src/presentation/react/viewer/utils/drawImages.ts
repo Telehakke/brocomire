@@ -1,7 +1,6 @@
 import { createImageSize, type ImageSizeStore } from "../../../../application/appState/imageSize";
 import type { OnInvertLightness } from "../../../../application/appState/onInvertLightness";
 import type { OnSharpeningFilter } from "../../../../application/appState/onSharpeningFilter";
-import type { FileNavigator } from "../../../../domain/models/file/fileNavigator";
 import type { ScrollPercentage2D } from "../../../../domain/models/scroll/scrollPercentage2D";
 import type { SharpeningFilterStrength } from "../../../../domain/models/userSettings/valueObjects/sharpeningFilterStrength";
 import type { ViewerManager } from "../../../../domain/models/viewer/viewerManager";
@@ -13,31 +12,28 @@ type Size = Readonly<{ width: number; height: number }>;
 
 /* -------------------------------------------------------------------------- */
 
-type DrawImagesOptions = Readonly<{
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-  fileNavigatorGetter: () => FileNavigator;
-  images: [Image, Image];
-  imageSizeStore: ImageSizeStore;
-  onInvertLightness: OnInvertLightness;
-  onSharpeningFilter: OnSharpeningFilter;
-  scrollPercentage2D: ScrollPercentage2D;
-  sharpeningFilterStrength: SharpeningFilterStrength;
-  viewerManager: ViewerManager;
-}>;
-
 /** Image要素をCanvasに描画 */
-export const drawImages = (o: DrawImagesOptions): void => {
+export const drawImages = (
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  images: [Image, Image],
+  imageSizeStore: ImageSizeStore,
+  onInvertLightness: OnInvertLightness,
+  onSharpeningFilter: OnSharpeningFilter,
+  scrollPercentage2D: ScrollPercentage2D,
+  sharpeningFilterStrength: SharpeningFilterStrength,
+  viewerManager: ViewerManager,
+): void => {
   // Canvasのstyleが変化した時に、
   // スクロール位置がズレることがある問題を解消するため処理を遅延させる
   // （Safariで発生する）
   window.setTimeout(() => {
-    const imageSize = getImageSize(o.images);
-    _drawImages(o.canvas, o.ctx, o.images, imageSize);
-    if (o.onInvertLightness) invertLightnessWebGL(o.canvas);
-    if (o.onSharpeningFilter) sharpenCanvasWebGL(o.canvas, o.sharpeningFilterStrength);
-    o.imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));
-    o.viewerManager.scrollToPercentage(o.scrollPercentage2D.x, o.scrollPercentage2D.y);
+    const imageSize = getImageSize(images);
+    _drawImages(canvas, ctx, images, imageSize);
+    if (onInvertLightness) invertLightnessWebGL(canvas, ctx);
+    if (onSharpeningFilter) sharpenCanvasWebGL(canvas, ctx, sharpeningFilterStrength);
+    imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));
+    viewerManager.scrollToPercentage(scrollPercentage2D.x, scrollPercentage2D.y);
   }, 10);
 };
 

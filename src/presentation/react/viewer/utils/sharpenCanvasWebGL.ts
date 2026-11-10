@@ -4,6 +4,7 @@ import type { SharpeningFilterStrength } from "../../../../domain/models/userSet
 // WebGLを使用した先鋭化
 export const sharpenCanvasWebGL = (
   canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
   strength: SharpeningFilterStrength,
 ): void => {
   const glCanvas = document.createElement("canvas");
@@ -43,9 +44,8 @@ export const sharpenCanvasWebGL = (
   });
   twgl.drawBufferInfo(gl, bufferInfo);
 
-  const ctx = canvas.getContext("2d");
-  ctx?.clearRect(0, 0, canvas.width, canvas.height);
-  ctx?.drawImage(glCanvas, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(glCanvas, 0, 0);
 };
 
 const getWeight = (

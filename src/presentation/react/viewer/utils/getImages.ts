@@ -12,24 +12,22 @@ type Image = HTMLImageElement | undefined;
 
 /* -------------------------------------------------------------------------- */
 
-type GetImagesOptions = Readonly<{
-  cache?: Cache;
-  bookFormat: BookFormat;
-  displayMode: DisplayMode;
-  fileManager: FileManager;
-  fileNavigator: FileNavigator;
-}>;
-
 /**
  * 現在ページのImage要素を見開きで取得
  * @returns [leftImage, rightImage]
  */
-export const getImages = async (o: GetImagesOptions): Promise<[Image, Image]> => {
-  const leftIndex = getLeftImageIndex(o.fileNavigator, o.bookFormat, o.displayMode);
-  const rightIndex = getRightImageIndex(o.fileNavigator, o.bookFormat, o.displayMode);
+export const getImages = async (
+  cache: Cache | undefined,
+  bookFormat: BookFormat,
+  displayMode: DisplayMode,
+  fileManager: FileManager,
+  fileNavigator: FileNavigator,
+): Promise<[Image, Image]> => {
+  const leftIndex = getLeftImageIndex(fileNavigator, bookFormat, displayMode);
+  const rightIndex = getRightImageIndex(fileNavigator, bookFormat, displayMode);
   return await Promise.all([
-    getImage(await getBlob(o.fileManager, leftIndex, o.cache)),
-    getImage(await getBlob(o.fileManager, rightIndex, o.cache)),
+    getImage(await getBlob(fileManager, leftIndex, cache)),
+    getImage(await getBlob(fileManager, rightIndex, cache)),
   ]);
 };
 
