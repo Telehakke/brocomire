@@ -25,9 +25,9 @@ export const handleThumbnailClick = (
   zoomPercentageSetter: ZoomPercentageSetter,
 ): void => {
   moveToIndexPage(
+    index,
     fileNavigatorGetter,
     fileNavigatorSetter,
-    index,
     notificationSetter,
     scrollPercentage2D,
     userSettingsGetter,

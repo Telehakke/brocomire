@@ -559,7 +559,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## pdfjs-dist - 6.4.299 (Apache-2.0)
+## pdfjs-dist - 6.5.438 (Apache-2.0)
 
 Apache License
                            Version 2.0, January 2004

@@ -134,7 +134,7 @@ export class ScrollPercentage2D {
     );
   }
 
-  private getNextXY = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+  private getNextXY(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position {
     const hOrigin = this.getHOrigin();
     const vOrigin = this.getVOrigin();
     return {
@@ -143,16 +143,16 @@ export class ScrollPercentage2D {
         : undefined,
       y: vOrigin.getNextOrigin(bookFormat, scrollStepCount).value,
     };
-  };
+  }
 
-  private getNextX = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+  private getNextX(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position {
     return {
       x: this.getHOrigin().getNextOrigin(bookFormat, scrollStepCount).value,
       y: undefined,
     };
-  };
+  }
 
-  private getPreviousXY = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+  private getPreviousXY(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position {
     const hOrigin = this.getHOrigin();
     const vOrigin = this.getVOrigin();
     return {
@@ -161,28 +161,28 @@ export class ScrollPercentage2D {
         : undefined,
       y: vOrigin.getPreviousOrigin(bookFormat, scrollStepCount).value,
     };
-  };
+  }
 
-  private getPreviousX = (bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position => {
+  private getPreviousX(bookFormat: BookFormat, scrollStepCount: ScrollStepCount): Position {
     return {
       x: this.getHOrigin().getPreviousOrigin(bookFormat, scrollStepCount).value,
       y: undefined,
     };
-  };
+  }
 
-  private getHOrigin = (): Origin => {
+  private getHOrigin(): Origin {
     if (Leftmost.isInRange(this._x)) return Leftmost;
     if (Left.isInRange(this._x)) return Left;
     if (HCenter.isInRange(this._x)) return HCenter;
     if (Right.isInRange(this._x)) return Right;
     return Rightmost;
-  };
+  }
 
-  private getVOrigin = (): Origin => {
+  private getVOrigin(): Origin {
     if (Top.isInRange(this._y)) return Top;
     if (Up.isInRange(this._y)) return Up;
     if (VCenter.isInRange(this._y)) return VCenter;
     if (Down.isInRange(this._y)) return Down;
     return Bottom;
-  };
+  }
 }

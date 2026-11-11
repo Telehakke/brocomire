@@ -6,7 +6,7 @@ import {
   getRightImageIndex,
   incrementCurrentIndex,
   type FileNavigator,
-  type FileNavigatorStore,
+  type FileNavigatorGetter,
 } from "../../domain/models/file/fileNavigator";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
@@ -16,15 +16,15 @@ import type { DisplayMode } from "../../domain/models/userSettings/valueObjects/
 export const preloadFiles = (
   cache: Cache,
   fileManager: FileManager,
-  fileNavigatorStore: FileNavigatorStore,
+  fileNavigatorGetter: FileNavigatorGetter,
   userSettingsGetter: UserSettingsGetter,
 ): void => {
   if (!userSettingsGetter().shouldPreload) return;
 
   const { bookFormat, displayMode } = userSettingsGetter();
-  preloadAfterFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorStore.get());
-  preloadBeforeFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorStore.get());
-  trimCache(bookFormat, cache, displayMode, fileNavigatorStore.get());
+  preloadAfterFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorGetter());
+  preloadBeforeFiles(bookFormat, cache, displayMode, fileManager, fileNavigatorGetter());
+  trimCache(bookFormat, cache, displayMode, fileNavigatorGetter());
 };
 
 /* -------------------------------------------------------------------------- */

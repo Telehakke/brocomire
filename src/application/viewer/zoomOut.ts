@@ -27,13 +27,13 @@ export const zoomOut = (
 ): void => {
   if (zoomPercentageGetter() === ZOOM_PERCENTAGE_MIN) return;
 
-  _zoomOut(userSettingsGetter, zoomPercentageGetter, zoomPercentageSetter, notificationSetter);
   updateScrollPercentage2D(
     isUserScrolledGetter,
     isUserScrolledSetter,
     scrollPercentage2D,
     viewerManager,
   );
+  _zoomOut(userSettingsGetter, zoomPercentageGetter, zoomPercentageSetter, notificationSetter);
 };
 
 /* -------------------------------------------------------------------------- */

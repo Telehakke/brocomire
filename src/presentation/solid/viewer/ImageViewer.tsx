@@ -77,6 +77,8 @@ export const ImageViewer = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const runZoomIn = (): void => {
   const [isUserScrolled, setIsUserScrolled] = isUserScrolledSignal;
   const [, setNotification] = notificationSignal;

@@ -22,6 +22,8 @@ export const ViewerCloseButton = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const runCloseViewer = (): void => {
   const [, setBookmarkIndex] = bookmarkIndexSignal;
   const [cache] = cacheSignal;

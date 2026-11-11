@@ -25,9 +25,9 @@ export const openImageFiles = (
   initFileNavigator(fileNavigatorSetter, fileManager.getLength());
   openViewer(onViewerSetter);
   moveToIndexPage(
+    0,
     fileNavigatorGetter,
     fileNavigatorSetter,
-    0,
     notificationSetter,
     scrollPercentage2D,
     userSettingsGetter,

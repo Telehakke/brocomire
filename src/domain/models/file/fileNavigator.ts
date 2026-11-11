@@ -14,13 +14,6 @@ declare const FileNavigatorBrand: unique symbol;
 
 export type FileNavigator = FileNavigatorType & { [FileNavigatorBrand]: unknown };
 
-/* -------------------------------------------------------------------------- */
-
-export type FileNavigatorStore = {
-  get(): FileNavigator;
-  set(value: FileNavigator): void;
-};
-
 export type FileNavigatorGetter = () => FileNavigator;
 export type FileNavigatorSetter = (value: FileNavigator) => void;
 
@@ -28,13 +21,6 @@ export type FileNavigatorSetter = (value: FileNavigator) => void;
 
 export const createFileNavigator = (currentIndex: number, fileLength: number): FileNavigator => {
   return { currentIndex, fileLength } as FileNavigator;
-};
-
-export const createFileNavigatorStore = (
-  getter: () => FileNavigator,
-  setter: (value: FileNavigator) => void,
-): FileNavigatorStore => {
-  return { get: () => getter(), set: (v) => setter(v) };
 };
 
 /** inputに新たなcurrentIndexをセットした新しいオブジェクトを返す */

@@ -22,7 +22,7 @@ import { createOnViewer, type OnViewerSetter } from "../appState/onViewer";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
 /** ファイルを開く */
-export const openFile = async (
+export const openFile = (
   fileManager: FileManager,
   fileNavigatorGetter: FileNavigatorGetter,
   fileNavigatorSetter: FileNavigatorSetter,
@@ -32,7 +32,7 @@ export const openFile = async (
   userSettingsGetter: UserSettingsGetter,
   userSettingsSetter: UserSettingsSetter,
   userSettingsRepository: UserSettingsRepository,
-): Promise<void> => {
+): void => {
   if (!fileManager.hasFiles()) return;
 
   const { historyList } = userSettingsGetter();
@@ -42,9 +42,9 @@ export const openFile = async (
   initFileNavigator(fileNavigatorSetter, fileManager.getLength());
   openViewer(onViewerSetter);
   moveToIndexPage(
+    getClosedPageIndex(historyList, bookId) ?? 0,
     fileNavigatorGetter,
     fileNavigatorSetter,
-    getClosedPageIndex(historyList, bookId) ?? 0,
     notificationSetter,
     scrollPercentage2D,
     userSettingsGetter,

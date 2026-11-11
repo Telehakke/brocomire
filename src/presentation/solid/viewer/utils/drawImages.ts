@@ -1,4 +1,4 @@
-import { createImageSize, type ImageSizeStore } from "../../../../application/appState/imageSize";
+import { createImageSize, type ImageSizeSetter } from "../../../../application/appState/imageSize";
 import {
   createIsImageWiderThanViewer,
   type IsImageWiderThanViewer,
@@ -22,7 +22,7 @@ export const drawImages = (
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   images: [Image, Image],
-  imageSizeStore: ImageSizeStore,
+  imageSizeSetter: ImageSizeSetter,
   onInvertLightness: OnInvertLightness,
   onSharpeningFilter: OnSharpeningFilter,
   setIsImageWiderThanViewer: (value: IsImageWiderThanViewer) => void,
@@ -34,7 +34,7 @@ export const drawImages = (
   _drawImages(canvas, ctx, images, imageSize);
   if (onInvertLightness) invertLightnessWebGL(canvas, ctx);
   if (onSharpeningFilter) sharpenCanvasWebGL(canvas, ctx, sharpeningFilterStrength);
-  imageSizeStore.set(createImageSize(imageSize.width, imageSize.height));
+  imageSizeSetter(createImageSize(imageSize.width, imageSize.height));
   scroll(scrollPercentage2D, viewerManager);
   setIsImageWiderThanViewer(
     createIsImageWiderThanViewer(

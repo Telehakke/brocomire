@@ -29,6 +29,8 @@ export const ZipFileOpenButton = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const runOpenZipFile = async (file: File): Promise<void> => {
   const [fileManager, setFileManager] = fileManagerSignal;
   const [fileNavigator, setFileNavigator] = fileNavigatorSignal;
@@ -38,7 +40,7 @@ const runOpenZipFile = async (file: File): Promise<void> => {
   const [userSettings, setUserSettings] = userSettingsStore;
 
   setFileManager(await ZipFileManager.create(file));
-  void openFile(
+  openFile(
     fileManager(),
     () => fileNavigator(),
     (v) => setFileNavigator(v),

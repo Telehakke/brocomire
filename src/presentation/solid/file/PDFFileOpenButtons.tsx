@@ -29,6 +29,8 @@ export const PDFFileOpenButton = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const runOpenPDFFile = async (file: File): Promise<void> => {
   const [fileManager, setFileManager] = fileManagerSignal;
   const [fileNavigator, setFileNavigator] = fileNavigatorSignal;
@@ -39,7 +41,7 @@ const runOpenPDFFile = async (file: File): Promise<void> => {
 
   setFileManager(await PDFFileManager.create(file));
 
-  void openFile(
+  openFile(
     fileManager(),
     () => fileNavigator(),
     (v) => setFileNavigator(v),

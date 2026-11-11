@@ -7,22 +7,10 @@ declare const ImageSizeBrand: unique symbol;
 
 export type ImageSize = ImageSizeValue & { [ImageSizeBrand]: unknown };
 
-/* -------------------------------------------------------------------------- */
-
-export type ImageSizeStore = Readonly<{
-  get(): ImageSize;
-  set(value: ImageSize): void;
-}>;
+export type ImageSizeSetter = (value: ImageSize) => void;
 
 /* -------------------------------------------------------------------------- */
 
 export const createImageSize = (width: number, height: number): ImageSize => {
   return { width, height } as ImageSize;
-};
-
-export const createImageSizeStore = (
-  getter: () => ImageSize,
-  setter: (value: ImageSize) => void,
-): ImageSizeStore => {
-  return { get: () => getter(), set: (v) => setter(v) };
 };

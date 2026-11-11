@@ -34,15 +34,15 @@ export const App = (): JSX.Element => {
 
   return (
     <Show when={onViewer()} fallback={<Home />}>
-      <>
-        <ImageViewer />
-        <SideMenu />
-        <Menu />
-        <NotificationView />
-      </>
+      <ImageViewer />
+      <SideMenu />
+      <Menu />
+      <NotificationView />
     </Show>
   );
 };
+
+/* -------------------------------------------------------------------------- */
 
 const runUpdateHistory = (): void => {
   const [fileManager] = fileManagerSignal;

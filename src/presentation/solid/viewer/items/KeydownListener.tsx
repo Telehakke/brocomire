@@ -21,6 +21,8 @@ export const KeydownListener = (): null => {
   return null;
 };
 
+/* -------------------------------------------------------------------------- */
+
 const createKeydownMonitor = (): KeydownMonitor => {
   const [fileNavigator, setFileNavigator] = fileNavigatorSignal;
   const [isOpenSideMenu] = isOpenSideMenuSignal;

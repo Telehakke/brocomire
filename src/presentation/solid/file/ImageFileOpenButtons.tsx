@@ -28,6 +28,8 @@ export const ImageFilesOpenButton = (): JSX.Element => {
   );
 };
 
+/* -------------------------------------------------------------------------- */
+
 const runOpenImageFiles = (files: File[]): void => {
   const [fileManager, setFileManager] = fileManagerSignal;
   const [fileNavigator, setFileNavigator] = fileNavigatorSignal;

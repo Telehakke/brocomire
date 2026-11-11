@@ -78,9 +78,9 @@ const runMoveToIndexPage = (index: number): void => {
   const [userSettings] = userSettingsStore;
 
   moveToIndexPage(
+    index,
     () => fileNavigator(),
     (v) => setFileNavigator(v),
-    index,
     (v) => setNotification(v),
     scrollPercentage2D(),
     () => userSettings,

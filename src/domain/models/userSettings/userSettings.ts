@@ -75,10 +75,6 @@ export type UserSettings = Readonly<{
   zoomStep: ZoomStep;
 }>;
 
-export type UserSettingsStore = {
-  get(): UserSettings;
-  set(value: UserSettings): void;
-};
 export type UserSettingsGetter = () => UserSettings;
 export type UserSettingsSetter = (value: UserSettings) => void;
 
@@ -140,13 +136,6 @@ export const createUserSettings = (value?: unknown): UserSettings => {
     tapAreaSize: createTapAreaSize(v.tapAreaSize.width, v.tapAreaSize.height),
     zoomStep: createZoomStep(v.zoomStep),
   };
-};
-
-export const createUserSettingsStore = (
-  getter: () => UserSettings,
-  setter: (value: UserSettings) => void,
-): UserSettingsStore => {
-  return { get: () => getter(), set: (v) => setter(v) };
 };
 
 export const setBookFormat = (

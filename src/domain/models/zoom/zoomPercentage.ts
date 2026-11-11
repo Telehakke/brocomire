@@ -2,13 +2,6 @@ declare const ZoomPercentageBrand: unique symbol;
 
 export type ZoomPercentage = number & { [ZoomPercentageBrand]: unknown };
 
-/* -------------------------------------------------------------------------- */
-
-export type ZoomPercentageStore = Readonly<{
-  get(): ZoomPercentage;
-  set(value: ZoomPercentage): void;
-}>;
-
 export type ZoomPercentageGetter = () => ZoomPercentage;
 export type ZoomPercentageSetter = (value: ZoomPercentage) => void;
 
@@ -27,13 +20,6 @@ export const addZoomPercentage = (input: ZoomPercentage, amount: number): ZoomPe
 
 export const subZoomPercentage = (input: ZoomPercentage, amount: number): ZoomPercentage => {
   return create(Math.max(input - amount, ZOOM_PERCENTAGE_MIN));
-};
-
-export const createZoomPercentageStore = (
-  getter: () => ZoomPercentage,
-  setter: (value: ZoomPercentage) => void,
-): ZoomPercentageStore => {
-  return { get: () => getter(), set: (v) => setter(v) };
 };
 
 /* -------------------------------------------------------------------------- */

@@ -13,14 +13,14 @@ import type { UserSettingsGetter } from "../../domain/models/userSettings/userSe
 
 /** 指定したindexのページへ移動 */
 export const moveToIndexPage = (
+  index: number,
   fileNavigatorGetter: FileNavigatorGetter,
   fileNavigatorSetter: FileNavigatorSetter,
-  index: number,
   notificationSetter: NotificationSetter,
   scrollPercentage2D: ScrollPercentage2D,
   userSettingsGetter: UserSettingsGetter,
 ): void => {
-  updateFileNavigator(fileNavigatorGetter, fileNavigatorSetter, index, notificationSetter);
+  updateFileNavigator(index, fileNavigatorGetter, fileNavigatorSetter, notificationSetter);
   const { bookFormat } = userSettingsGetter();
   scrollPercentage2D.setStartPosition(bookFormat);
   // スクロール処理は画像が生成されてから行うため、ここではスクロール位置だけを設定する
@@ -29,9 +29,9 @@ export const moveToIndexPage = (
 /* -------------------------------------------------------------------------- */
 
 const updateFileNavigator = (
+  index: number,
   fileNavigatorGetter: FileNavigatorGetter,
   fileNavigatorSetter: FileNavigatorSetter,
-  index: number,
   notificationSetter: NotificationSetter,
 ): void => {
   const fileNavigator = copyFileNavigatorWithCurrentIndex(fileNavigatorGetter(), index);

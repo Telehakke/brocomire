@@ -44,10 +44,10 @@ export class ClickGestureManager {
     this.click(singleClicked);
   }
 
-  private click = (action: () => void): void => {
+  private click(action: () => void): void {
     action();
     this.clickCount = 0;
-  };
+  }
 
   /** サブクリックでactionを実行 */
   onSubClick(action: () => void): void {

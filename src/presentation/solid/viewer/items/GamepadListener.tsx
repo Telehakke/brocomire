@@ -20,6 +20,8 @@ export const GamepadListener = (): null => {
   return null;
 };
 
+/* -------------------------------------------------------------------------- */
+
 const createGamepadMonitor = (): GamepadMonitor => {
   const [fileNavigator, setFileNavigator] = fileNavigatorSignal;
   const [isUserScrolled, setIsUserScrolled] = isUserScrolledSignal;

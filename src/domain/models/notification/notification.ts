@@ -9,26 +9,12 @@ declare const NotificationBrand: unique symbol;
 
 export type Notification = NotificationType & { [NotificationBrand]: unknown };
 
-/* -------------------------------------------------------------------------- */
-
-export type NotificationStore = Readonly<{
-  get(): Notification;
-  set(value: Notification): void;
-}>;
-
 export type NotificationSetter = (value: Notification) => void;
 
 /* -------------------------------------------------------------------------- */
 
 export const initNotification = (): Notification => {
   return create({ message: undefined, visibility: "hidden" });
-};
-
-export const createNotificationStore = (
-  getter: () => Notification,
-  setter: (value: Notification) => void,
-): NotificationStore => {
-  return { get: () => getter(), set: (v) => setter(v) };
 };
 
 /** メッセージを表示 */

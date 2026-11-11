@@ -12,15 +12,6 @@ import {
   zoomPercentageSignal,
 } from "../../../signals";
 
-const runScroll = (): void => {
-  const [scrollPercentage2D] = scrollPercentage2DSignal;
-  const [viewerManager] = viewerManagerSignal;
-
-  scroll(scrollPercentage2D(), viewerManager());
-};
-
-/* -------------------------------------------------------------------------- */
-
 export const ViewerContent = (props: { children: JSX.Element }): JSX.Element => {
   // oxlint-disable-next-line no-unassigned-vars
   let divRef: HTMLDivElement | undefined;
@@ -75,4 +66,13 @@ const getContentStyleMap = (
       { width: scale, height: "100%" },
     ],
   };
+};
+
+/* -------------------------------------------------------------------------- */
+
+const runScroll = (): void => {
+  const [scrollPercentage2D] = scrollPercentage2DSignal;
+  const [viewerManager] = viewerManagerSignal;
+
+  scroll(scrollPercentage2D(), viewerManager());
 };
