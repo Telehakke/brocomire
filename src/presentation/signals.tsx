@@ -1,0 +1,51 @@
+import { createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
+import { createBookmarkIndex } from "../application/appState/bookmarkIndex";
+import { createChevronMark } from "../application/appState/chevronMark";
+import { createImageSize } from "../application/appState/imageSize";
+import { createInfoVisibility } from "../application/appState/infoVisibility";
+import { createIsImageWiderThanViewer } from "../application/appState/isImageWiderThanViewer";
+import { createIsLandscape } from "../application/appState/isLandscape";
+import { createIsLoading } from "../application/appState/isLoading";
+import { createIsOpenSideMenu } from "../application/appState/isOpenSideMenu";
+import { createIsUserScrolled } from "../application/appState/isUserScrolled";
+import { createOnInvertFilter } from "../application/appState/onInvertFilter";
+import { createOnInvertLightness } from "../application/appState/onInvertLightness";
+import { createOnSharpeningFilter } from "../application/appState/onSharpeningFilter";
+import { createOnViewer } from "../application/appState/onViewer";
+import type { Cache } from "../domain/models/file/cache";
+import type { FileManager } from "../domain/models/file/fileManager";
+import { createFileNavigator } from "../domain/models/file/fileNavigator";
+import { initNotification } from "../domain/models/notification/notification";
+import { ScrollPercentage2D } from "../domain/models/scroll/scrollPercentage2D";
+import { createUserSettings } from "../domain/models/userSettings/userSettings";
+import type { ViewerManager } from "../domain/models/viewer/viewerManager";
+import { createZoomPercentage, ZOOM_PERCENTAGE_MIN } from "../domain/models/zoom/zoomPercentage";
+import { BlobCache } from "../infrastructure/file/blobCache";
+import { NullFileManager } from "../infrastructure/file/nullFileManager";
+import { ImageViewerManager } from "../infrastructure/viewer/imageViewerManager";
+
+export const bookmarkIndexSignal = createSignal(createBookmarkIndex());
+export const cacheSignal = createSignal<Cache>(new BlobCache());
+export const chevronMarkSignal = createSignal(createChevronMark("none"));
+export const fileManagerSignal = createSignal<FileManager>(new NullFileManager());
+export const fileNavigatorSignal = createSignal(createFileNavigator(0, 0));
+export const imageSizeSignal = createSignal(createImageSize(0, 0));
+export const infoVisibilitySignal = createSignal(createInfoVisibility("visible"));
+export const isImageWiderThanViewerSignal = createSignal(createIsImageWiderThanViewer(undefined));
+export const isLandscapeSignal = createSignal(createIsLandscape(false));
+export const isLoadingSignal = createSignal(createIsLoading(false));
+export const isOpenSideMenuSignal = createSignal(createIsOpenSideMenu(false));
+export const isUserScrolledSignal = createSignal(createIsUserScrolled(false));
+export const notificationSignal = createSignal(initNotification());
+export const onInvertFilterSignal = createSignal(createOnInvertFilter(false));
+export const onInvertLightnessSignal = createSignal(createOnInvertLightness(false));
+export const onSharpeningFilterSignal = createSignal(createOnSharpeningFilter(false));
+export const onViewerSignal = createSignal(createOnViewer(false));
+export const scrollPercentage2DSignal = createSignal(new ScrollPercentage2D());
+export const viewerManagerSignal = createSignal<ViewerManager>(new ImageViewerManager());
+export const zoomPercentageSignal = createSignal(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
+
+/* -------------------------------------------------------------------------- */
+
+export const userSettingsStore = createStore(createUserSettings());

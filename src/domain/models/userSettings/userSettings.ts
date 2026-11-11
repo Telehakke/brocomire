@@ -75,12 +75,12 @@ export type UserSettings = Readonly<{
   zoomStep: ZoomStep;
 }>;
 
-export type UserSettingsGetter = () => UserSettings;
-
 export type UserSettingsStore = {
   get(): UserSettings;
   set(value: UserSettings): void;
 };
+export type UserSettingsGetter = () => UserSettings;
+export type UserSettingsSetter = (value: UserSettings) => void;
 
 /* -------------------------------------------------------------------------- */
 

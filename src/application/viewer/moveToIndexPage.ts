@@ -1,24 +1,26 @@
 import {
   copyFileNavigatorWithCurrentIndex,
   getFileNavigatorProgress,
-  type FileNavigatorStore,
+  type FileNavigatorGetter,
+  type FileNavigatorSetter,
 } from "../../domain/models/file/fileNavigator";
 import {
   showNotificationMessage,
-  type NotificationStore,
+  type NotificationSetter,
 } from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 
 /** 指定したindexのページへ移動 */
 export const moveToIndexPage = (
-  fileNavigatorStore: FileNavigatorStore,
+  fileNavigatorGetter: FileNavigatorGetter,
+  fileNavigatorSetter: FileNavigatorSetter,
   index: number,
-  notificationStore: NotificationStore,
+  notificationSetter: NotificationSetter,
   scrollPercentage2D: ScrollPercentage2D,
   userSettingsGetter: UserSettingsGetter,
 ): void => {
-  updateFileNavigator(fileNavigatorStore, index, notificationStore);
+  updateFileNavigator(fileNavigatorGetter, fileNavigatorSetter, index, notificationSetter);
   const { bookFormat } = userSettingsGetter();
   scrollPercentage2D.setStartPosition(bookFormat);
   // スクロール処理は画像が生成されてから行うため、ここではスクロール位置だけを設定する
@@ -27,15 +29,16 @@ export const moveToIndexPage = (
 /* -------------------------------------------------------------------------- */
 
 const updateFileNavigator = (
-  fileNavigatorStore: FileNavigatorStore,
+  fileNavigatorGetter: FileNavigatorGetter,
+  fileNavigatorSetter: FileNavigatorSetter,
   index: number,
-  notificationStore: NotificationStore,
+  notificationSetter: NotificationSetter,
 ): void => {
-  const fileNavigator = copyFileNavigatorWithCurrentIndex(fileNavigatorStore.get(), index);
-  fileNavigatorStore.set(fileNavigator);
-  showMessage(notificationStore, getFileNavigatorProgress(fileNavigator));
+  const fileNavigator = copyFileNavigatorWithCurrentIndex(fileNavigatorGetter(), index);
+  fileNavigatorSetter(fileNavigator);
+  showMessage(notificationSetter, getFileNavigatorProgress(fileNavigator));
 };
 
-const showMessage = (notificationStore: NotificationStore, message: string): void => {
-  notificationStore.set(showNotificationMessage(message));
+const showMessage = (notificationSetter: NotificationSetter, message: string): void => {
+  notificationSetter(showNotificationMessage(message));
 };

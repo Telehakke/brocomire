@@ -1,15 +1,20 @@
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import { createIsUserScrolled, type IsUserScrolledStore } from "../appState/isUserScrolled";
+import {
+  createIsUserScrolled,
+  type IsUserScrolledGetter,
+  type IsUserScrolledSetter,
+} from "../appState/isUserScrolled";
 
 /** ユーザーがスクロール操作を行なっていれば、スクロールデータを更新 */
 export const updateScrollPercentage2D = (
-  isUserScrolledStore: IsUserScrolledStore,
+  isUserScrolledGetter: IsUserScrolledGetter,
+  isUserScrolledSetter: IsUserScrolledSetter,
   scrollPercentage2D: ScrollPercentage2D,
   viewerManager: ViewerManager,
 ): void => {
-  if (!isUserScrolledStore.get()) return;
+  if (!isUserScrolledGetter()) return;
 
-  isUserScrolledStore.set(createIsUserScrolled(false));
+  isUserScrolledSetter(createIsUserScrolled(false));
   scrollPercentage2D.setFromViewerManager(viewerManager);
 };

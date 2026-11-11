@@ -16,6 +16,8 @@ export type NotificationStore = Readonly<{
   set(value: Notification): void;
 }>;
 
+export type NotificationSetter = (value: Notification) => void;
+
 /* -------------------------------------------------------------------------- */
 
 export const initNotification = (): Notification => {

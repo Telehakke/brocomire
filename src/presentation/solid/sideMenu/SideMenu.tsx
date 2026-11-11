@@ -1,0 +1,107 @@
+import type { JSX } from "solid-js/jsx-runtime";
+import { createIsOpenSideMenu } from "../../../application/appState/isOpenSideMenu";
+import { isOpenSideMenuSignal } from "../../signals";
+import { Card } from "../utils/Card";
+import { SideMenuDialog } from "../utils/SideMenuDialog";
+import {
+  safeAreaPaddingBottom,
+  safeAreaPaddingLeft,
+  safeAreaPaddingTop,
+} from "../utils/safeAreaPadding";
+import { BookFormatSegmentGroup } from "./items/BookFormatSegmentGroup";
+import { ContentFitSegmentGroup } from "./items/ContentFitSegmentGroup";
+import { DisplayModeSegmentGroup } from "./items/DisplayModeSegmentGroup";
+import { IsSafeAreaEnabledSwitch } from "./items/IsSafeAreaEnabledSwitch";
+import { IsSmoothScrollEnabledSwitch } from "./items/IsSmoothScrollEnabledSwitch";
+import { LongPressRecognitionTimeSlider } from "./items/LongPressRecognitionTimeSlider";
+import { MenuOpacitySlider } from "./items/MenuOpacitySlider";
+import { SafeAreaLengthSlider } from "./items/SafeAreaLengthSlider";
+import { ScrollSpeedSlider } from "./items/ScrollSpeedSlider";
+import { ScrollStepCountSegmentGroup } from "./items/ScrollStepCountSegmentGroup";
+import { SelectPageSlider } from "./items/SelectPageSlider";
+import { SharpeningFilterStrengthSlider } from "./items/SharpeningFilterStrengthSlider";
+import { ShouldAdvanceSwitch } from "./items/ShouldAdvanceSwitch";
+import { ShouldPreloadSwitch } from "./items/ShouldPreloadSwitch";
+import { ShouldShowBookmarkButtonSwitch } from "./items/ShouldShowBookmarkButtonSwitch";
+import { ShouldShowFullscreenButtonSwitch } from "./items/ShouldShowFullscreenButtonSwitch";
+import { ShouldShowInvertButtonSwitch } from "./items/ShouldShowInvertButtonSwitch";
+import { ShouldShowInvertLightnessButtonSwitch } from "./items/ShouldShowInvertLightnessButtonSwitch";
+import { ShouldShowProgressBarSwitch } from "./items/ShouldShowProgressBarSwitch";
+import { ShouldShowSharpeningFilterButtonSwitch } from "./items/ShouldShowSharpeningFilterButtonSwitch";
+import { TapAreaHeightSegmentGroup } from "./items/TapAreaHeightSegmentGroup";
+import { TapAreaWidthSegmentGroup } from "./items/TapAreaWidthSegmentGroup";
+import { ViewerCloseButton } from "./items/ViewerCloseButton";
+import { ZoomStepSlider } from "./items/ZoomStepSlider";
+
+export const SideMenu = (): JSX.Element => {
+  const [isOpen, setIsOpen] = isOpenSideMenuSignal;
+
+  const handleOpenChange = (open: boolean): void => {
+    setIsOpen(createIsOpenSideMenu(open));
+  };
+
+  return (
+    <SideMenuDialog
+      closeOnInteractOutside
+      unmountOnExit
+      lazyMount
+      modal={false}
+      open={isOpen()}
+      onOpenChange={handleOpenChange}
+      style={{
+        ...safeAreaPaddingLeft,
+        ...safeAreaPaddingTop,
+        ...safeAreaPaddingBottom,
+      }}
+    >
+      <div class="w-80 space-y-4">
+        <div class="flex justify-center">
+          <ViewerCloseButton />
+        </div>
+        <SelectPageSlider />
+        <Card footer={`1：1枚の画像を表示\n1・2：表紙だけ1枚、以降は2枚\n2：2枚の画像を並べて表示`}>
+          <BookFormatSegmentGroup />
+          <ContentFitSegmentGroup />
+          <DisplayModeSegmentGroup />
+        </Card>
+        <Card footer="ディスプレイのノッチやパンチホールなどを避けてコンテンツを表示します">
+          <IsSafeAreaEnabledSwitch />
+          <SafeAreaLengthSlider />
+        </Card>
+        <Card footer="拡大時に次、または前のページに移動するのに必要な最大タップ数">
+          <ScrollStepCountSegmentGroup />
+        </Card>
+        <Card footer={`拡大：ダブルタップ\n縮小：右クリック、またはロングタッチ`}>
+          <ZoomStepSlider />
+        </Card>
+        <Card
+          footer={`左右どちらをタップしても次に進みます\n右クリック、または長押しで前へ戻ります`}
+        >
+          <TapAreaWidthSegmentGroup />
+          <TapAreaHeightSegmentGroup />
+          <ShouldAdvanceSwitch />
+        </Card>
+        <Card>
+          <LongPressRecognitionTimeSlider />
+        </Card>
+        <Card footer={`垂直スクロール：左右端をスクロール\n水平スクロール：下端をスクロール`}>
+          <ScrollSpeedSlider />
+          <IsSmoothScrollEnabledSwitch />
+        </Card>
+        <Card footer="全画面への切り替えはiPhone以外で使用できます">
+          <MenuOpacitySlider />
+          <ShouldShowProgressBarSwitch />
+          <ShouldShowSharpeningFilterButtonSwitch />
+          <SharpeningFilterStrengthSlider />
+          <ShouldShowInvertButtonSwitch />
+          <ShouldShowInvertLightnessButtonSwitch />
+          <ShouldShowBookmarkButtonSwitch />
+          <ShouldShowFullscreenButtonSwitch />
+        </Card>
+        <Card footer="読み込みが遅い場合にパフォーマンスが改善します">
+          <ShouldPreloadSwitch />
+        </Card>
+      </div>
+    </SideMenuDialog>
+  );
+};

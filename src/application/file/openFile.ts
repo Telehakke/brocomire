@@ -1,9 +1,10 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
 import {
   createFileNavigator,
-  type FileNavigatorStore,
+  type FileNavigatorGetter,
+  type FileNavigatorSetter,
 } from "../../domain/models/file/fileNavigator";
-import type { NotificationStore } from "../../domain/models/notification/notification";
+import type { NotificationSetter } from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import { createBookId } from "../../domain/models/userSettings/history/bookId";
 import {
@@ -13,53 +14,58 @@ import {
 } from "../../domain/models/userSettings/history/historyList";
 import {
   setHistoryList,
-  type UserSettingsStore,
+  type UserSettingsGetter,
+  type UserSettingsSetter,
 } from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
-import { createOnViewer, type OnViewerStore } from "../appState/onViewer";
+import { createOnViewer, type OnViewerSetter } from "../appState/onViewer";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
 /** ファイルを開く */
 export const openFile = async (
   fileManager: FileManager,
-  fileNavigatorStore: FileNavigatorStore,
-  notificationStore: NotificationStore,
-  onViewerStore: OnViewerStore,
+  fileNavigatorGetter: FileNavigatorGetter,
+  fileNavigatorSetter: FileNavigatorSetter,
+  notificationSetter: NotificationSetter,
+  onViewerSetter: OnViewerSetter,
   scrollPercentage2D: ScrollPercentage2D,
-  userSettingsStore: UserSettingsStore,
+  userSettingsGetter: UserSettingsGetter,
+  userSettingsSetter: UserSettingsSetter,
   userSettingsRepository: UserSettingsRepository,
 ): Promise<void> => {
   if (!fileManager.hasFiles()) return;
 
-  const { historyList } = userSettingsStore.get();
+  const { historyList } = userSettingsGetter();
   const bookId = createBookId(fileManager.getHashedFileName());
   const newHistoryList = tryPrependHistoryList(historyList, bookId);
-  updateHistoryList(userSettingsStore, newHistoryList, userSettingsRepository);
-  initFileNavigator(fileNavigatorStore, fileManager.getLength());
-  openViewer(onViewerStore);
+  updateHistoryList(userSettingsGetter, userSettingsSetter, newHistoryList, userSettingsRepository);
+  initFileNavigator(fileNavigatorSetter, fileManager.getLength());
+  openViewer(onViewerSetter);
   moveToIndexPage(
-    fileNavigatorStore,
+    fileNavigatorGetter,
+    fileNavigatorSetter,
     getClosedPageIndex(historyList, bookId) ?? 0,
-    notificationStore,
+    notificationSetter,
     scrollPercentage2D,
-    () => userSettingsStore.get(),
+    userSettingsGetter,
   );
 };
 
 /* -------------------------------------------------------------------------- */
 
-const initFileNavigator = (fileNavigatorStore: FileNavigatorStore, fileLength: number): void => {
-  fileNavigatorStore.set(createFileNavigator(0, fileLength));
+const initFileNavigator = (fileNavigatorSetter: FileNavigatorSetter, fileLength: number): void => {
+  fileNavigatorSetter(createFileNavigator(0, fileLength));
 };
 
-const openViewer = (onViewerStore: OnViewerStore): void => {
-  onViewerStore.set(createOnViewer(true));
+const openViewer = (onViewerSetter: OnViewerSetter): void => {
+  onViewerSetter(createOnViewer(true));
 };
 
 const updateHistoryList = (
-  userSettingsStore: UserSettingsStore,
+  userSettingsGetter: UserSettingsGetter,
+  userSettingsSetter: UserSettingsSetter,
   historyList: HistoryList,
   repository: UserSettingsRepository,
 ): void => {
-  userSettingsStore.set(setHistoryList(userSettingsStore.get(), historyList, repository));
+  userSettingsSetter(setHistoryList(userSettingsGetter(), historyList, repository));
 };

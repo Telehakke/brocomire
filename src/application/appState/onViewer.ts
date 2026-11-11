@@ -8,6 +8,7 @@ export type OnViewerStore = Readonly<{
   get(): OnViewer;
   set(value: OnViewer): void;
 }>;
+export type OnViewerSetter = (value: OnViewer) => void;
 
 /* -------------------------------------------------------------------------- */
 

@@ -8,6 +8,7 @@ export type BookmarkIndexStore = Readonly<{
   get(): BookmarkIndex;
   set(value: BookmarkIndex): void;
 }>;
+export type BookmarkIndexSetter = (value: BookmarkIndex) => void;
 
 /* -------------------------------------------------------------------------- */
 

@@ -8,6 +8,8 @@ export type IsOpenSideMenuStore = Readonly<{
   get(): IsOpenSideMenu;
   set(value: IsOpenSideMenu): void;
 }>;
+export type IsOpenSideMenuGetter = () => IsOpenSideMenu;
+export type IsOpenSideMenuSetter = (value: IsOpenSideMenu) => void;
 
 /* -------------------------------------------------------------------------- */
 

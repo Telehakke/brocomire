@@ -1,36 +1,45 @@
 import type { FileManager } from "../../domain/models/file/fileManager";
 import {
   createFileNavigator,
-  type FileNavigatorStore,
+  type FileNavigatorGetter,
+  type FileNavigatorSetter,
 } from "../../domain/models/file/fileNavigator";
-import type { NotificationStore } from "../../domain/models/notification/notification";
+import type { NotificationSetter } from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
-import { createOnViewer, type OnViewerStore } from "../appState/onViewer";
+import { createOnViewer, type OnViewerSetter } from "../appState/onViewer";
 import { moveToIndexPage } from "../viewer/moveToIndexPage";
 
 /** 画像ファイルを開く */
 export const openImageFiles = (
   fileManager: FileManager,
-  fileNavigatorStore: FileNavigatorStore,
-  notificationStore: NotificationStore,
-  onViewerStore: OnViewerStore,
+  fileNavigatorGetter: FileNavigatorGetter,
+  fileNavigatorSetter: FileNavigatorSetter,
+  notificationSetter: NotificationSetter,
+  onViewerSetter: OnViewerSetter,
   scrollPercentage2D: ScrollPercentage2D,
   userSettingsGetter: UserSettingsGetter,
 ): void => {
   if (!fileManager.hasFiles()) return;
 
-  initFileNavigator(fileNavigatorStore, fileManager.getLength());
-  openViewer(onViewerStore);
-  moveToIndexPage(fileNavigatorStore, 0, notificationStore, scrollPercentage2D, userSettingsGetter);
+  initFileNavigator(fileNavigatorSetter, fileManager.getLength());
+  openViewer(onViewerSetter);
+  moveToIndexPage(
+    fileNavigatorGetter,
+    fileNavigatorSetter,
+    0,
+    notificationSetter,
+    scrollPercentage2D,
+    userSettingsGetter,
+  );
 };
 
 /* -------------------------------------------------------------------------- */
 
-const initFileNavigator = (fileNavigatorStore: FileNavigatorStore, fileLength: number): void => {
-  fileNavigatorStore.set(createFileNavigator(0, fileLength));
+const initFileNavigator = (fileNavigatorSetter: FileNavigatorSetter, fileLength: number): void => {
+  fileNavigatorSetter(createFileNavigator(0, fileLength));
 };
 
-const openViewer = (onViewerStore: OnViewerStore): void => {
-  onViewerStore.set(createOnViewer(true));
+const openViewer = (onViewerSetter: OnViewerSetter): void => {
+  onViewerSetter(createOnViewer(true));
 };

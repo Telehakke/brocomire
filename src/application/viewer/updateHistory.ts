@@ -4,7 +4,8 @@ import { createHistory } from "../../domain/models/userSettings/history/history"
 import { updateHistoryList } from "../../domain/models/userSettings/history/historyList";
 import {
   setHistoryList,
-  type UserSettingsStore,
+  type UserSettingsGetter,
+  type UserSettingsSetter,
 } from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 
@@ -12,11 +13,12 @@ import type { UserSettingsRepository } from "../../domain/models/userSettings/us
 export const updateHistory = (
   fileManager: FileManager,
   fileNavigatorGetter: FileNavigatorGetter,
-  userSettingsStore: UserSettingsStore,
+  userSettingsGetter: UserSettingsGetter,
+  userSettingsSetter: UserSettingsSetter,
   userSettingsRepository: UserSettingsRepository,
 ): void => {
-  const userSettings = userSettingsStore.get();
-  userSettingsStore.set(
+  const userSettings = userSettingsGetter();
+  userSettingsSetter(
     setHistoryList(
       userSettings,
       updateHistoryList(

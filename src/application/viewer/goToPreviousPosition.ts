@@ -1,29 +1,40 @@
-import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
-import type { NotificationStore } from "../../domain/models/notification/notification";
+import type {
+  FileNavigatorGetter,
+  FileNavigatorSetter,
+} from "../../domain/models/file/fileNavigator";
+import type { NotificationSetter } from "../../domain/models/notification/notification";
 import { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { BookFormat } from "../../domain/models/userSettings/valueObjects/bookFormat";
 import type { ScrollStepCount } from "../../domain/models/userSettings/valueObjects/scrollStepCount";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import type { IsUserScrolledStore } from "../appState/isUserScrolled";
+import type { IsUserScrolledGetter, IsUserScrolledSetter } from "../appState/isUserScrolled";
 import { moveToPreviousPage } from "./moveToPreviousPage";
 import { updateScrollPercentage2D } from "./updateScrollPercentage2D";
 
 /** 前へ戻る */
 export const goToPreviousPosition = (
-  fileNavigatorStore: FileNavigatorStore,
-  isUserScrolledStore: IsUserScrolledStore,
-  notificationStore: NotificationStore,
+  fileNavigatorGetter: FileNavigatorGetter,
+  fileNavigatorSetter: FileNavigatorSetter,
+  isUserScrolledGetter: IsUserScrolledGetter,
+  isUserScrolledSetter: IsUserScrolledSetter,
+  notificationSetter: NotificationSetter,
   scrollPercentage2D: ScrollPercentage2D,
   userSettingsGetter: UserSettingsGetter,
   viewerManager: ViewerManager,
 ): void => {
-  updateScrollPercentage2D(isUserScrolledStore, scrollPercentage2D, viewerManager);
+  updateScrollPercentage2D(
+    isUserScrolledGetter,
+    isUserScrolledSetter,
+    scrollPercentage2D,
+    viewerManager,
+  );
   const { bookFormat, scrollStepCount } = userSettingsGetter();
   if (canMoveToPreviousPage(scrollPercentage2D, bookFormat, viewerManager)) {
     moveToPreviousPage(
-      fileNavigatorStore,
-      notificationStore,
+      fileNavigatorGetter,
+      fileNavigatorSetter,
+      notificationSetter,
       scrollPercentage2D,
       userSettingsGetter,
     );

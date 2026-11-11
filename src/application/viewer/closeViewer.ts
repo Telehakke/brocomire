@@ -1,53 +1,63 @@
 import type { Cache } from "../../domain/models/file/cache";
 import type { FileManager } from "../../domain/models/file/fileManager";
 import type { FileNavigatorGetter } from "../../domain/models/file/fileNavigator";
-import type { UserSettingsStore } from "../../domain/models/userSettings/userSettings";
+import type {
+  UserSettingsGetter,
+  UserSettingsSetter,
+} from "../../domain/models/userSettings/userSettings";
 import type { UserSettingsRepository } from "../../domain/models/userSettings/userSettingsRepository";
 import {
   createZoomPercentage,
   ZOOM_PERCENTAGE_MIN,
-  type ZoomPercentageStore,
+  type ZoomPercentageSetter,
 } from "../../domain/models/zoom/zoomPercentage";
-import type { BookmarkIndexStore } from "../appState/bookmarkIndex";
-import { createIsOpenSideMenu, type IsOpenSideMenuStore } from "../appState/isOpenSideMenu";
-import { createOnViewer, type OnViewerStore } from "../appState/onViewer";
+import type { BookmarkIndexSetter } from "../appState/bookmarkIndex";
+import { createIsOpenSideMenu, type IsOpenSideMenuSetter } from "../appState/isOpenSideMenu";
+import { createOnViewer, type OnViewerSetter } from "../appState/onViewer";
 import { updateHistory } from "./updateHistory";
 
 /** ビューアを閉じる */
 export const closeViewer = (
-  bookmarkIndexStore: BookmarkIndexStore,
+  bookmarkIndexSetter: BookmarkIndexSetter,
   cache: Cache,
   fileManager: FileManager,
   fileNavigatorGetter: FileNavigatorGetter,
-  isOpenSideMenuStore: IsOpenSideMenuStore,
-  onViewerStore: OnViewerStore,
-  userSettingsStore: UserSettingsStore,
+  isOpenSideMenuSetter: IsOpenSideMenuSetter,
+  onViewerSetter: OnViewerSetter,
+  userSettingsGetter: UserSettingsGetter,
+  userSettingsSetter: UserSettingsSetter,
   userSettingsRepository: UserSettingsRepository,
-  zoomPercentageStore: ZoomPercentageStore,
+  zoomPercentageSetter: ZoomPercentageSetter,
 ): void => {
-  updateHistory(fileManager, fileNavigatorGetter, userSettingsStore, userSettingsRepository);
+  updateHistory(
+    fileManager,
+    fileNavigatorGetter,
+    userSettingsGetter,
+    userSettingsSetter,
+    userSettingsRepository,
+  );
   cache.clear();
   fileManager.clear();
-  deleteBookmarkIndex(bookmarkIndexStore);
-  closeSideMenu(isOpenSideMenuStore);
-  _closeViewer(onViewerStore);
-  resetZoom(zoomPercentageStore);
+  deleteBookmarkIndex(bookmarkIndexSetter);
+  closeSideMenu(isOpenSideMenuSetter);
+  _closeViewer(onViewerSetter);
+  resetZoom(zoomPercentageSetter);
 };
 
 /* -------------------------------------------------------------------------- */
 
-const deleteBookmarkIndex = (bookmarkIndexStore: BookmarkIndexStore): void => {
-  bookmarkIndexStore.set(undefined);
+const deleteBookmarkIndex = (bookmarkIndexSetter: BookmarkIndexSetter): void => {
+  bookmarkIndexSetter(undefined);
 };
 
-const closeSideMenu = (isOpenSideMenuStore: IsOpenSideMenuStore): void => {
-  isOpenSideMenuStore.set(createIsOpenSideMenu(false));
+const closeSideMenu = (isOpenSideMenuSetter: IsOpenSideMenuSetter): void => {
+  isOpenSideMenuSetter(createIsOpenSideMenu(false));
 };
 
-const _closeViewer = (onViewerStore: OnViewerStore): void => {
-  onViewerStore.set(createOnViewer(false));
+const _closeViewer = (onViewerSetter: OnViewerSetter): void => {
+  onViewerSetter(createOnViewer(false));
 };
 
-const resetZoom = (zoomPercentageStore: ZoomPercentageStore): void => {
-  zoomPercentageStore.set(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
+const resetZoom = (zoomPercentageSetter: ZoomPercentageSetter): void => {
+  zoomPercentageSetter(createZoomPercentage(ZOOM_PERCENTAGE_MIN));
 };

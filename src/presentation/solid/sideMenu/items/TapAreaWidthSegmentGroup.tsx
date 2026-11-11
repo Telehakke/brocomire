@@ -1,0 +1,59 @@
+import type { JSX } from "solid-js/jsx-runtime";
+import { setTapAreaSize } from "../../../../domain/models/userSettings/userSettings";
+import {
+  copyTapAreaSizeWith,
+  getSizeValues,
+  type SizeValue,
+} from "../../../../domain/models/userSettings/valueObjects/tapAreaSize";
+import { exhaustiveCheck } from "../../../../domain/models/utils/exhaustiveCheck";
+import { LocalStorageUserSettingsRepository } from "../../../../infrastructure/userSettings/localStorageUserSettingsRepository";
+import { userSettingsStore } from "../../../signals";
+import { SegmentGroup, type SegmentGroupItem } from "../../utils/SegmentGroup";
+
+export const TapAreaWidthSegmentGroup = (): JSX.Element => {
+  const [userSettings, setUserSettings] = userSettingsStore;
+
+  const handleValueChange = (value: string | null): void => {
+    setUserSettings((v) =>
+      setTapAreaSize(
+        v,
+        copyTapAreaSizeWith(v.tapAreaSize, { width: value as SizeValue }),
+        new LocalStorageUserSettingsRepository(),
+      ),
+    );
+  };
+
+  return (
+    <SegmentGroup
+      label="左右タップエリアの幅"
+      items={getItems()}
+      value={userSettings.tapAreaSize.width}
+      onValueChange={handleValueChange}
+    />
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+
+const getItems = (): SegmentGroupItem[] => {
+  return getSizeValues().map((v) => ({
+    value: v,
+    label: getSizeLabel(v),
+  }));
+};
+
+const getSizeLabel = (value: SizeValue): string => {
+  switch (value) {
+    case "none":
+      return "-";
+    case "s":
+      return "S";
+    case "m":
+      return "M";
+    case "l":
+      return "L";
+    default:
+      exhaustiveCheck(value);
+      throw new Error();
+  }
+};

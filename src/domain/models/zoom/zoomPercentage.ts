@@ -9,6 +9,9 @@ export type ZoomPercentageStore = Readonly<{
   set(value: ZoomPercentage): void;
 }>;
 
+export type ZoomPercentageGetter = () => ZoomPercentage;
+export type ZoomPercentageSetter = (value: ZoomPercentage) => void;
+
 /* -------------------------------------------------------------------------- */
 
 export const ZOOM_PERCENTAGE_MIN = 100;

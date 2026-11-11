@@ -22,6 +22,7 @@ export type FileNavigatorStore = {
 };
 
 export type FileNavigatorGetter = () => FileNavigator;
+export type FileNavigatorSetter = (value: FileNavigator) => void;
 
 /* -------------------------------------------------------------------------- */
 

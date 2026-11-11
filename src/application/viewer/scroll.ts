@@ -1,7 +1,7 @@
 import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
 
-/** 現在のscrollPercentage2Dの値を元にスクロールする */
+/** 現在のscrollPercentage2Dの値でスクロールする */
 export const scroll = (
   scrollPercentage2D: ScrollPercentage2D,
   viewerManager: ViewerManager,

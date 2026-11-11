@@ -9,8 +9,8 @@ export class LandscapeMonitor {
     this.mediaQuery = window.matchMedia("(orientation: landscape)");
   }
 
-  /** デバイス方向を一度だけ確認 */
-  runOnce(): void {
+  /** デバイス方向をストアにセット */
+  setStore(): void {
     this.isLandscapeStore.set(createIsLandscape(this.mediaQuery.matches));
   }
 

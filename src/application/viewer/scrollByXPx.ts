@@ -1,16 +1,16 @@
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import { createIsUserScrolled, type IsUserScrolledStore } from "../appState/isUserScrolled";
+import { createIsUserScrolled, type IsUserScrolledSetter } from "../appState/isUserScrolled";
 
 /** 現在の位置からさらにピクセル値で指定した位置に水平スクロール */
 export const scrollByXPx = (
   amount: number,
-  isUserScrolledStore: IsUserScrolledStore,
+  isUserScrolledSetter: IsUserScrolledSetter,
   userSettingsGetter: UserSettingsGetter,
   viewerManager: ViewerManager,
 ): void => {
   _scrollByXPx(viewerManager, amount, userSettingsGetter);
-  setIsUserScrolled(isUserScrolledStore);
+  setIsUserScrolled(isUserScrolledSetter);
 };
 
 /* -------------------------------------------------------------------------- */
@@ -24,6 +24,6 @@ const _scrollByXPx = (
   viewerManager.scrollByPx(amount * scrollSpeed, 0);
 };
 
-const setIsUserScrolled = (isUserScrolledStore: IsUserScrolledStore): void => {
-  isUserScrolledStore.set(createIsUserScrolled(true));
+const setIsUserScrolled = (isUserScrolledSetter: IsUserScrolledSetter): void => {
+  isUserScrolledSetter(createIsUserScrolled(true));
 };

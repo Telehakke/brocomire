@@ -1,7 +1,6 @@
-import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import { default as react, reactCompilerPreset } from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import solid from "vite-plugin-solid";
 import { defineConfig, lazyPlugins } from "vite-plus";
 
 const tsEslintRecommended = {
@@ -37,31 +36,16 @@ export default defineConfig({
     ignorePatterns: ["dev-dist/**", "docs/**", "public"],
   },
   lint: {
-    plugins: ["react", "typescript", "oxc"],
+    plugins: ["typescript", "oxc"],
     rules: {
-      "react/rules-of-hooks": "error",
-      "react/only-export-components": [
-        "warn",
-        {
-          allowConstantExport: true,
-        },
-      ],
       "vite-plus/prefer-vite-plus-imports": "error",
       ...tsEslintRecommended,
       "typescript/explicit-function-return-type": "error",
       "typescript/strict-boolean-expressions": "error",
       complexity: ["error", { max: 7 }],
     },
-    options: {
-      typeAware: true,
-      typeCheck: true,
-    },
-    jsPlugins: [
-      {
-        name: "vite-plus",
-        specifier: "vite-plus/oxlint-plugin",
-      },
-    ],
+    options: { typeAware: true, typeCheck: true },
+    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     ignorePatterns: ["dev-dist/**", "docs/**"],
     overrides: [
       {
@@ -113,8 +97,7 @@ export default defineConfig({
     ],
   },
   plugins: lazyPlugins(() => [
-    react(),
-    babel({ presets: [reactCompilerPreset()] }),
+    solid(),
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",

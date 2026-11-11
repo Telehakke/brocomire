@@ -8,6 +8,8 @@ export type IsUserScrolledStore = Readonly<{
   get(): IsUserScrolled;
   set(value: IsUserScrolled): void;
 }>;
+export type IsUserScrolledGetter = () => IsUserScrolled;
+export type IsUserScrolledSetter = (value: IsUserScrolled) => void;
 
 /* -------------------------------------------------------------------------- */
 

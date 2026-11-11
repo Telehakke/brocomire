@@ -1,42 +1,60 @@
-import type { IsUserScrolledStore } from "../../application/appState/isUserScrolled";
+import type {
+  IsUserScrolledGetter,
+  IsUserScrolledSetter,
+} from "../../application/appState/isUserScrolled";
 import { goToLeftPosition } from "../../application/viewer/goToLeftPosition";
 import { goToRightPosition } from "../../application/viewer/goToRightPosition";
 import { scrollByPercentage } from "../../application/viewer/scrollByPercentage";
 import { zoomIn } from "../../application/viewer/zoomIn";
 import { zoomOut } from "../../application/viewer/zoomOut";
-import type { FileNavigatorStore } from "../../domain/models/file/fileNavigator";
-import type { NotificationStore } from "../../domain/models/notification/notification";
+import type {
+  FileNavigatorGetter,
+  FileNavigatorSetter,
+} from "../../domain/models/file/fileNavigator";
+import type { NotificationSetter } from "../../domain/models/notification/notification";
 import type { ScrollPercentage2D } from "../../domain/models/scroll/scrollPercentage2D";
 import type { UserSettingsGetter } from "../../domain/models/userSettings/userSettings";
 import type { ViewerManager } from "../../domain/models/viewer/viewerManager";
-import type { ZoomPercentageStore } from "../../domain/models/zoom/zoomPercentage";
+import type {
+  ZoomPercentageGetter,
+  ZoomPercentageSetter,
+} from "../../domain/models/zoom/zoomPercentage";
 
 export class GamepadMonitor {
-  private readonly fileNavigatorStore: FileNavigatorStore;
-  private readonly isUserScrolledStore: IsUserScrolledStore;
-  private readonly notificationStore: NotificationStore;
+  private readonly fileNavigatorGetter: FileNavigatorGetter;
+  private readonly fileNavigatorSetter: FileNavigatorSetter;
+  private readonly isUserScrolledGetter: IsUserScrolledGetter;
+  private readonly isUserScrolledSetter: IsUserScrolledSetter;
+  private readonly notificationSetter: NotificationSetter;
   private readonly scrollPercentage2D: ScrollPercentage2D;
   private readonly userSettingsGetter: UserSettingsGetter;
   private readonly viewerManager: ViewerManager;
-  private readonly zoomPercentageStore: ZoomPercentageStore;
+  private readonly zoomPercentageGetter: ZoomPercentageGetter;
+  private readonly zoomPercentageSetter: ZoomPercentageSetter;
   private readonly prevPressed: boolean[];
 
   constructor(
-    fileNavigatorStore: FileNavigatorStore,
-    isUserScrolledStore: IsUserScrolledStore,
-    notificationStore: NotificationStore,
+    fileNavigatorGetter: FileNavigatorGetter,
+    fileNavigatorSetter: FileNavigatorSetter,
+    isUserScrolledGetter: IsUserScrolledGetter,
+    isUserScrolledSetter: IsUserScrolledSetter,
+    notificationSetter: NotificationSetter,
     scrollPercentage2D: ScrollPercentage2D,
     userSettingsGetter: UserSettingsGetter,
     viewerManager: ViewerManager,
-    zoomPercentageStore: ZoomPercentageStore,
+    zoomPercentageGetter: ZoomPercentageGetter,
+    zoomPercentageSetter: ZoomPercentageSetter,
   ) {
-    this.fileNavigatorStore = fileNavigatorStore;
-    this.isUserScrolledStore = isUserScrolledStore;
-    this.notificationStore = notificationStore;
+    this.fileNavigatorGetter = fileNavigatorGetter;
+    this.fileNavigatorSetter = fileNavigatorSetter;
+    this.isUserScrolledGetter = isUserScrolledGetter;
+    this.isUserScrolledSetter = isUserScrolledSetter;
+    this.notificationSetter = notificationSetter;
     this.scrollPercentage2D = scrollPercentage2D;
     this.userSettingsGetter = userSettingsGetter;
     this.viewerManager = viewerManager;
-    this.zoomPercentageStore = zoomPercentageStore;
+    this.zoomPercentageGetter = zoomPercentageGetter;
+    this.zoomPercentageSetter = zoomPercentageSetter;
     this.prevPressed = [];
   }
 
@@ -56,36 +74,44 @@ export class GamepadMonitor {
       gamepad,
       () =>
         zoomIn(
-          this.isUserScrolledStore,
-          this.notificationStore,
+          this.isUserScrolledGetter,
+          this.isUserScrolledSetter,
+          this.notificationSetter,
           this.scrollPercentage2D,
           this.userSettingsGetter,
           this.viewerManager,
-          this.zoomPercentageStore,
+          this.zoomPercentageGetter,
+          this.zoomPercentageSetter,
         ),
       () =>
         zoomOut(
-          this.isUserScrolledStore,
-          this.notificationStore,
+          this.isUserScrolledGetter,
+          this.isUserScrolledSetter,
+          this.notificationSetter,
           this.scrollPercentage2D,
           this.userSettingsGetter,
           this.viewerManager,
-          this.zoomPercentageStore,
+          this.zoomPercentageGetter,
+          this.zoomPercentageSetter,
         ),
       () =>
         goToLeftPosition(
-          this.fileNavigatorStore,
-          this.isUserScrolledStore,
-          this.notificationStore,
+          this.fileNavigatorGetter,
+          this.fileNavigatorSetter,
+          this.isUserScrolledGetter,
+          this.isUserScrolledSetter,
+          this.notificationSetter,
           this.scrollPercentage2D,
           this.userSettingsGetter,
           this.viewerManager,
         ),
       () =>
         goToRightPosition(
-          this.fileNavigatorStore,
-          this.isUserScrolledStore,
-          this.notificationStore,
+          this.fileNavigatorGetter,
+          this.fileNavigatorSetter,
+          this.isUserScrolledGetter,
+          this.isUserScrolledSetter,
+          this.notificationSetter,
           this.scrollPercentage2D,
           this.userSettingsGetter,
           this.viewerManager,
@@ -95,7 +121,7 @@ export class GamepadMonitor {
       scrollByPercentage(
         x,
         y,
-        this.isUserScrolledStore,
+        this.isUserScrolledGetter,
         this.scrollPercentage2D,
         this.viewerManager,
       ),

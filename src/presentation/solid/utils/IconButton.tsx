@@ -1,0 +1,26 @@
+import type { JSX } from "solid-js/jsx-runtime";
+import { joinObjectValues } from "./joinObjectValues";
+
+const className = {
+  _: "size-10 p-2 transition",
+  bg: "bg-neutral-300",
+  hoverBg: "group-hover:bg-neutral-400",
+  activeBg: " group-active:bg-neutral-500",
+  stroke: "stroke-black",
+};
+
+export const IconButton = {
+  className,
+  Button: (props: { onClick: () => void; children: JSX.Element }): JSX.Element => {
+    const className = {
+      _: "group overflow-clip rounded-full transition select-none",
+      outline: "outline-blue-500/75 focus-visible:outline-2",
+    };
+
+    return (
+      <button class={joinObjectValues(className)} onClick={props.onClick}>
+        {props.children}
+      </button>
+    );
+  },
+} as const;
