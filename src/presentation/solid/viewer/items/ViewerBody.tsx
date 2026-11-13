@@ -23,6 +23,7 @@ export const ViewerBody = (props: {
 }): JSX.Element => {
   // oxlint-disable-next-line no-unassigned-vars
   let bodyRef: HTMLDivElement | undefined;
+  let canTouch = false;
   const clickGestureManager = new ClickGestureManager();
   const pullManager = new PullManager();
   let touchMoveManager = new TouchMoveManager(0, 0);
@@ -46,16 +47,8 @@ export const ViewerBody = (props: {
     return (): void => observer.disconnect();
   });
 
-  const handleClick = (): void => {
-    clickGestureManager.onClick(props.onClick, props.onDoubleClick);
-  };
-
-  const handleContextMenu = (ev: PointerEvent): void => {
-    ev.preventDefault(); // ブラウザデフォルトのメニューを開かない
-    clickGestureManager.onSubClick(props.onSubClick);
-  };
-
   const handleTouchStart = (ev: TouchEvent): void => {
+    canTouch = true;
     const { clientX, clientY } = ev.targetTouches[0];
     touchMoveManager = new TouchMoveManager(clientX, clientY);
     clickGestureManager.reset();
@@ -67,6 +60,7 @@ export const ViewerBody = (props: {
     const { clientX, clientY } = ev.targetTouches[0];
     if (!touchMoveManager.isScrolled(clientX, clientY)) return;
 
+    clickGestureManager.cancelClick();
     clickGestureManager.cancelLongPress();
     if (viewerManager().isReachedLimitX()) {
       pullManager.add(touchMoveManager.getDeltaX(clientX));
@@ -78,10 +72,21 @@ export const ViewerBody = (props: {
   };
 
   const handleTouchEnd = (): void => {
+    clickGestureManager.onClick(props.onClick, props.onDoubleClick);
     clickGestureManager.cancelLongPress();
     pullManager.onLeftSidePull(props.onLeftSidePull);
     pullManager.onRightSidePull(props.onRightSidePull);
     setChevronMark(createChevronMark("none"));
+  };
+
+  const handleClick = (): void => {
+    if (canTouch) return;
+    clickGestureManager.onClick(props.onClick, props.onDoubleClick);
+  };
+
+  const handleContextMenu = (ev: PointerEvent): void => {
+    ev.preventDefault(); // ブラウザデフォルトのメニューを開かない
+    clickGestureManager.onSubClick(props.onSubClick);
   };
 
   const handleWheel = (): void => {
@@ -92,11 +97,11 @@ export const ViewerBody = (props: {
     <div
       class="fixed inset-0 h-dvh w-dvw scrollbar-none overflow-scroll overscroll-none bg-black select-none"
       ref={bodyRef}
-      onClick={handleClick}
-      onContextMenu={handleContextMenu}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
       onWheel={handleWheel}
     >
       {props.children}

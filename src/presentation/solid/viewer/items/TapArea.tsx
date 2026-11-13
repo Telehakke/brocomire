@@ -1,6 +1,6 @@
 import { createEffect, createSignal, onCleanup } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
-import { ClickGestureManager } from "../../../../infrastructure/viewer/clickGestureManager";
+import { BasicClickGestureManager } from "../../../../infrastructure/viewer/basicClickGestureManager";
 import { SmoothScroll } from "../../../../infrastructure/viewer/smoothScroll";
 import { TouchMoveManager } from "../../../../infrastructure/viewer/touchMoveManager";
 import { userSettingsStore } from "../../../signals";
@@ -16,7 +16,8 @@ export const TapArea = (props: {
   // oxlint-disable-next-line no-unassigned-vars
   let divRef: HTMLDivElement | undefined;
   let timerId: number | undefined;
-  const clickGestureManager = new ClickGestureManager();
+  let canTouch = false;
+  const clickGestureManager = new BasicClickGestureManager();
   let smoothScroll = new SmoothScroll();
   let touchMoveManager = new TouchMoveManager(0, 0);
   const [userSettings] = userSettingsStore;
@@ -31,6 +32,7 @@ export const TapArea = (props: {
       const { clientX, clientY } = ev.targetTouches[0];
       if (!touchMoveManager.isScrolled(clientX, clientY)) return;
 
+      clickGestureManager.cancelClick();
       clickGestureManager.cancelLongPress();
       let delta = touchMoveManager.getDelta(clientX, clientY);
       if (userSettings.isSmoothScrollEnabled) {
@@ -67,16 +69,8 @@ export const TapArea = (props: {
     });
   });
 
-  const handleClick = (): void => {
-    clickGestureManager.onClick(props.onClick);
-  };
-
-  const handleContextMenu = (ev: PointerEvent): void => {
-    ev.preventDefault(); // ブラウザデフォルトのメニューを開かない
-    clickGestureManager.onSubClick(props.onSubClick);
-  };
-
   const handleTouchStart = (ev: TouchEvent): void => {
+    canTouch = true;
     const { clientX, clientY } = ev.targetTouches[0];
     touchMoveManager = new TouchMoveManager(clientX, clientY);
     clickGestureManager.reset();
@@ -85,7 +79,18 @@ export const TapArea = (props: {
   };
 
   const handleTouchEnd = (): void => {
+    clickGestureManager.onClick(props.onClick);
     clickGestureManager.cancelLongPress();
+  };
+
+  const handleClick = (): void => {
+    if (canTouch) return;
+    clickGestureManager.onClick(props.onClick);
+  };
+
+  const handleContextMenu = (ev: PointerEvent): void => {
+    ev.preventDefault(); // ブラウザデフォルトのメニューを開かない
+    clickGestureManager.onSubClick(props.onSubClick);
   };
 
   const className = {
@@ -100,10 +105,10 @@ export const TapArea = (props: {
       class={joinObjectValues(className)}
       style={props.style}
       ref={divRef}
-      onClick={handleClick}
-      onContextMenu={handleContextMenu}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onClick={handleClick}
+      onContextMenu={handleContextMenu}
     />
   );
 };

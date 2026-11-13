@@ -23,25 +23,21 @@ export class ClickGestureManager {
   }
 
   /** クリックでactionを実行 */
-  onClick(singleClicked: () => void, doubleClicked?: () => void): void {
+  onClick(singleClicked: () => void, doubleClicked: () => void): void {
     this.clickCount += 1;
     if (!this.canClick) {
       this.canClick = true;
       this.clickCount = 0;
       return;
     }
-    if (doubleClicked != null) {
-      if (this.clickCount === 2) {
-        window.clearInterval(this.clickTimerId);
-        this.click(doubleClicked);
-        return;
-      }
-      this.clickTimerId = window.setTimeout(() => {
-        this.click(singleClicked);
-      }, 400);
+    if (this.clickCount === 2) {
+      window.clearInterval(this.clickTimerId);
+      this.click(doubleClicked);
       return;
     }
-    this.click(singleClicked);
+    this.clickTimerId = window.setTimeout(() => {
+      this.click(singleClicked);
+    }, 400);
   }
 
   private click(action: () => void): void {
@@ -70,6 +66,11 @@ export class ClickGestureManager {
       this.canSubClick = false;
       action();
     }, timeout);
+  }
+
+  /** クリックをキャンセル */
+  cancelClick(): void {
+    this.canClick = false;
   }
 
   /** 長押しをキャンセル */
