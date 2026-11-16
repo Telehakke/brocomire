@@ -191,7 +191,7 @@ const runDrawImages = (
   images: [Image, Image],
   onInvertLightness: OnInvertLightness,
   onSharpeningFilter: OnSharpeningFilter,
-  setIsImageWiderThanViewer: (value: IsImageWiderThanViewer) => void,
+  isImageWiderThanViewerSetter: (value: IsImageWiderThanViewer) => void,
   sharpeningFilterStrength: SharpeningFilterStrength,
 ): void => {
   const [, setImageSize] = imageSizeSignal;
@@ -203,9 +203,9 @@ const runDrawImages = (
     ctx,
     images,
     (v) => setImageSize(v),
+    isImageWiderThanViewerSetter,
     onInvertLightness,
     onSharpeningFilter,
-    setIsImageWiderThanViewer,
     scrollPercentage2D(),
     sharpeningFilterStrength,
     viewerManager(),

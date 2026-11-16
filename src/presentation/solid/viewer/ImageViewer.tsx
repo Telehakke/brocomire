@@ -10,7 +10,6 @@ import { zoomIn } from "../../../application/viewer/zoomIn";
 import { zoomOut } from "../../../application/viewer/zoomOut";
 import {
   fileNavigatorSignal,
-  imageSizeSignal,
   infoVisibilitySignal,
   isImageWiderThanViewerSignal,
   isUserScrolledSignal,
@@ -31,16 +30,13 @@ import { ViewerCanvas } from "./items/ViewerCanvas";
 import { ViewerContent } from "./items/ViewerContent";
 
 export const ImageViewer = (): JSX.Element => {
-  const [imageSize] = imageSizeSignal;
   const [, setInfoVisibility] = infoVisibilitySignal;
   const [, setIsImageWiderThanViewer] = isImageWiderThanViewerSignal;
   const [viewerManager] = viewerManagerSignal;
 
   const handleResize = (): void => {
     setIsImageWiderThanViewer(
-      createIsImageWiderThanViewer(
-        viewerManager().isImageWiderThanViewer(imageSize().width, imageSize().height),
-      ),
+      createIsImageWiderThanViewer(viewerManager().isImageWiderThanViewer()),
     );
   };
 

@@ -23,9 +23,9 @@ export const drawImages = (
   ctx: CanvasRenderingContext2D,
   images: [Image, Image],
   imageSizeSetter: ImageSizeSetter,
+  isImageWiderThanViewerSetter: (value: IsImageWiderThanViewer) => void,
   onInvertLightness: OnInvertLightness,
   onSharpeningFilter: OnSharpeningFilter,
-  setIsImageWiderThanViewer: (value: IsImageWiderThanViewer) => void,
   scrollPercentage2D: ScrollPercentage2D,
   sharpeningFilterStrength: SharpeningFilterStrength,
   viewerManager: ViewerManager,
@@ -35,12 +35,10 @@ export const drawImages = (
   if (onInvertLightness) invertLightnessWebGL(canvas, ctx);
   if (onSharpeningFilter) sharpenCanvasWebGL(canvas, ctx, sharpeningFilterStrength);
   imageSizeSetter(createImageSize(imageSize.width, imageSize.height));
-  scroll(scrollPercentage2D, viewerManager);
-  setIsImageWiderThanViewer(
-    createIsImageWiderThanViewer(
-      viewerManager.isImageWiderThanViewer(imageSize.width, imageSize.height),
-    ),
+  isImageWiderThanViewerSetter(
+    createIsImageWiderThanViewer(viewerManager.isImageWiderThanViewer()),
   );
+  scroll(scrollPercentage2D, viewerManager);
 };
 
 /* -------------------------------------------------------------------------- */

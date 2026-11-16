@@ -2,14 +2,12 @@ export class BasicClickGestureManager {
   private canClick: boolean;
   private canSubClick: boolean;
   private canLongPress: boolean;
-  private clickTimerId: number | undefined;
   private longPressTimerId: number | undefined;
 
   constructor() {
     this.canClick = true;
     this.canSubClick = true;
     this.canLongPress = true;
-    this.clickTimerId = undefined;
     this.longPressTimerId = undefined;
   }
 

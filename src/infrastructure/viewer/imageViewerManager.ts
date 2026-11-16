@@ -60,11 +60,18 @@ export class ImageViewerManager implements ViewerManager {
     return x <= 0 || 100 <= x;
   }
 
-  isImageWiderThanViewer(imageWidth: number, imageHeight: number): boolean | undefined {
-    if (this.body == null || this.body().clientHeight === 0 || imageHeight === 0) return undefined;
+  isImageWiderThanViewer(): boolean | undefined {
+    if (
+      this.body == null ||
+      this.body().clientHeight === 0 ||
+      this.canvas == null ||
+      this.canvas().clientHeight === 0
+    )
+      return undefined;
+
     const bodyRatio = this.body().clientWidth / this.body().clientHeight;
-    const imageRatio = imageWidth / imageHeight;
-    return bodyRatio <= imageRatio;
+    const canvasRatio = this.canvas().clientWidth / this.canvas().clientHeight;
+    return bodyRatio <= canvasRatio;
   }
 
   scrollByPx(x: number, y: number): void {

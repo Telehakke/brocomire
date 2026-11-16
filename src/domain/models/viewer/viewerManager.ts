@@ -41,7 +41,7 @@ export interface ViewerManager {
    * ビューア縦横比よりも画像の方が横に長いかどうか\
    * 結果の判定が不可能であればundefinedを返す
    */
-  isImageWiderThanViewer(imageWidth: number, imageHeight: number): boolean | undefined;
+  isImageWiderThanViewer(): boolean | undefined;
 
   /** 現在の位置からさらにピクセル値で指定した位置にスクロール */
   scrollByPx(x: number, y: number): void;
