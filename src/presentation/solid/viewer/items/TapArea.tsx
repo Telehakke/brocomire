@@ -18,8 +18,8 @@ export const TapArea = (props: {
   let timerId: number | undefined;
   let canTouch = false;
   const clickGestureManager = new BasicClickGestureManager();
-  let smoothScroll = new SmoothScroll();
-  let touchMoveManager = new TouchMoveManager(0, 0);
+  const smoothScroll = new SmoothScroll();
+  const touchMoveManager = new TouchMoveManager();
   const [userSettings] = userSettingsStore;
   const [isActive, setIsActive] = createSignal(false);
 
@@ -54,7 +54,7 @@ export const TapArea = (props: {
       setIsActive(true);
       window.clearTimeout(timerId);
       timerId = window.setTimeout(() => {
-        smoothScroll = new SmoothScroll();
+        smoothScroll.init();
         setIsActive(false);
       }, 100);
     };
@@ -72,10 +72,10 @@ export const TapArea = (props: {
   const handleTouchStart = (ev: TouchEvent): void => {
     canTouch = true;
     const { clientX, clientY } = ev.targetTouches[0];
-    touchMoveManager = new TouchMoveManager(clientX, clientY);
+    touchMoveManager.init(clientX, clientY);
     clickGestureManager.reset();
     clickGestureManager.onLongPress(props.onSubClick, userSettings.longPressRecognitionTime);
-    smoothScroll = new SmoothScroll();
+    smoothScroll.init();
   };
 
   const handleTouchEnd = (): void => {
@@ -84,7 +84,10 @@ export const TapArea = (props: {
   };
 
   const handleClick = (): void => {
-    if (canTouch) return;
+    if (canTouch) {
+      canTouch = false;
+      return;
+    }
     clickGestureManager.onClick(props.onClick);
   };
 

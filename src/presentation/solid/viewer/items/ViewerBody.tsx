@@ -26,7 +26,7 @@ export const ViewerBody = (props: {
   let canTouch = false;
   const clickGestureManager = new ClickGestureManager();
   const pullManager = new PullManager();
-  let touchMoveManager = new TouchMoveManager(0, 0);
+  const touchMoveManager = new TouchMoveManager();
   const [viewerManager] = viewerManagerSignal;
   const [, setChevronMark] = chevronMarkSignal;
   const [, setIsUserScrolled] = isUserScrolledSignal;
@@ -50,7 +50,7 @@ export const ViewerBody = (props: {
   const handleTouchStart = (ev: TouchEvent): void => {
     canTouch = true;
     const { clientX, clientY } = ev.targetTouches[0];
-    touchMoveManager = new TouchMoveManager(clientX, clientY);
+    touchMoveManager.init(clientX, clientY);
     clickGestureManager.reset();
     clickGestureManager.onLongPress(props.onSubClick, userSettings.longPressRecognitionTime);
     pullManager.reset();
@@ -80,7 +80,10 @@ export const ViewerBody = (props: {
   };
 
   const handleClick = (): void => {
-    if (canTouch) return;
+    if (canTouch) {
+      canTouch = false;
+      return;
+    }
     clickGestureManager.onClick(props.onClick, props.onDoubleClick);
   };
 

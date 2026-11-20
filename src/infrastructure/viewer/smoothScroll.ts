@@ -3,6 +3,12 @@ export class SmoothScroll {
   private deltaXList: number[] = [];
   private deltaYList: number[] = [];
 
+  /** 初期化 */
+  init(): void {
+    this.deltaXList = [];
+    this.deltaYList = [];
+  }
+
   /** 変化量を追加 */
   push(deltaX: number, deltaY: number): void {
     this.deltaXList.push(deltaX);

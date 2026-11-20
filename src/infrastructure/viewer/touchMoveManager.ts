@@ -1,11 +1,12 @@
 export class TouchMoveManager {
-  private beginX: number;
-  private beginY: number;
-  private prevX: number;
-  private prevY: number;
-  private _isScrolled: boolean;
+  private beginX = 0;
+  private beginY = 0;
+  private prevX = 0;
+  private prevY = 0;
+  private _isScrolled = false;
 
-  constructor(x: number, y: number) {
+  /** タッチした開始位置を初期化 */
+  init(x: number, y: number): void {
     this.beginX = x;
     this.beginY = y;
     this.prevX = x;
